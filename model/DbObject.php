@@ -7,10 +7,8 @@ abstract class DbObject {
     public function __construct(array $data) {
         $this->hydrate($data);
     }
-    //abstract public function __set($name, $value);
-    public function __set($name, $value) {
-        $this->_attributes[$name] = $value;
-    }
+    
+    abstract public function __set($name, $value);
 
     public function __get($name) {
         if (isset($this->_attributes[$name])) {
