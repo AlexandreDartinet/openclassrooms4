@@ -1,5 +1,6 @@
 <?php
-include('config.php');
+require('config.php');
+require('init.php');
 require('controller/frontend.php');
 
 try {
