@@ -17,5 +17,5 @@ if(!isset($_SESSION["user"])) {
         "level" => User::LEVEL_ANON,
         "ip" => $_SERVER["REMOTE_ADDR"],
         "name_display" => "Anonyme"
-    ])
+    ]);
 }
