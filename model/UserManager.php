@@ -2,8 +2,8 @@
 
 class UserManager extends Manager {
 
-    public function __constructor() {
-        parent::__constructor();
+    public function __construct() {
+        parent::__construct();
     }
     public function login(string $name, string $password) {
         $req = $this->_db->prepare('SELECT * FROM users WHERE name=? AND password=?');
@@ -24,7 +24,8 @@ class UserManager extends Manager {
         $req = $this->_db->prepare('SELECT * FROM users');
         if($req->execute()) {
             $users = [];
-            while($user = new User($req->fetch())) {
+            while($line = $req->fetch()) {
+                $user = new User($line);
                 $users[] = $user;
             }
             $req->closeCursor();

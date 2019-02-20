@@ -4,10 +4,10 @@ abstract class DbObject {
 
     protected $_attributes = [];
 
-    public function __constructor(array $data) {
+    public function __construct(array $data) {
         $this->hydrate($data);
     }
-
+    //abstract public function __set($name, $value);
     public function __set($name, $value) {
         $this->_attributes[$name] = $value;
     }

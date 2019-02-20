@@ -5,7 +5,7 @@ abstract class Manager
 {
     protected $_db;
 
-    public function __constructor() {
+    public function __construct() {
         $this->_db = $this->dbConnect();
     }
 
