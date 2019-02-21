@@ -8,7 +8,7 @@ try {
         
     }
     else {
-        
+        listPosts();
     }
 }
 catch(Exception $e) {
