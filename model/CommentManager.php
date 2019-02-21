@@ -4,7 +4,7 @@ class CommentManager extends Manager {
     const COMMENT_PAGE = 2000;
 
     public function getComments(int $id_post, $page = 1) {
-        $req = $this->_db->prepare('SELECT a.*, COUNT(b.id) AS replies_nbr FROM comments a INNER JOIN comments b ON a.id = b.reply_to WHERE a.id_post=:id_post ORDER BY a.date_publication DESC LIMIT '.(($page-1)*self::COMMENT_PAGE).','.$page*self::COMMENT_PAGE);
+        $req = $this->_db->prepare('SELECT a.*, COUNT(b.id) AS replies_nbr FROM comments a LEFT JOIN comments b ON a.id = b.reply_to WHERE a.id_post=:id_post GROUP BY a.id ORDER BY a.date_publication ASC LIMIT '.(($page-1)*self::COMMENT_PAGE).','.$page*self::COMMENT_PAGE);
         $req->bindParam(":id_post", $id_post);
         if($req->execute()) {
             $comments = [];
@@ -21,7 +21,7 @@ class CommentManager extends Manager {
     } 
 
     public function getCommentById(int $id) {
-        $req = $this->_db->prepare('SELECT a.*, COUNT(b.id) AS replies_nbr FROM comments a INNER JOIN comments b ON a.id = b.reply_to WHERE a.id=:id');
+        $req = $this->_db->prepare('SELECT a.*, COUNT(b.id) AS replies_nbr FROM comments a LEFT JOIN comments b ON a.id = b.reply_to WHERE a.id=:id');
         $req->bindParam(":id", $id);
         if($req->execute()) {
             $comment = new Comment($req->fetch());
@@ -64,9 +64,8 @@ class CommentManager extends Manager {
     }
 
     public function getReplies(Comment $comment) {
-        $req = $this->_db->prepare('SELECT * FROM comments WHERE reply_to=:id');
-        $req->bindParam(":id", $comment->id);
-        if($req->execute()) {
+        $req = $this->_db->prepare('SELECT * FROM comments WHERE reply_to=?');
+        if($req->execute([$comment->id])) {
             $comments = [];
             while($line = $req->fetch()) {
                 $line['replies_nbr'] = 0;

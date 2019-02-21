@@ -55,7 +55,7 @@ class Comment extends DbObject {
         }
     }
 
-    public function default() {
+    public static function default() {
         $comment = new self([
             "id" => 0,
             "id_post" => 0,
@@ -66,11 +66,12 @@ class Comment extends DbObject {
             "name" => "Anonyme",
             "content" => "nothing",
             "replies_nbr" => 0
-        ])
+        ]);
+        return $comment;
     }
 
     public function getName() {
-        if($this->id == 0) {
+        if($this->id_user == 0) {
             return $this->name;
         }
         else {

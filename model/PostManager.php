@@ -5,7 +5,7 @@ class PostManager extends Manager {
 
     public function getPosts($page = 1, $published = true, $year = 0, $month = 0, $day = 0) {
         $query_start = 'SELECT posts.*, COUNT(comments.id) AS comments_nbr FROM posts LEFT JOIN comments ON posts.id = comments.id_post ';
-        $query_end =  ' ORDER BY date_publication DESC LIMIT '.(($page-1)*self::POST_PAGE).','.$page*self::POST_PAGE;
+        $query_end =  ' GROUP BY posts.id ORDER BY posts.date_publication DESC LIMIT '.(($page-1)*self::POST_PAGE).','.$page*self::POST_PAGE;
         if($year != 0) {
             if($month != 0) {
                 if($day != 0) {
