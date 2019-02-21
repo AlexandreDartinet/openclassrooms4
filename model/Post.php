@@ -2,7 +2,43 @@
 class Post extends DbObject {
 
     public function __set($name, $value) {
-        $this->_attributes[$name] = $value;
+        switch($name) {
+            case "id":
+                $this->_attributes[$name] = (int) $value;
+                break;
+            case "date_publication":
+                if(self::checkDate($value)) {
+                    $this->_attributes[$name] = (string) $value;
+                }
+                else {
+                    throw new Exception("$name n'est pas une date.");
+                }
+                break;
+            case "id_user":
+                $this->_attributes[$name] = (int) $value;
+                break;
+            case "title":
+                if($value != "") {
+                    $this->_attributes[$name] = (string) $value;
+                }
+                else {
+                    throw new Exception("$name est vide.");
+                }
+                break;
+            case "content":
+                if($value != "") {
+                    $this->_attributes[$name] = (string) $value;
+                }
+                else {
+                    throw new Exception("$name est vide.");
+                }
+                break;
+            case "published":
+                $this->_attributes[$name] = (boolean) $value;
+                break;
+            default:
+                break;
+        }
     }
 
     public function getAuthor() {

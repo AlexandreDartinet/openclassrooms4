@@ -38,7 +38,7 @@ class User extends DbObject {
                 }
                 break;
             case "date_inscription":
-                if(preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $value)) {
+                if(self::checkDate($value)) {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
@@ -46,7 +46,7 @@ class User extends DbObject {
                 }
                 break;
             case "last_seen":
-                if(preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $value)) {
+                if(self::checkDate($value)) {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
