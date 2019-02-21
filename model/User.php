@@ -11,19 +11,14 @@ class User extends DbObject {
     public function __set($name, $value) {
         switch($name) {
             case "id":
-                if(is_int($value)) {
-                    $this->_attributes[$name] = $value;
-                }
-                else {
-                    throw new Exception("L'id n'est pas un entier.");
-                }
+                $this->_attributes[$name] = (int) $value;
                 break;
             case "name":
-                if(is_string($value) && $value != "") {
-                    $this->_attributes[$name] = $value;
+                if($value != "") {
+                    $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("L'attribut name n'est pas une chaine de caractères.");
+                    throw new Exception("L'attribut name est vide.");
                 }
                 break;
             case "password":
@@ -35,7 +30,7 @@ class User extends DbObject {
                 }
                 break;
             case "mail":
-                if(preg_match('/^\w+@\w+\.\w+$/', $value)) {
+                if(preg_match('/^.+@\w+\.\w+$/', $value)) {
                     $this->_attributes[$name] = $value;
                 }
                 else {
@@ -59,12 +54,7 @@ class User extends DbObject {
                 }
                 break;
             case "level":
-                if(is_int($value)) {
-                    $this->_attributes[$name] = $value;
-                }
-                else {
-                    throw new Exception("level invalide");
-                }
+                $this->_attributes[$name] = (int) $value;
                 break;
             case "ip":
                 if(preg_match('/^\d{1,3}(\.\d{1,3}){3}$/', $value)) {
@@ -83,7 +73,7 @@ class User extends DbObject {
                 }
                 break;
             default:
-                throw new Exception("Attribut $name inconnu.");
+                //throw new Exception("Attribut $name inconnu.");
                 break;
         }
     }

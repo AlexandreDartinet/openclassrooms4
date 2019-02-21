@@ -2,9 +2,6 @@
 
 class UserManager extends Manager {
 
-    public function __construct() {
-        parent::__construct();
-    }
     public function login(string $name, string $password) {
         $req = $this->_db->prepare('SELECT * FROM users WHERE name=? AND password=?');
         if($req->execute([$name, password_hash($password, PASSWORD_DEFAULT)])) {
