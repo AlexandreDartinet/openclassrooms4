@@ -1,13 +1,15 @@
 <?php
 class Post extends DbObject {
 
+    const EXTRACT_LENGTH = 500;
+
     public function __set($name, $value) {
         switch($name) {
             case "id":
                 $this->_attributes[$name] = (int) $value;
                 break;
             case "date_publication":
-                if(self::checkDate($value)) {
+                if(self::isDate($value)) {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
@@ -36,6 +38,8 @@ class Post extends DbObject {
             case "published":
                 $this->_attributes[$name] = (boolean) $value;
                 break;
+            case "comments_nbr":
+                $this->_attributes[$name] = (int) $value;
             default:
                 break;
         }
@@ -47,6 +51,10 @@ class Post extends DbObject {
         return $author;
     }
 
+    public function getExtract() {
+        return (strlen($this->content) > self::EXTRACT_LENGTH) ? substr($this->content, 0, self::EXTRACT_LENGTH).'...' : $this->content;
+    }
+
     public static function default() {
         $post = new self([
             "id" => 0,
@@ -54,7 +62,8 @@ class Post extends DbObject {
             "id_user" => 0,
             "title" => "nothing",
             "content" => "nothing",
-            "published" => true
+            "published" => true,
+            "comments_nbr" => 0
         ]);
         return $post;
     }

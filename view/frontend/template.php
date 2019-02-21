@@ -12,6 +12,7 @@
     </head>
         
     <body>
+    <h1> Le blog </h1>
         <?= $content ?>
     </body>
 </html>

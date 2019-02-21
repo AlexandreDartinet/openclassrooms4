@@ -4,8 +4,9 @@ require('init.php');
 require('controller/frontend.php');
 
 try {
-    if (isset($_GET['action'])) {
-        
+    if (preg_match('/^\/post\//', $_GET['path'])) {
+        $id = (int) preg_replace('/^\/post\/(\d+)\//', '$1', $_GET['path']);
+        viewPost($id);
     }
     else {
         listPosts();

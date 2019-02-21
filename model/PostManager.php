@@ -4,27 +4,29 @@ class PostManager extends Manager {
     const POST_PAGE = 5;
 
     public function getPosts($page = 1, $published = true, $year = 0, $month = 0, $day = 0) {
+        $query_start = 'SELECT posts.*, COUNT(comments.id) AS comments_nbr FROM posts LEFT JOIN comments ON posts.id = comments.id_post ';
+        $query_end =  ' ORDER BY date_publication DESC LIMIT '.(($page-1)*self::POST_PAGE).','.$page*self::POST_PAGE;
         if($year != 0) {
             if($month != 0) {
                 if($day != 0) {
-                    $req = $this->_db->prepare('SELECT * FROM posts WHERE'.($published?' published = 1 AND':'').' YEAR(date_publication) = :year AND MONTH(date_publication) = :month AND DAY(date_publication) = :day ORDER BY date_publication DESC LIMIT '.(($page-1)*self::POST_PAGE).','.$page*self::POST_PAGE);
+                    $req = $this->_db->prepare($query_start.'WHERE'.($published?' published = 1 AND':'').' YEAR(date_publication) = :year AND MONTH(date_publication) = :month AND DAY(date_publication) = :day'.$query_end);
                     $req->bindParam(":year",$year);
                     $req->bindParam(":month",$month);
                     $req->bindParam(":day",$day);
                 }
                 else {
-                    $req = $this->_db->prepare('SELECT * FROM posts WHERE'.($published?' published = 1 AND':'').' YEAR(date_publication) = :year AND MONTH(date_publication) = :month ORDER BY date_publication DESC LIMIT '.(($page-1)*self::POST_PAGE).','.$page*self::POST_PAGE);
+                    $req = $this->_db->prepare($query_start.'WHERE'.($published?' published = 1 AND':'').' YEAR(date_publication) = :year AND MONTH(date_publication) = :month'.$query_end);
                     $req->bindParam(":year",$year);
                     $req->bindParam(":month",$month);
                 }
             }
             else {
-                $req = $this->_db->prepare('SELECT * FROM posts WHERE'.($published?' published = 1 AND':'').' YEAR(date_publication) = :year ORDER BY date_publication DESC LIMIT '.(($page-1)*self::POST_PAGE).','.$page*self::POST_PAGE);
+                $req = $this->_db->prepare($query_start.'WHERE'.($published?' published = 1 AND':'').' YEAR(date_publication) = :year'.$query_end);
                 $req->bindParam(":year",$year);
             }
         }
         else {
-            $req = $this->_db->prepare('SELECT * FROM posts'.($published?' WHERE published = 1':'').' ORDER BY date_publication DESC LIMIT '.(($page-1)*self::POST_PAGE).','.$page*self::POST_PAGE);
+            $req = $this->_db->prepare($query_start.($published?'WHERE published = 1':'').$query_end);
         }
         if($req->execute()) {
             $posts = [];
@@ -41,7 +43,7 @@ class PostManager extends Manager {
     }
 
     public function getPostById(int $id) {
-        $req = $this->_db->prepare('SELECT * FROM posts WHERE id=?');
+        $req = $this->_db->prepare('SELECT posts.*, COUNT(comments.id) AS comments_nbr FROM posts LEFT JOIN comments ON posts.id = comments.id_post WHERE posts.id=?');
         if($req->execute([$id])) {
             $post = new Post($req->fetch());
             $req->closeCursor();

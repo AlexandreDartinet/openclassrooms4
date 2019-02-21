@@ -38,7 +38,7 @@ class User extends DbObject {
                 }
                 break;
             case "date_inscription":
-                if(self::checkDate($value)) {
+                if(self::isDate($value)) {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
@@ -46,7 +46,7 @@ class User extends DbObject {
                 }
                 break;
             case "last_seen":
-                if(self::checkDate($value)) {
+                if(self::isDate($value)) {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
@@ -57,7 +57,7 @@ class User extends DbObject {
                 $this->_attributes[$name] = (int) $value;
                 break;
             case "ip":
-                if(preg_match('/^\d{1,3}(\.\d{1,3}){3}$/', $value)) {
+                if(self::isIp($value)) {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
