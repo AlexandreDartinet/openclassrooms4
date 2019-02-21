@@ -52,5 +52,32 @@ class PostManager extends Manager {
         }
     }
 
+    public function setPost(Post $post) {
+        if ($post->id == 0) {
+            $req = $this->_db->prepare('INSERT INTO posts(date_publication, id_user, title, content, published) VALUES (?, ?, ?, ?, ?)');
+            $exec = $req->execute([
+                $post->date_publication,
+                $post->id_user,
+                $post->title,
+                $post->content,
+                $post->published
+            ]);
+            
+        }
+        else {
+            $req = $this->_db->prepare('UPDATE posts SET date_publication=?, id_user=?, title=?, content=?, published=? WHERE id=?');
+            $exec = $req->execute([
+                $post->date_publication,
+                $post->id_user,
+                $post->title,
+                $post->content,
+                $post->published,
+                $post->id
+            ]);
+        }
+        $req->closeCursor();
+        return $exec;
+    }
+
 
 }

@@ -29,7 +29,13 @@ abstract class DbObject {
         }
     }
 
+    abstract public static function default();
+
     public function rDate($name) {
         return preg_replace('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}:\d{2}:\d{2})$/', '$3/$2/$1 à $4', $this->$name);
+    }
+
+    public static function now() {
+        return date("Y-m-d H:i:s");
     }
 }

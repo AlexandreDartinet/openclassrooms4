@@ -22,16 +22,16 @@ class User extends DbObject {
                 }
                 break;
             case "password":
-                if(is_string($value)) {
-                    $this->_attributes[$name] = $value;
+                if($value != "") {
+                    $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("password n'est pas une chaine de caractères.");
+                    throw new Exception("password est vide.");
                 }
                 break;
             case "mail":
                 if(preg_match('/^.+@\w+\.\w+$/', $value)) {
-                    $this->_attributes[$name] = $value;
+                    $this->_attributes[$name] = (string) $value;
                 }
                 else {
                     throw new Exception("mail invalide.");
@@ -39,7 +39,7 @@ class User extends DbObject {
                 break;
             case "date_inscription":
                 if(preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $value)) {
-                    $this->_attributes[$name] = $value;
+                    $this->_attributes[$name] = (string) $value;
                 }
                 else {
                     throw new Exception("Date d'inscription invalide");
@@ -47,7 +47,7 @@ class User extends DbObject {
                 break;
             case "last_seen":
                 if(preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $value)) {
-                    $this->_attributes[$name] = $value;
+                    $this->_attributes[$name] = (string) $value;
                 }
                 else {
                     throw new Exception("Last seen invalide");
@@ -58,23 +58,37 @@ class User extends DbObject {
                 break;
             case "ip":
                 if(preg_match('/^\d{1,3}(\.\d{1,3}){3}$/', $value)) {
-                    $this->_attributes[$name] = $value;
+                    $this->_attributes[$name] = (string) $value;
                 }
                 else {
                     throw new Exception("ip invalide.");
                 }
                 break;
             case "name_display":
-                if(is_string($value) && $value != "") {
-                    $this->_attributes[$name] = $value;
+                if($value != "") {
+                    $this->_attributes[$name] = (string) $value;
                 }
                 else {
                     throw new Exception("Nom d'affichage invalide.");
                 }
                 break;
             default:
-                //throw new Exception("Attribut $name inconnu.");
                 break;
         }
+    }
+
+    public static function default() {
+        $user = new self([
+            "id" => 0,
+            "name" => "Anonyme",
+            "password" => "nothing",
+            "mail" => "nothing@anonymous.fr",
+            "date_inscription" => self::now(),
+            "last_seen" => self::now(),
+            "level" => self::LEVEL_ANON,
+            "ip" => $_SERVER["REMOTE_ADDR"],
+            "name_display" => "Anonyme"
+        ]);
+        return $user;
     }
 }
