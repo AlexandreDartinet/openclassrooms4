@@ -1,7 +1,6 @@
 <?php
 $title = "Modification de votre profil";
 ob_start();
-$user = $_SESSION['user']; 
 ?>
 <h2>Modification de votre profil</h2>
 <?php

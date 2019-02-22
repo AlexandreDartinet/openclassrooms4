@@ -33,6 +33,7 @@ function viewProfileEdit() {
         header('Location: /');
     }
     else {
+        $user = $_SESSION['user'];
         require("view/frontend/profileEditView.php");
     }
 }
