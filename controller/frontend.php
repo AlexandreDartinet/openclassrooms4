@@ -28,6 +28,15 @@ function viewRegister() {
     }
 }
 
+function viewProfileEdit() {
+    if($_SESSION['user']->id == 0) {
+        header('Location: /');
+    }
+    else {
+        require("view/frontend/profileEditView.php");
+    }
+}
+
 function commentPost(int $id_post, string $name, string $content, int $reply_to) {
     $commentManager = new CommentManager();
     $comment = Comment::default();
@@ -75,4 +84,45 @@ function registerUser($name, $password, $email, $name_display) {
         smtpMailer($email, "noreply@".SITE_URL, "noreply", "Nouveau compte sur ".SITE_URL, "Le compte $name a été créé.\nCeci est un mail automatique, merci de ne pas y répondre.");
         header('Location: /');
     }
+}
+
+function modifyUser(int $id, string $name, string $name_display, string $email, string $password, string $old_password) {
+    $user = clone $_SESSION['user'];
+    $userManager = new UserManager();
+    if($id != $user->id) {
+        header('Location: /');
+    }
+    if($old_password != '' && $password != '') {
+        if(password_verify($old_password, $user->password)) {
+            $user->password = password_hash($password, PASSWORD_DEFAULT);
+        }
+        else {
+            header('Location: /profile/edit/retry/password/');
+            return;
+        }
+    }
+    if($name != $user->name) {
+        if($userManager->exists('name', $name, $id)) {
+            header('Location: /profile/edit/retry/name/');
+            return;
+        }
+        else {
+            $user->name = $name;
+        }
+    }
+    if($name_display != $user->name_display) {
+        if($userManager->exists('name_display', $name, $id)) {
+            header('Location: /profile/edit/retry/name_display/');
+            return;
+        }
+        else {
+            $user->name_display = $name_display;
+        }
+    }
+    $user->email = $email;
+    $user->ip = $_SERVER['REMOTE_ADDR'];
+    $user->last_seen = User::now();
+    $userManager->setUser($user);
+    $_SESSION['user'] = $user;
+    header('Location: /profile/edit/');
 }

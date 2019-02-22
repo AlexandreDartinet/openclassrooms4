@@ -77,9 +77,10 @@ class UserManager extends Manager {
         return $exec;
     }
 
-    public function exists($name, $value) {
-        $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM users WHERE `$name`=?");
-        if($req->execute([$value])) {
+    public function exists(string $name, string $value, $id = 0) {
+        $id = (int) $id;
+        $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM users WHERE `$name`=? AND id!=?");
+        if($req->execute([$value, $id])) {
             $res = $req->fetch();
             $req->closeCursor();
             $count = (int) $res['count'];
