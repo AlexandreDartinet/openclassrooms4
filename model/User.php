@@ -32,7 +32,7 @@ class User extends DbObject {
                     throw new Exception("password est vide.");
                 }
                 break;
-            case "mail":
+            case "email":
                 if(preg_match('/^.+@\w+\.\w+$/', $value)) {
                     $this->_attributes[$name] = (string) $value;
                 }
@@ -85,7 +85,7 @@ class User extends DbObject {
             "id" => 0,
             "name" => "Anonyme",
             "password" => "nothing",
-            "mail" => "nothing@anonymous.fr",
+            "email" => "nothing@anonymous.fr",
             "date_inscription" => self::now(),
             "last_seen" => self::now(),
             "level" => self::LEVEL_ANON,

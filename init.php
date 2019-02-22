@@ -15,6 +15,8 @@ define('DB_USER','XXX');
 define('DB_PASSWORD','XXX');
 define('DB_BASE','XXX');
 
+define('SITE_URL', 'xxx');
+
 define('USE_PHPMAILER', false);
 define('SMTP_HOST','XXX');
 define('SMTP_USER','XXX');

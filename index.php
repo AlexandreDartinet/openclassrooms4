@@ -15,6 +15,11 @@ try {
                     login($_POST['name'], $_POST['password'], $_GET['path']);
                 }
                 break;
+            case "registerUser":
+                if(isset($_POST['name']) && isset($_POST['password']) && isset($_POST['email']) && isset($_POST['name_display'])) {
+                    registerUser($_POST['name'], $_POST['password'], $_POST['email'], $_POST['name_display']);
+                }
+                break;
         }
     }
     if (preg_match('/\/logout\//', $_GET['path'])) {

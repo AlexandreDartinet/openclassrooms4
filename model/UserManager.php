@@ -8,7 +8,10 @@ class UserManager extends Manager {
             $user = new User($req->fetch());
             $req->closeCursor();
             if(password_verify($password, $user->password)) {
+                $user->last_seen = User::now();
+                $user->ip = $_SERVER['REMOTE_ADDR'];
                 $_SESSION['user'] = $user;
+                $this->setUser($user);
                 return true;
             }
         }
@@ -47,11 +50,11 @@ class UserManager extends Manager {
 
     public function setUser(User $user) {
         if ($user->id == 0) {
-            $req = $this->_db->prepare('INSERT INTO users(name, password, mail, level, ip, name_display) VALUES (?, ?, ?, ?, ?, ?)');
+            $req = $this->_db->prepare('INSERT INTO users(name, password, email, level, ip, name_display) VALUES (?, ?, ?, ?, ?, ?)');
             $exec = $req->execute([
                 $user->name,
                 $user->password,
-                $user->mail,
+                $user->email,
                 $user->level,
                 $user->ip,
                 $user->name_display
@@ -59,11 +62,11 @@ class UserManager extends Manager {
             
         }
         else {
-            $req = $this->_db->prepare('UPDATE users SET name=?, password=?, mail=?, level=?, ip=?, name_display=?, last_seen=NOW() WHERE id=?');
+            $req = $this->_db->prepare('UPDATE users SET name=?, password=?, email=?, level=?, ip=?, name_display=?, last_seen=NOW() WHERE id=?');
             $exec = $req->execute([
                 $user->name,
                 $user->password,
-                $user->mail,
+                $user->email,
                 $user->level,
                 $user->ip,
                 $user->name_display,
@@ -72,5 +75,23 @@ class UserManager extends Manager {
         }
         $req->closeCursor();
         return $exec;
+    }
+
+    public function exists($name, $value) {
+        $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM users WHERE `$name`=?");
+        if($req->execute([$value])) {
+            $res = $req->fetch();
+            $req->closeCursor();
+            $count = (int) $res['count'];
+            if($count == 0) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
     }
 }
