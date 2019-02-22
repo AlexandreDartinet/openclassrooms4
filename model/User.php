@@ -33,7 +33,7 @@ class User extends DbObject {
                 }
                 break;
             case "email":
-                if(preg_match('/^.+@\w+\.\w+$/', $value)) {
+                if(self::isEmail($value)) {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {

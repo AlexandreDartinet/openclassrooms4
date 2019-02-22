@@ -35,12 +35,16 @@ abstract class DbObject {
         return preg_replace('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', '$3/$2/$1 à $4h$5', $this->$name);
     }
 
-    protected static function isDate(string $date) {
+    public static function isDate(string $date) {
         return preg_match('/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/', $date);
     }
 
-    protected static function isIp(string $ip) {
+    public static function isIp(string $ip) {
         return preg_match('/^\d{1,3}(\.\d{1,3}){3}$/', $ip);
+    }
+
+    public static function isEmail(string $email) {
+        return preg_match('/^.+@\w+\.\w+$/', $email);
     }
 
     public static function now() {
