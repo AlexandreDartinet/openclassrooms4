@@ -70,4 +70,5 @@ if($post->comments_nbr != 0) {
 }
 
 $content = ob_get_clean();
+
 require('template.php');

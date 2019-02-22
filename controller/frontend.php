@@ -29,3 +29,15 @@ function commentPost(int $id_post, string $name, string $content, int $reply_to)
     $commentManager->setComment($comment);
     header("Location: /post/$id_post/");
 }
+
+function login($name, $password, $path) {
+    $userManager = new UserManager();
+    if($userManager->login($name, $password)) {
+        header("Location: $path");
+    }
+}
+
+function logout() {
+    $_SESSION['user'] = User::default();
+    header("Location: /");
+}

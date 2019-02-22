@@ -2,6 +2,9 @@
 
 class User extends DbObject {
     const LEVEL_ANON = 1;
+    const LEVEL_USER = 2;
+    const LEVEL_MODERATOR = 3;
+    const LEVEL_EDITOR = 4;
     const LEVEL_ADMIN = 5;
 
     public function __construct(array $data) {

@@ -3,18 +3,17 @@
 class UserManager extends Manager {
 
     public function login(string $name, string $password) {
-        $req = $this->_db->prepare('SELECT * FROM users WHERE name=? AND password=?');
-        if($req->execute([$name, password_hash($password, PASSWORD_DEFAULT)])) {
+        $req = $this->_db->prepare('SELECT * FROM users WHERE name=?');
+        if($req->execute([$name])) {
             $user = new User($req->fetch());
             $req->closeCursor();
-            $_SESSION['user'] = $user;
-            return true;
+            if(password_verify($password, $user->password)) {
+                $_SESSION['user'] = $user;
+                return true;
+            }
         }
-        else {
-            throw new Exception("Nom d'utilisateur ou mot de passe incorrect.");
-            return false;
-        }
-        
+        throw new Exception("Nom d'utilisateur ou mot de passe incorrect.");
+        return false;
     }
 
     public function getUsers() {
@@ -30,6 +29,7 @@ class UserManager extends Manager {
         }
         else {
             throw new Exception("Aucun utilisateur trouvé.");
+            return [];
         }
     }
     public function getUserById(int $id) {
@@ -41,6 +41,7 @@ class UserManager extends Manager {
         }
         else {
             throw new Exception("Aucun utilisateur correspondant à l'id $id.");
+            return false;
         }
     }
 

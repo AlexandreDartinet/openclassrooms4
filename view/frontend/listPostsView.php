@@ -23,4 +23,5 @@ foreach($posts as &$post) {
 <?php
 }
 $content = ob_get_clean();
+
 require('template.php');
