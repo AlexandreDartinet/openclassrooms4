@@ -47,8 +47,6 @@ if(USE_PHPMAILER) {
     catch (Exception $e) {
         echo 'Veuillez installer PHPMailer <a href="https://github.com/PHPMailer/PHPMailer">https://github.com/PHPMailer/PHPMailer</a>.<br/>'.$e->getMessage();
     }
-    // use PHPMailer\PHPMailer\PHPMailer;
-    // use PHPMailer\PHPMailer\Exception;
     function smtpMailer($to, $from, $from_name, $subject, $body) {
         $mail = new PHPMailer\PHPMailer\PHPMailer();
         $mail->IsSMTP();
