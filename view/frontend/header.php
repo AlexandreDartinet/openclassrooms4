@@ -36,6 +36,7 @@ else {
 }
 ?>
 </div>
+<h1> Le blog </h1>
 </header>
 
 <?php

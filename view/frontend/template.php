@@ -15,7 +15,6 @@
         
     <body>
         <?= $header ?>
-        <h1> Le blog </h1>
         <?= $content ?>
         <?= $footer ?>
     </body>
