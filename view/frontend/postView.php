@@ -33,8 +33,10 @@ else {
     <input type="hidden" name="reply_to" value="<?= $reply_to ?>" required/>
 
     <div>
+
         <label for="name">Auteur</label><br/>
-        <input type="text" id="name" name="name" value="<?= $_SESSION['user']->name_display ?>" required/>
+        <input type="text" id="name" name="name" value="<?= $_SESSION['user']->name_display ?>" required<?= ($_SESSION['user']->id != 0)?' readonly':'' ?>/>
+
     </div>
     <div>
         <label for="content">Commentaire</label><br/>
