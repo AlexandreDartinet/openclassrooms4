@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
 -- Structure de la table `reported_comments`
 --
 
-CREATE TABLE IF NOT EXISTS `reported_comments` (
+CREATE TABLE IF NOT EXISTS `reports` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_comment` int(11) NOT NULL,
   `id_user` int(11) NOT NULL DEFAULT '0',
@@ -93,7 +93,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(32) NOT NULL,
   `password` varchar(255) NOT NULL,
-  `mail` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
   `date_inscription` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `last_seen` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `level` int(11) NOT NULL DEFAULT '1',
