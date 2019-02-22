@@ -1,4 +1,5 @@
-<?php require('navigation.php'); ?>
+<?php require('header.php'); ?>
+<?php require('footer.php'); ?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -13,8 +14,9 @@
     </head>
         
     <body>
-        <?= $navigation ?>
+        <?= $header ?>
         <h1> Le blog </h1>
         <?= $content ?>
+        <?= $footer ?>
     </body>
 </html>

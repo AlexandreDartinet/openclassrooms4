@@ -1,7 +1,7 @@
 <?php
 ob_start();
 ?>
-
+<header>
 <div id="nav">
         <nav>
             <a href="/">Accueil</a>
@@ -36,8 +36,9 @@ else {
 }
 ?>
 </div>
+</header>
 
 <?php
 
 
-$navigation = ob_get_clean();
+$header = ob_get_clean();
