@@ -1,5 +1,12 @@
 <?php
-define("DB_HOST","DATABASE HOST");
-define("DB_USER","DATABASE USER");
-define("DB_PASSWORD","DATABASE PASSWORD");
-define("DB_BASE","DATABASE NAME");
+define("DB_HOST","XXX");
+define("DB_USER","XXX");
+define("DB_PASSWORD","XXX");
+define("DB_BASE","XXX");
+
+define("SMTP_HOST","XXX");
+define("SMTP_USER","XXX");
+define("SMTP_PASSWORD","XXX");
+define("SMTP_PORT",0);
+define("CONTACT_MAIL","XXX");
+define("PHPMAILER_PATH", "model/PHPMailer/");
