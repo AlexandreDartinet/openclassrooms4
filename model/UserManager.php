@@ -94,4 +94,16 @@ class UserManager extends Manager {
             return false;
         }
     }
+
+    public function countUsers() {
+        $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM users");
+        if($req->execute()) {
+            $res = $req->fetch();
+            $req->closeCursor();
+            return (int) $res['count'];
+        }
+        else {
+            return 0;
+        }
+    }
 }
