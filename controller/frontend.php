@@ -37,6 +37,18 @@ function viewProfileEdit() {
         require("view/frontend/profileEditView.php");
     }
 }
+function viewContactForm() {
+    if($_SESSION['user']->id != 0) {
+        $name = $_SESSION['user']->name_display;
+        $email = $_SESSION['user']->email;
+    }
+    else {
+        $name = '';
+        $email = '';
+    }
+    
+    require('view/frontend/contactFormView.php');
+}
 
 function commentPost(int $id_post, string $name, string $content, int $reply_to) {
     $commentManager = new CommentManager();
@@ -59,6 +71,25 @@ function login($name, $password, $path) {
 function logout() {
     $_SESSION['user'] = User::default();
     header("Location: /");
+}
+
+function sendContactForm($from, $from_name, $message) {
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $body = 
+"Message envoyé par $from_name <$from> depuis l'IP : $ip.
+--------------------------------------------------------
+$message
+--------------------------------------------------------";
+    $bodyConfirm = 
+"Votre message a bien été envoyé à ".SITE_URL."
+--------------------------------------------------------
+$message
+--------------------------------------------------------
+Une réponse vous sera donnée sous peu.
+Ceci est un mail automatique, merci de ne pas y répondre.";
+    smtpMailer(CONTACT_MAIL, $from, $from_name, "Message de $from_name <$from> sur le site ".SITE_URL, $body);
+    smtpMailer($from, "noreply@".SITE_URL, "noreply", "Confirmation de l'envoi de votre message a ".SITE_URL, $bodyConfirm);
+    header('Location: /');
 }
 
 function registerUser($name, $password, $email, $name_display) {

@@ -37,6 +37,10 @@ try {
                         modifyUser((int) $_POST['id'], $_POST['name'], $_POST['name_display'], $_POST['email'], $password, $old_password);
                     }
                     break;
+                case "sendContactForm":
+                    if(isset($_POST['email']) && isset($_POST['name']) && isset($_POST['message'])) {
+                        sendContactForm($_POST['email'], $_POST['name'], $_POST['message']);
+                    }
             }
         }
         if (preg_match('/^\/logout\//', $_GET['path'])) {
@@ -52,7 +56,9 @@ try {
         elseif (preg_match('/^\/profile\/edit\//', $_GET['path'])) {
             viewProfileEdit();
         }
-
+        elseif (preg_match('/^\/contact\//', $_GET['path'])) {
+            viewContactForm();
+        }
         elseif ($_GET['path'] == "/") {
             listPosts();
         }
