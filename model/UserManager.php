@@ -12,6 +12,8 @@ class UserManager extends Manager {
                 $user->ip = $_SERVER['REMOTE_ADDR'];
                 $_SESSION['user'] = $user;
                 $this->setUser($user);
+                $recoverManager = new RecoverManager();
+                $recoverManager->removeRecoversByUser($user);
                 return true;
             }
         }
@@ -35,6 +37,7 @@ class UserManager extends Manager {
             return [];
         }
     }
+
     public function getUserById(int $id) {
         $req = $this->_db->prepare('SELECT * FROM users WHERE id=?');
         if($req->execute([$id])) {
@@ -44,6 +47,23 @@ class UserManager extends Manager {
         }
         else {
             throw new Exception("Aucun utilisateur correspondant à l'id $id.");
+            return false;
+        }
+    }
+
+    public function getUsersBy(string $name, $value) {
+        $req = $this->_db->prepare("SELECT * FROM users WHERE `$name`=?");
+        if($req->execute([$value])) {
+            $users = [];
+            while($line = $req->fetch()) {
+                $user = new User($line);
+                $users[] = $user;
+            }
+            $req->closeCursor();
+            return $users;
+        }
+        else {
+            throw new Exception("Aucun utilisateur correspondant au $name $value.");
             return false;
         }
     }
