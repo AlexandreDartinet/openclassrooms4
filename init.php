@@ -40,6 +40,21 @@ session_start();
 if(!isset($_SESSION["user"])) {
     $_SESSION["user"] = User::default();
 }
+$userManager = new UserManager();
+if($userManager->countUsers() == 0) {
+    $user = new User([
+        "id" => 0,
+        "name" => "admin",
+        "password" => password_hash("123456", PASSWORD_DEFAULT),
+        "email" => CONTACT_MAIL,
+        "date_inscription" => User::now(),
+        "last_seen" => User::now(),
+        "level" => User::LEVEL_ADMIN,
+        "ip" => $_SERVER["REMOTE_ADDR"],
+        "name_display" => "Administrateur"
+    ]);
+    $userManager->setUser($user);
+}
 if(USE_PHPMAILER) {
     try {
         include PHPMAILER_PATH.'src/Exception.php';
