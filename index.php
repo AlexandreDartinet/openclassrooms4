@@ -1,5 +1,4 @@
 <?php
-require('config.php');
 require('init.php');
 require('controller/frontend.php');
 
@@ -21,9 +20,12 @@ try {
     if (preg_match('/\/logout\//', $_GET['path'])) {
         logout();
     }
-    if (preg_match('/^\/post\//', $_GET['path'])) {
+    elseif (preg_match('/^\/post\//', $_GET['path'])) {
         $id = (int) preg_replace('/^\/post\/(\d+)\//', '$1', $_GET['path']);
         viewPost($id);
+    }
+    elseif (preg_match('/^\/register\//', $_GET['path'])) {
+        viewRegister();
     }
     else {
         listPosts();
