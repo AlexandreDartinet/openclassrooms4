@@ -1,4 +1,5 @@
 <?php
+$title = "Inscription";
 ob_start();
 ?>
 <h2>Formulaire d'inscription :</h2>
