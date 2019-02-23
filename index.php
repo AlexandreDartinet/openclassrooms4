@@ -13,15 +13,24 @@ try {
                     if(isset($_POST['id_post']) && isset($_POST['name']) && isset($_POST['content'])) {
                         commentPost((int) $_POST['id_post'], (string) $_POST['name'], (string) $_POST['content'], (int) $_POST['reply_to']);
                     }
+                    else {
+                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                    }
                     break;
                 case "login":
                     if(isset($_POST['name']) && isset($_POST['password']) && isset($_GET['path'])) {
                         login($_POST['name'], $_POST['password'], $_GET['path']);
                     }
+                    else {
+                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                    }
                     break;
                 case "registerUser":
-                    if(isset($_POST['name']) && isset($_POST['password']) && isset($_POST['email']) && isset($_POST['name_display'])) {
-                        registerUser($_POST['name'], $_POST['password'], $_POST['email'], $_POST['name_display']);
+                    if(isset($_POST['name']) && isset($_POST['password']) && isset($_POST['password_confirm']) && isset($_POST['email']) && isset($_POST['email_confirm']) && isset($_POST['name_display'])) {
+                        registerUser($_POST['name'], $_POST['password'], $_POST['password_confirm'], $_POST['email'], $_POST['email_confirm'], $_POST['name_display']);
+                    }
+                    else {
+                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                     }
                     break;
                 case "modifyUser":
@@ -37,15 +46,35 @@ try {
                         }
                         modifyUser((int) $_POST['id'], $_POST['name'], $_POST['name_display'], $_POST['email'], $_POST['email_confirm'], $password, $password_confirm, $old_password);
                     }
+                    else {
+                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                    }
                     break;
                 case "sendContactForm":
-                    if(isset($_POST['email']) && isset($_POST['name']) && isset($_POST['message'])) {
-                        sendContactForm($_POST['email'], $_POST['name'], $_POST['message']);
+                    if(isset($_POST['email']) && isset($_POST['email_confirm']) && isset($_POST['name']) && isset($_POST['message'])) {
+                        sendContactForm($_POST['email'], $_POST['email_confirm'], $_POST['name'], $_POST['message']);
+                    }
+                    else {
+                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                     }
                 case "sendRecover":
                     if(isset($_POST['recover'])) {
                         sendRecover($_POST['recover']);
                     }
+                    else {
+                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                    }
+                    break;
+                case "useRecover":
+                    if(isset($_POST['key']) && isset($_POST['id_user']) && isset($_POST['password']) && isset($_POST['password_confirm'])) {
+                        useRecover($_POST['key'], (int) $_POST['id_user'], $_POST['password'], $_POST['password_confirm']);
+                    }
+                    else {
+                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                    }
+                    break;
+                default:
+                    throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: l\'action n\'existe pas.');
                     break;
             }
         }
