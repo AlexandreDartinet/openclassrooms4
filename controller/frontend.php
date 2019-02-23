@@ -1,6 +1,19 @@
 <?php
+/**
+ * Toutes les fonctions relatives à l'affichage et au traitement des données de la partie frontend du site
+ */
 
+ /**
+  * Fonctions relatives à l'affichage
+  */
 
+/**
+ * Liste les posts
+ * 
+ * @param int $page : Quelle page on souhaite afficher (par défaut 1)
+ * 
+ * @return void
+ */
 function listPosts(int $page = 1) {
     $postManager = new PostManager();
     $posts = $postManager->getPosts();
@@ -8,6 +21,14 @@ function listPosts(int $page = 1) {
     require("view/frontend/listPostsView.php");
 }
 
+/**
+ * Affiche un post et ses commentaires.
+ * 
+ * @param int $id : Identifiant du post à afficher
+ * @param int $page : Quelle page des commentaires on souhaite afficher (par défaut 1)
+ * 
+ * @return void
+ */
 function viewPost(int $id, $page = 1) {
     $postManager = new PostManager();
     $post = $postManager->getPostById($id);
@@ -19,6 +40,11 @@ function viewPost(int $id, $page = 1) {
     require("view/frontend/postView.php");
 }
 
+/**
+ * Affiche le formulaire d'enregistrement si l'utilisateur n'est pas connecté
+ * 
+ * @return void
+ */
 function viewRegister() {
     if($_SESSION['user']->id != 0) {
         header('Location: /');
@@ -28,6 +54,11 @@ function viewRegister() {
     }
 }
 
+/**
+ * Affiche le formulaire de modification de profil si l'utilisateur est connecté
+ * 
+ * @return void
+ */
 function viewProfileEdit() {
     if($_SESSION['user']->id == 0) {
         header('Location: /');
@@ -37,6 +68,12 @@ function viewProfileEdit() {
         require("view/frontend/profileEditView.php");
     }
 }
+
+/**
+ * Affiche le formulaire de contact
+ * 
+ * @return void
+ */
 function viewContactForm() {
     if($_SESSION['user']->id != 0) {
         $name = $_SESSION['user']->name_display;
@@ -50,6 +87,20 @@ function viewContactForm() {
     require('view/frontend/contactFormView.php');
 }
 
+/**
+ * Fonctions relatives au traitement des données
+ */
+
+/**
+ * Enregistrement d'un nouveau commentaire et renvoi de l'utilisateur sur la page du post qu'il vient de commenter
+ * 
+ * @param int $id_post : Identifiant du post à commenter
+ * @param string $name : Nom de l'auteur renseigné (utile si auteur anonyme)
+ * @param string $content : Le corps du commentaire
+ * @param int $reply_to : L'identifiant du commentaire auquel on répond (0 si le commentaire n'est pas une réponse)
+ * 
+ * @return void
+ */
 function commentPost(int $id_post, string $name, string $content, int $reply_to) {
     $commentManager = new CommentManager();
     $comment = Comment::default();
@@ -61,63 +112,136 @@ function commentPost(int $id_post, string $name, string $content, int $reply_to)
     header("Location: /post/$id_post/");
 }
 
-function login($name, $password, $path) {
+/**
+ * Connecte un utilisateur à son compte et raffraichit la page sur laquelle il était avant la connexion
+ * 
+ * @param string $name : Nom de l'utilisateur
+ * @param string $password : Mot de passe de l'utilisateur en clair
+ * @param string $path : Chemin de la page au moment de la connexion
+ * 
+ * @return void
+ */
+function login(string $name, string $password, string $path) {
     $userManager = new UserManager();
     if($userManager->login($name, $password)) {
         header("Location: $path");
     }
 }
 
+/**
+ * Déconnecte un utilisateur et le renvoie à la page d'accueil du site
+ * 
+ * @return void
+ */
 function logout() {
     $_SESSION['user'] = User::default();
     header("Location: /");
 }
 
-function sendContactForm($from, $from_name, $message) {
-    $ip = $_SERVER['REMOTE_ADDR'];
-    $body = 
+/**
+ * Envoie le contenu du formulaire de contact à l'administrateur, et envoie une confirmation à l'expéditeur
+ * 
+ * @param string $from : Adresse mail de l'expéditeur
+ * @param string $from_confirm : Confirmation de l'adresse mail de l'expéditeur
+ * @param string $from_name : Nom de l'expéditeur
+ * @param string $message : Contenu du message
+ * 
+ * @return void
+ */
+function sendContactForm(string $from, string $from_confirm, string $from_name, string $message) {
+    if($from == $from_confirm) {
+        $ip = $_SERVER['REMOTE_ADDR'];
+        $body = 
 "Message envoyé par $from_name <$from> depuis l'IP : $ip.
 --------------------------------------------------------
+
 $message
+
 --------------------------------------------------------";
-    $bodyConfirm = 
+        $bodyConfirm = 
 "Votre message a bien été envoyé à ".SITE_URL."
 --------------------------------------------------------
+
 $message
+
 --------------------------------------------------------
 Une réponse vous sera donnée sous peu.
 Ceci est un mail automatique, merci de ne pas y répondre.";
-    smtpMailer(CONTACT_MAIL, $from, $from_name, "Message de $from_name <$from> sur le site ".SITE_URL, $body);
-    smtpMailer($from, "noreply@".SITE_URL, "noreply", "Confirmation de l'envoi de votre message a ".SITE_URL, $bodyConfirm);
-    header('Location: /');
+        smtpMailer(CONTACT_MAIL, $from, $from_name, "Message de $from_name <$from> sur le site ".SITE_URL, $body);
+        smtpMailer($from, "noreply@".SITE_URL, "noreply", "Confirmation de l'envoi de votre message a ".SITE_URL, $bodyConfirm);
+        header('Location: /');
+        return;
+    }
+    else {
+        header('Location: /contact/retry/email_confirm/');
+        return;
+    }
 }
 
-function registerUser($name, $password, $email, $name_display) {
+/**
+ * Enregistre un nouvel utilisateur dans la base de données, le connecte, lui envoie une confirmation par mail et le renvoie à la page d'accueil.
+ * Le renvoie au formulaire d'enregistrement avec un message d'erreur en cas de mauvaise saisie/duplication de données uniques.
+ * 
+ * @param string $name : Nom de l'utilisateur (unique)
+ * @param string $password : Mot de passe en clair
+ * @param string $password_confirm : Confirmation du mot de passe en clair
+ * @param string $email : Email de l'utilisateur
+ * @param string $email_confirm : Confirmation de l'email de l'utilisateur
+ * @param string $name_display : Nom d'affichage de l'utilisateur
+ * 
+ * @return void
+ */
+function registerUser(string $name, string $password, string $password_confirm, string $email, string $email_confirm, string $name_display) {
     $userManager = new UserManager();
     if($_SESSION['user']->id != 0) {
         header('Location: /');
+        return;
     }
-    elseif($userManager->exists('name', $name)) {
+    if($userManager->exists('name', $name)) {
         header('Location: /register/retry/name/');
+        return;
     }
-    elseif($userManager->exists('name_display', $name_display)) {
+    if($userManager->exists('name_display', $name_display)) {
         header('Location: /register/retry/name_display/');
+        return;
     }
-    else {
-        $_SESSION['user']->name = $name;
-        $_SESSION['user']->password = password_hash($password, PASSWORD_DEFAULT);
-        $_SESSION['user']->email = $email;
-        $_SESSION['user']->date_inscription = User::now();
-        $_SESSION['user']->last_seen = User::now();
-        $_SESSION['user']->level = User::LEVEL_USER;
-        $_SESSION['user']->name_display = $name_display;
-        $userManager->setUser($_SESSION['user']);
-        $userManager->login($name, $password);
-        smtpMailer($email, "noreply@".SITE_URL, "noreply", "Nouveau compte sur ".SITE_URL, "Le compte $name a été créé.\nCeci est un mail automatique, merci de ne pas y répondre.");
-        header('Location: /');
+    if($password != $password_confirm) {
+        header('Location: /register/retry/password_confirm/');
+        return;
     }
-}
+    if($email != $email_confirm) {
+        header('Location: /register/retry/email_confirm/');
+        return;
+    }
+    $_SESSION['user']->name = $name;
+    $_SESSION['user']->password = password_hash($password, PASSWORD_DEFAULT);
+    $_SESSION['user']->email = $email;
+    $_SESSION['user']->date_inscription = User::now();
+    $_SESSION['user']->last_seen = User::now();
+    $_SESSION['user']->level = User::LEVEL_USER;
+    $_SESSION['user']->name_display = $name_display;
+    $userManager->setUser($_SESSION['user']);
+    $userManager->login($name, $password);
+    smtpMailer($email, "noreply@".SITE_URL, "noreply", "Nouveau compte sur ".SITE_URL, "Le compte $name a été créé.\nCeci est un mail automatique, merci de ne pas y répondre.");
+    header('Location: /');
 
+}
+/**
+ * Modifie le profil de l'utilisateur connecté en session et dans la bdd.
+ * Renvoie l'utilisateur à la page d'accueil si il n'est pas connecté
+ * Renvoie l'utilisateur à la page de profil avec un message d'erreur si une donnée est erronée, sans sinon.
+ * 
+ * @param int $id : Identifiant d'utilisateur fourni par le formulaire
+ * @param string $name : Nom d'utilisateur
+ * @param string $name_display : Nom d'affichage
+ * @param string $email : Email
+ * @param string $email_confirm : Confirmation de l'email
+ * @param string $password : Nouveau mot de passe en clair
+ * @param string $password_confirm : Confirmation du nouveau mot de passe en clair
+ * @param string $old_password : Ancien mot de passe en clair
+ * 
+ * @return void
+ */
 function modifyUser(int $id, string $name, string $name_display, string $email, string $email_confirm, string $password, string $password_confirm, string $old_password) {
     $user = clone $_SESSION['user'];
     $userManager = new UserManager();
