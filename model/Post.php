@@ -4,44 +4,47 @@ class Post extends DbObject {
     const EXTRACT_LENGTH = 500;
 
     public function __set($name, $value) {
-        switch($name) {
-            case "id":
-                $this->_attributes[$name] = (int) $value;
-                break;
-            case "date_publication":
-                if(self::isDate($value)) {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("$name n'est pas une date.");
-                }
-                break;
-            case "id_user":
-                $this->_attributes[$name] = (int) $value;
-                break;
-            case "title":
-                if($value != "") {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("$name est vide.");
-                }
-                break;
-            case "content":
-                if($value != "") {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("$name est vide.");
-                }
-                break;
-            case "published":
-                $this->_attributes[$name] = (boolean) $value;
-                break;
-            case "comments_nbr":
-                $this->_attributes[$name] = (int) $value;
-            default:
-                break;
+        if(!is_int($name)) {
+            switch($name) {
+                case "id":
+                    $this->_attributes[$name] = (int) $value;
+                    break;
+                case "date_publication":
+                    if(self::isDate($value)) {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("Post: $name($value) n'est pas une date.");
+                    }
+                    break;
+                case "id_user":
+                    $this->_attributes[$name] = (int) $value;
+                    break;
+                case "title":
+                    if($value != "") {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("Post: $name($value) est vide.");
+                    }
+                    break;
+                case "content":
+                    if($value != "") {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("Post: $name($value) est vide.");
+                    }
+                    break;
+                case "published":
+                    $this->_attributes[$name] = (boolean) $value;
+                    break;
+                case "comments_nbr":
+                    $this->_attributes[$name] = (int) $value;
+                default:
+                    throw new Exception("Post: $name($value) attribut inconnu.");
+                    break;
+            }
         }
     }
 

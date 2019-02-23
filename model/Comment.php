@@ -4,54 +4,59 @@ class Comment extends DbObject {
 
 
     public function __set($name, $value) {
-        switch($name) {
-            case "id":
-                $this->_attributes[$name] = (int) $value;
-                break;
-            case "id_post":
-                $this->_attributes[$name] = (int) $value;
-                break;
-            case "id_user":
-                $this->_attributes[$name] = (int) $value;
-                break;
-            case "reply_to":
-                $this->_attributes[$name] = (int) $value;
-                break;
-            case "date_publication":
-                if(self::isDate($value)) {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("$name n'est pas une date.");
-                }
-                break;
-            case "ip":
-                if(self::isIp($value)) {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("$name n'est pas une ip.");
-                }
-                break;
-            case "name":
-                if($value != "") {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("$name est vide.");
-                }
-                break;
-            case "content":
-                if($value != "") {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("$name est vide.");
-                }
-                break;
-            case "replies_nbr":
-                $this->_attributes[$name] = (int) $value;
-                break;
+        if(!is_int($name)) {
+            switch($name) {
+                case "id":
+                    $this->_attributes[$name] = (int) $value;
+                    break;
+                case "id_post":
+                    $this->_attributes[$name] = (int) $value;
+                    break;
+                case "id_user":
+                    $this->_attributes[$name] = (int) $value;
+                    break;
+                case "reply_to":
+                    $this->_attributes[$name] = (int) $value;
+                    break;
+                case "date_publication":
+                    if(self::isDate($value)) {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("Comment: $name($value) n'est pas une date.");
+                    }
+                    break;
+                case "ip":
+                    if(self::isIp($value)) {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("Comment: $name($value) n'est pas une ip.");
+                    }
+                    break;
+                case "name":
+                    if($value != "") {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("Comment: $name($value) est vide.");
+                    }
+                    break;
+                case "content":
+                    if($value != "") {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("Comment: $name($value) est vide.");
+                    }
+                    break;
+                case "replies_nbr":
+                    $this->_attributes[$name] = (int) $value;
+                    break;
+                default:
+                    throw new Exception("Comment: $name($value) attribut inconnu.");
+                    break;
+            }
         }
     }
 

@@ -12,71 +12,74 @@ class User extends DbObject {
     }
 
     public function __set($name, $value) {
-        switch($name) {
-            case "id":
-                $this->_attributes[$name] = (int) $value;
-                break;
-            case "name":
-                if($value != "") {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("L'attribut name est vide.");
-                }
-                break;
-            case "password":
-                if($value != "") {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("password est vide.");
-                }
-                break;
-            case "email":
-                if(self::isEmail($value)) {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("mail invalide.");
-                }
-                break;
-            case "date_inscription":
-                if(self::isDate($value)) {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("Date d'inscription invalide");
-                }
-                break;
-            case "last_seen":
-                if(self::isDate($value)) {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("Last seen invalide");
-                }
-                break;
-            case "level":
-                $this->_attributes[$name] = (int) $value;
-                break;
-            case "ip":
-                if(self::isIp($value)) {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("ip invalide.");
-                }
-                break;
-            case "name_display":
-                if($value != "") {
-                    $this->_attributes[$name] = (string) $value;
-                }
-                else {
-                    throw new Exception("Nom d'affichage invalide.");
-                }
-                break;
-            default:
-                break;
+        if(!is_int($name)) {
+            switch($name) {
+                case "id":
+                    $this->_attributes[$name] = (int) $value;
+                    break;
+                case "name":
+                    if($value != "") {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("User: $name($value) est vide.");
+                    }
+                    break;
+                case "password":
+                    if($value != "") {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("User: $name($value) est vide.");
+                    }
+                    break;
+                case "email":
+                    if(self::isEmail($value)) {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("User: $name($value) invalide.");
+                    }
+                    break;
+                case "date_inscription":
+                    if(self::isDate($value)) {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("User: $name($value) invalide");
+                    }
+                    break;
+                case "last_seen":
+                    if(self::isDate($value)) {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("User: $name($value) invalide");
+                    }
+                    break;
+                case "level":
+                    $this->_attributes[$name] = (int) $value;
+                    break;
+                case "ip":
+                    if(self::isIp($value)) {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("User: $name($value) invalide.");
+                    }
+                    break;
+                case "name_display":
+                    if($value != "") {
+                        $this->_attributes[$name] = (string) $value;
+                    }
+                    else {
+                        throw new Exception("User: $name($value) invalide.");
+                    }
+                    break;
+                default:
+                    throw new Exception("User: $name($value) inconnu.");
+                    break;
+            }
         }
     }
 
