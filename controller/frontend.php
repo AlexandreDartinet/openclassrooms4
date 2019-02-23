@@ -118,7 +118,7 @@ function registerUser($name, $password, $email, $name_display) {
     }
 }
 
-function modifyUser(int $id, string $name, string $name_display, string $email, string $password, string $old_password) {
+function modifyUser(int $id, string $name, string $name_display, string $email, string $email_confirm, string $password, string $password_confirm, string $old_password) {
     $user = clone $_SESSION['user'];
     $userManager = new UserManager();
     if($id != $user->id) {
@@ -126,7 +126,13 @@ function modifyUser(int $id, string $name, string $name_display, string $email, 
     }
     if($old_password != '' && $password != '') {
         if(password_verify($old_password, $user->password)) {
-            $user->password = password_hash($password, PASSWORD_DEFAULT);
+            if($password == $password_confirm) {
+                $user->password = password_hash($password, PASSWORD_DEFAULT);
+            }
+            else {
+                header('Location: /profile/edit/retry/password_confirm/');
+                return;
+            }
         }
         else {
             header('Location: /profile/edit/retry/password/');
@@ -151,7 +157,15 @@ function modifyUser(int $id, string $name, string $name_display, string $email, 
             $user->name_display = $name_display;
         }
     }
-    $user->email = $email;
+    if($user->email != $email) {
+        if($email == $email_confirm) {
+            $user->email = $email;
+        }
+        else {
+            header('Location: /profile/edit/retry/email_confirm/');
+            return;
+        }
+    }
     $user->ip = $_SERVER['REMOTE_ADDR'];
     $user->last_seen = User::now();
     $userManager->setUser($user);

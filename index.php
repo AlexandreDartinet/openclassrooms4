@@ -25,26 +25,39 @@ try {
                     }
                     break;
                 case "modifyUser":
-                    if(isset($_POST['id']) && isset($_POST['name']) && isset($_POST['email']) && isset($_POST['name_display'])) {
-                        if(isset($_POST['password']) && isset($_POST['old_password'])) {
+                    if(isset($_POST['id']) && isset($_POST['name']) && isset($_POST['email']) && isset($_POST['email_confirm']) && isset($_POST['name_display'])) {
+                        if(isset($_POST['password']) && isset($_POST['password_confirm']) && isset($_POST['old_password'])) {
                             $password = $_POST['password'];
+                            $password_confirm = $_POST['password_confirm'];
                             $old_password = $_POST['old_password'];
                         }
                         else {
                             $password = '';
                             $old_password = '';
                         }
-                        modifyUser((int) $_POST['id'], $_POST['name'], $_POST['name_display'], $_POST['email'], $password, $old_password);
+                        modifyUser((int) $_POST['id'], $_POST['name'], $_POST['name_display'], $_POST['email'], $_POST['email_confirm'], $password, $password_confirm, $old_password);
                     }
                     break;
                 case "sendContactForm":
                     if(isset($_POST['email']) && isset($_POST['name']) && isset($_POST['message'])) {
                         sendContactForm($_POST['email'], $_POST['name'], $_POST['message']);
                     }
+                case "sendRecover":
+                    if(isset($_POST['recover'])) {
+                        sendRecover($_POST['recover']);
+                    }
+                    break;
             }
         }
         if (preg_match('/^\/logout\//', $_GET['path'])) {
             logout();
+        }
+        elseif (preg_match('/^\/recover\/$/', $_GET['path'])) {
+            recoverPasswordView();
+        }
+        elseif (preg_match('/^\/recover\/.+\/$/', $_GET['path'])) {
+            $key = preg_replace('/^\/recover\/(.+)\/$/', '$1', $_GET['path']);
+            recoverPasswordLinkView($key);
         }
         elseif (preg_match('/^\/post\/\d+\//', $_GET['path'])) {
             $id = (int) preg_replace('/^\/post\/(\d+)\/.*$/', '$1', $_GET['path']);
