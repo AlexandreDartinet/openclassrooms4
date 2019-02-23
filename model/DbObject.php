@@ -25,7 +25,9 @@ abstract class DbObject {
 
     public function hydrate(array $data) {
         foreach ($data as $name => $value) {
-            $this->$name = $value;
+            if(!is_int($name)) {
+                $this->$name = $value;
+            }
         }
     }
 

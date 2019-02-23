@@ -4,34 +4,32 @@ class Recover extends DbObject {
     const HOURS_VALID = 1;
 
     public function __set($name, $value) {
-        if(!is_int($name)) {
-            switch($name) {
-                case "id":
-                    $this->_attributes[$name] = (int) $value;
-                    break;
-                case "id_user":
-                    $this->_attributes[$name] = (int) $value;
-                    break;
-                case "recover_key":
-                    if($value != "") {
-                        $this->_attributes[$name] = (string) $value;
-                    }
-                    else {
-                        throw new Exception("Recover: $name($value) invalide.");
-                    }
-                    break;
-                case "date_sent":
-                    if(self::isDate($value)) {
-                        $this->_attributes[$name] = (string) $value;
-                    }
-                    else {
-                        throw new Exception("Recover: $name($value) invalide.");
-                    }
-                    break;
-                default:
-                    throw new Exception("Recover: $name($value) attribut inconnu.");
-                    break;
-            }
+        switch($name) {
+            case "id":
+                $this->_attributes[$name] = (int) $value;
+                break;
+            case "id_user":
+                $this->_attributes[$name] = (int) $value;
+                break;
+            case "recover_key":
+                if($value != "") {
+                    $this->_attributes[$name] = (string) $value;
+                }
+                else {
+                    throw new Exception("Recover: $name($value) invalide.");
+                }
+                break;
+            case "date_sent":
+                if(self::isDate($value)) {
+                    $this->_attributes[$name] = (string) $value;
+                }
+                else {
+                    throw new Exception("Recover: $name($value) invalide.");
+                }
+                break;
+            default:
+                throw new Exception("Recover: $name($value) attribut inconnu.");
+                break;
         }
     }
 
