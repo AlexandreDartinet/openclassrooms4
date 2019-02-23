@@ -32,6 +32,7 @@ else {
             <input type="submit"/>
         </form>
         <a href="/register/">S'inscrire</a>
+        <a href="/recover/">Mot de passe oublié</a>
 <?php
 }
 ?>

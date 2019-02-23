@@ -78,15 +78,22 @@ try {
                     break;
             }
         }
+
+        if (preg_match('/\/retry\/\w+\//', $_GET['path'])) {
+            define('RETRY', preg_replace('/^.*\/retry\/(\w+)\/.*$/', '$1', $_GET['path']));
+        }
+        else {
+            define('RETRY','');
+        }
         if (preg_match('/^\/logout\//', $_GET['path'])) {
             logout();
         }
-        elseif (preg_match('/^\/recover\/$/', $_GET['path'])) {
-            recoverPasswordView();
+        elseif (preg_match('/^\/recover\/(retry\/\w+\/)?$/', $_GET['path'])) {
+            viewRecoverPassword();
         }
-        elseif (preg_match('/^\/recover\/.+\/$/', $_GET['path'])) {
-            $key = preg_replace('/^\/recover\/(.+)\/$/', '$1', $_GET['path']);
-            recoverPasswordLinkView($key);
+        elseif (preg_match('/^\/recover\/.+\/(retry\/\w+\/)?$/', $_GET['path'])) {
+            $key = preg_replace('/^\/recover\/(.+)\/(retry\/\w+\/)?$/', '$1', $_GET['path']);
+            viewRecoverPasswordLink($key);
         }
         elseif (preg_match('/^\/post\/\d+\//', $_GET['path'])) {
             $id = (int) preg_replace('/^\/post\/(\d+)\/.*$/', '$1', $_GET['path']);

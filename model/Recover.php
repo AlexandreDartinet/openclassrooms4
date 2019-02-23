@@ -1,7 +1,7 @@
 <?php
 
 class Recover extends DbObject {
-    const HOURS_VALID = 1;
+    const HOURS_VALID = "1";
 
     public function __set($name, $value) {
         switch($name) {

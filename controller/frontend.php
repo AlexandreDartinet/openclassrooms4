@@ -86,6 +86,39 @@ function viewContactForm() {
     
     require('view/frontend/contactFormView.php');
 }
+/**
+ * Affiche le formulaire d'envoi d'un lien de récupération de mot de passe
+ * 
+ * @return void
+ */
+function viewRecoverPassword() {
+    require('view/frontend/recoverPasswordView.php');
+}
+
+/**
+ * Affiche le formulaire de modification du mot de passe si la clé et valide et non expirée
+ * 
+ * @return void
+ */
+function viewRecoverPasswordLink($key) {
+    $recoverManager = new RecoverManager();
+    if($recoverManager->exists('recover_key', $key)) {
+        $recover = $recoverManager->getRecoverByKey($key);
+        if($recover->isValid()) {
+            $userManager = new UserManager();
+            $user = $userManager->getUserById($recover->id_user);
+            require('view/frontend/recoverPasswordLinkView.php');
+        }
+        else {
+            $recoverManager->removeRecover($recover);
+            header('Location: /recover/retry/date_sent/');
+        }
+    }
+    else {
+        header('Location: /recover/retry/recover_key/');
+        return;
+    }
+}
 
 /**
  * Fonctions relatives au traitement des données
@@ -295,4 +328,108 @@ function modifyUser(int $id, string $name, string $name_display, string $email, 
     $userManager->setUser($user);
     $_SESSION['user'] = $user;
     header('Location: /profile/edit/');
+}
+
+/**
+ * Envoie un mail de récupération à un utilisateur et enregistre la récupération en bdd.
+ * Renvoie l'utilisateur à la page d'accueuil si aucune erreur, sinon le renvoie au formulaire d'envoie avec une erreur
+ * 
+ * @param string $value : Nom ou email de l'utilisateur à qui envoyer le mail
+ * 
+ * @return void
+ */
+function sendRecover(string $value) {
+    $userManager = new UserManager();
+    if(User::isEmail($value)) {
+        if($userManager->exists('email', $value)) {
+            $users = $userManager->getUsersBy('email', $value);
+        }
+        else {
+            header('Location: /recover/retry/no_match_email/');
+            return;
+        }
+    }
+    else {
+        if($userManager->exists('name', $value)) {
+            $users = $userManager->getUsersBy('name', $value);
+        }
+        else {
+            header('Location: /recover/retry/no_match_name/');
+            return;
+        }
+    }
+    $sent = false;
+    foreach($users as &$user) {
+        $recoverManager = new RecoverManager();
+        if($recoverManager->exists('id_user', $user->id)) {
+            $recover = $recoverManager->getRecoverByUser($user);
+            if($recover->isValid()) {
+                $send = false;
+            }
+            else {
+                $recoverManager->removeRecover($recover);
+                $send = true;
+            }
+        }
+        else {
+            $send = true;
+        }
+        if($send) {
+            $recover = Recover::default();
+            $recover->id_user = $user->id;
+            $recover->recover_key = password_hash($user->email, PASSWORD_DEFAULT);
+            $recoverManager->setRecover($recover);
+            $subject = "Lien de modification du mot de passe ".SITE_URL;
+            $body = 
+"Une demande de réinitialisation a été soumise pour votre compte $user->name sur le site ".SITE_URL.".
+Vous pouvez modifier votre mot de passe à l'adresse https://".SITE_URL."/recover/$recover->recover_key/ .
+Ce lien expirera dans ".Recover::HOURS_VALID." heures.
+Ceci est un message automatique, merci de ne pas y répondre.";
+            smtpMailer($user->email, "noreply@".SITE_URL, "noreply", $subject, $body);
+            $sent = true;
+        }
+    }
+    if($sent) {
+        header('Location: /');
+    }
+    else {
+        header('Location: /recover/retry/nothing_sent/');
+    }
+}
+
+/**
+ * Change le mot de passe d'un utilisateur et le met en session en cas de succès.
+ * Renvoie à l'accueil en cas de succès. 
+ * Renvoie à la page appropriée avec un message d'erreur en cas d'échec.
+ * 
+ * @param string $key : clé du recover
+ * @param int $id_user : identifiant renvoyé par le formulaire
+ * @param string $password : Le nouveau mot de passe
+ * @param string $password_confirm : Confirmation du nouveau mot de passe
+ * 
+ * @return void
+ */
+function useRecover(string $key, int $id_user, string $password, string $password_confirm) {
+    if($password != $password_confirm) {
+        header("Location: /recover/$key/retry/password_confirm/");
+        return;
+    }
+    $recoverManager = new RecoverManager();
+    $recover = $recoverManager->getRecoverByKey($key);
+    if($recover->id_user != $id_user) {
+        header("Location: /recover/$key/retry/id_user/");
+        return;
+    }
+    if(!$recover->isValid()) {
+        $recoverManager->removeRecover($recover);
+        header("Location: /recover/retry/expired/");
+        return;
+    }
+    $userManager = new UserManager();
+    $user = $userManager->getUserById($id_user);
+    $user->password = password_hash($password, PASSWORD_DEFAULT);
+    $userManager->setUser($user);
+    $recoverManager->removeRecover($recover);
+    $_SESSION['user'] = $user;
+    header('Location: /');
 }
