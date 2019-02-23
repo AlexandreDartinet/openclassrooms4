@@ -1,5 +1,9 @@
+/**
+ * Script qui vérifie que les champs email et email_confirm sont identiques avant d'autoriser l'envoi du formulaire
+ */
+
 let email = document.getElementById("email");
-let confirm_email = document.getElementById("confirm_email");
+let confirm_email = document.getElementById("email_confirm");
 
 function validateEmail(){
   if(email.value != confirm_email.value) {

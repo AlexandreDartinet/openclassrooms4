@@ -1,12 +1,24 @@
 <?php
-require('init.php');
+/**
+ * Routeur de toutes les requêtes sur le site qui ne vont pas vers /public
+ */
+require('init.php'); // On inclut le fichier d'initialisation du site
 
-try {
+try { // Gestion des erreurs
+    /**
+     * Bloc de la section backend
+     */
     if(preg_match('/^\/admin\//', $_GET['path'])) {
         require('controller/backend.php');
     }
+    /**
+     * Bloc de la section frontend
+     */
     else {
-        require('controller/frontend.php');
+        require('controller/frontend.php'); // On inclut le contrôleur frontend
+        /**
+         * Gestion des différentes actions envoyées en post à la partie frontend
+         */
         if(isset($_POST['action'])) {
             switch($_POST['action']) {
                 case "commentPost":
@@ -35,12 +47,12 @@ try {
                     break;
                 case "modifyUser":
                     if(isset($_POST['id']) && isset($_POST['name']) && isset($_POST['email']) && isset($_POST['email_confirm']) && isset($_POST['name_display'])) {
-                        if(isset($_POST['password']) && isset($_POST['password_confirm']) && isset($_POST['old_password'])) {
+                        if(isset($_POST['password']) && isset($_POST['password_confirm']) && isset($_POST['old_password'])) { // Si le mot de passe est modifié
                             $password = $_POST['password'];
                             $password_confirm = $_POST['password_confirm'];
                             $old_password = $_POST['old_password'];
                         }
-                        else {
+                        else { // Sinon on envoie du rien
                             $password = '';
                             $old_password = '';
                         }
@@ -79,12 +91,15 @@ try {
             }
         }
 
-        if (preg_match('/\/retry\/\w+\//', $_GET['path'])) {
+        if (preg_match('/\/retry\/\w+\//', $_GET['path'])) { // Si il y a une erreur, on crée une variable globale la contenant
             define('RETRY', preg_replace('/^.*\/retry\/(\w+)\/.*$/', '$1', $_GET['path']));
         }
-        else {
+        else { // Sinon la variable est vide
             define('RETRY','');
         }
+        /**
+         * Routage vers les différentes pages en fonction de l'addresse fournie en utilisant le controlleur frontend
+         */
         if (preg_match('/^\/logout\//', $_GET['path'])) {
             logout();
         }
@@ -92,7 +107,10 @@ try {
             viewRecoverPassword();
         }
         elseif (preg_match('/^\/recover\/.+\/(retry\/\w+\/)?$/', $_GET['path'])) {
-            $key = preg_replace('/^\/recover\/(.+)\/(retry\/\w+\/)?$/', '$1', $_GET['path']);
+            /**
+             * On passe la clé fournie dans la barre d'adresse au controlleur
+             */
+            $key = preg_replace('/^\/recover\/(.+)\/(retry\/\w+\/)?$/', '$1', $_GET['path']); 
             viewRecoverPasswordLink($key);
         }
         elseif (preg_match('/^\/post\/\d+\//', $_GET['path'])) {
@@ -116,6 +134,6 @@ try {
         }
     }
 }
-catch(Exception $e) {
+catch(Exception $e) { // Affichage des erreurs
     echo 'Erreur : ' . $e->getMessage();
 }

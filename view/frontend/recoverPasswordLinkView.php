@@ -1,15 +1,26 @@
 <?php
+/**
+ * Gère l'affichage de changement de mot de passe en cas de mot de passe oublié
+ */
 $title = "Changement de mot de passe pour $user->name";
 ob_start();
 ?>
 <h2>Vous avez oublié votre mot de passe <?= $user->name ?></h2>
 <p>Entrez votre nouveau mot de passe ci dessous</p>
 <?php
-if(RETRY != '') {
+if(RETRY != '') { // Si il y a une erreur, on l'affiche
 ?>
 <p>Erreur : <?= RETRY ?></p>
 <?php
 }
+/**
+ * Le formulaire renvoie en post à / les valeurs suivantes :
+ * @var string action : useRecover (hidden)
+ * @var string key : La clé du recover (hidden)
+ * @var string id_user : L'identifiant de l'utilisateur associé au recover (hidden)
+ * @var string password : Le nouveau mot de passe (required)
+ * @var string old_password : Confirmation du nouveau mot de passe (requires)
+ */
 ?>
 <form method="post" action="/">
     <input type="hidden" name="action" value="useRecover"/>

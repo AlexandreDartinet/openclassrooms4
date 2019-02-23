@@ -1,15 +1,27 @@
 <?php
+/**
+ * Gère l'affichage du formulaire d'inscription
+ */
 $title = "Inscription";
 ob_start();
 ?>
 <h2>Formulaire d'inscription :</h2>
 <?php
-if(preg_match('/\/retry\//', $_GET['path'])) {
-    $field = preg_replace('/^.*\/retry\/(\w+)\/.*$/', '$1', $_GET['path']);
+if(RETRY != '') { // Si il y a une erreur, on l'affiche
 ?>
-<p>Le <?= $field ?> que vous avez choisi est déjà utilisé.</p>
+<p>Le <?= RETRY ?> que vous avez choisi est déjà utilisé.</p>
 <?php
 }
+/**
+ * Le formulaire envoie à / en post les valeurs suivantes :
+ * @var string action : registerUser (hidden)
+ * @var string name : Nom de l'utilisateur (required)
+ * @var string password : Mot de passe (required)
+ * @var string password_confirm : Confirmation du mot de passe (required)
+ * @var string name_display : Nom d'affichage (required)
+ * @var string email : Email (required)
+ * @var string email_confirm : Confirmation de l'email (required)
+ */
 ?>
 <form method="post" action="/">
     <input type="hidden" name="action" value="registerUser" required/>
@@ -20,7 +32,7 @@ if(preg_match('/\/retry\//', $_GET['path'])) {
     <div>
         <label for="password">Mot de passe :</label>
         <input type="password" name="password" id="password" placeholder="Mot de passe" required/>
-        <input type="password" name="confirm_password" id="confirm_password" placeholder="Confirmez le mot de passe" required/>
+        <input type="password" name="password_confirm" id="password_confirm" placeholder="Confirmez le mot de passe" required/>
     </div>
     <div>
         <label for="name_display">Nom affiché :</label>
@@ -29,7 +41,7 @@ if(preg_match('/\/retry\//', $_GET['path'])) {
     <div>
         <label for="email">Email :</label>
         <input type="email" name="email" id="email" placeholder="Entrez votre email." required/>
-        <input type="email" name="confirm_email" id="confirm_email" placeholder="Confirmez votre email." required/>
+        <input type="email" name="email_confirm" id="email_confirm" placeholder="Confirmez votre email." required/>
     </div>
     <diV>
         <input type="checkbox" required/> J'accepte le bla bla.

@@ -1,9 +1,27 @@
 <?php
-
+/**
+ * Classe représentant une ligne du tableau comments de la bdd
+ * 
+ * @var int $id : Identifiant du commentaire
+ * @var int $id_post : Identifiant du post auquel le commentaire est lié
+ * @var int $id_user : Identifiant de l'utilisateur qui a envoyé le commentaire (0 si anonyme)
+ * @var int $reply_to : Identifiant du commentaire auquel ce commentaire est lié (0 si aucun)
+ * @var string $date_publication : Date de publication au format DateTime
+ * @var string $ip : Ip qui a posté ce commentaire
+ * @var string $name : Nom de l'auteur du commentaire
+ * @var string $content : Corps du commentaire
+ * @var int $replies_nbr : Nombre calculé de réponses à ce commentaire
+ * 
+ * @see DbObject : classe parente
+ */
 class Comment extends DbObject {
 
-
-    public function __set($name, $value) {
+    /**
+     * Fonction d'encapsulation
+     * 
+     * @see DbObject->__set(string $name, $value)
+     */
+    public function __set(string $name, $value) {
         switch($name) {
             case "id":
                 $this->_attributes[$name] = (int) $value;
@@ -58,6 +76,11 @@ class Comment extends DbObject {
         }
     }
 
+    /**
+     * Fonction retournant un objet par défaut
+     * 
+     * @see DbObject::default()
+     */
     public static function default() {
         $comment = new self([
             "id" => 0,
@@ -73,11 +96,17 @@ class Comment extends DbObject {
         return $comment;
     }
 
+    /**
+     * Fonction retournant le nom à afficher pour un commentaire.
+     * L'attribut name du commentaire si l'utilisateur était anonyme, sinon le name_display de l'utilisateur.
+     * 
+     * @return string : Nom de l'auteur du commentaire.
+     */
     public function getName() {
         if($this->id_user == 0) {
             return $this->name;
         }
-        else {
+        else { // Si l'auteur n'est pas anonyme, on récupère son user pour retourner son nom
             $userManager = new UserManager();
             $user = $userManager->getUserById($this->id_user);
             return $user->name_display;

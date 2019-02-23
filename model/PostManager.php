@@ -1,32 +1,51 @@
 <?php
+/**
+ * Classe gérant les interactions avec la bdd en rapport avec la table posts
+ * 
+ * @var int POST_PAGE : Constante définissant le nombre de posts à afficher par page
+ * 
+ * @see Manager : classe parente
+ */
 class PostManager extends Manager {
 
     const POST_PAGE = 5;
 
+    /**
+     * Retourne la liste des posts selon différents critères.
+     * Par page (par défaut 1), si ils sont publiés ou non (par défaut true), par année, année et mois, année et mois et jour.
+     * 
+     * @param int $page : Numéro de la page à récupérer (défaut = 1)
+     * @param boolean $published : false si on récupère aussi les articles non publiés (défaut = true)
+     * @param int $year : Année des articles à récupérer (défaut = 0, non pris en compte)
+     * @param int $month : Mois des articles à récupérer (défaut = 0, non pris en compte)
+     * @param int $day : Jour des articles à récupérer (défaut = 0, non pris en compte)
+     * 
+     * @return array : Tableau d'objets Post triés par date de publication répondant aux critères
+     */
     public function getPosts($page = 1, $published = true, $year = 0, $month = 0, $day = 0) {
         $query_start = 'SELECT posts.*, COUNT(comments.id) AS comments_nbr FROM posts LEFT JOIN comments ON posts.id = comments.id_post ';
         $query_end =  ' GROUP BY posts.id ORDER BY posts.date_publication DESC LIMIT '.(($page-1)*self::POST_PAGE).','.$page*self::POST_PAGE;
-        if($year != 0) {
-            if($month != 0) {
-                if($day != 0) {
-                    $req = $this->_db->prepare($query_start.'WHERE'.($published?' published = 1 AND':'').' YEAR(date_publication) = :year AND MONTH(date_publication) = :month AND DAY(date_publication) = :day'.$query_end);
-                    $req->bindParam(":year",$year);
-                    $req->bindParam(":month",$month);
-                    $req->bindParam(":day",$day);
+        if($year != 0) {// Si $year est renseigné
+            if($month != 0) {// Si $month est renseigné
+                if($day != 0) {// Si $day est renseigné, on recherche par année, mois et jour
+                    $req = $this->_db->prepare($query_start.'WHERE'.($published?' published = 1 AND posts.date_publication<=NOW() AND':'').' YEAR(date_publication) = :year AND MONTH(date_publication) = :month AND DAY(date_publication) = :day'.$query_end);
+                    $req->bindParam(":year",(int) $year);
+                    $req->bindParam(":month",(int) $month);
+                    $req->bindParam(":day",(int) $day);
                 }
-                else {
-                    $req = $this->_db->prepare($query_start.'WHERE'.($published?' published = 1 AND':'').' YEAR(date_publication) = :year AND MONTH(date_publication) = :month'.$query_end);
-                    $req->bindParam(":year",$year);
-                    $req->bindParam(":month",$month);
+                else {// Si $day n'est pas renseigné, on recherche par année et mois
+                    $req = $this->_db->prepare($query_start.'WHERE'.($published?' published = 1 AND posts.date_publication<=NOW() AND':'').' YEAR(date_publication) = :year AND MONTH(date_publication) = :month'.$query_end);
+                    $req->bindParam(":year",(int) $year);
+                    $req->bindParam(":month",(int) $month);
                 }
             }
-            else {
-                $req = $this->_db->prepare($query_start.'WHERE'.($published?' published = 1 AND':'').' YEAR(date_publication) = :year'.$query_end);
-                $req->bindParam(":year",$year);
+            else {// Si $month n'est pas renseigné, on recherche par année
+                $req = $this->_db->prepare($query_start.'WHERE'.($published?' published = 1 AND posts.date_publication<=NOW() AND':'').' YEAR(date_publication) = :year'.$query_end);
+                $req->bindParam(":year",(int) $year);
             }
         }
-        else {
-            $req = $this->_db->prepare($query_start.($published?'WHERE published = 1':'').$query_end);
+        else {// Si $year n'est pas renseigné, on recherche les derniers posts publiés
+            $req = $this->_db->prepare($query_start.($published?'WHERE published = 1 AND posts.date_publication<=NOW()':'').$query_end);
         }
         if($req->execute()) {
             $posts = [];
@@ -38,10 +57,17 @@ class PostManager extends Manager {
             return $posts;
         }
         else {
-            throw new Exception("Aucun post trouvé.");
+            throw new Exception("PostManager: Aucun post trouvé.");
         }
     }
 
+    /**
+     * Retourne le post désigné par une id
+     * 
+     * @param int $id : Identifiant du post qu'on veut récupérer
+     * 
+     * @return Post : Le post à retourner
+     */
     public function getPostById(int $id) {
         $req = $this->_db->prepare('SELECT posts.*, COUNT(comments.id) AS comments_nbr FROM posts LEFT JOIN comments ON posts.id = comments.id_post WHERE posts.id=?');
         if($req->execute([$id])) {
@@ -50,10 +76,18 @@ class PostManager extends Manager {
             return $post;
         }
         else {
-            throw new Exception("Aucun post correspondant à l'id $id.");
+            throw new Exception("PostManager: Aucun post correspondant à l'id $id.");
         }
     }
 
+    /**
+     * Enregistre un nouveau post, ou en modifie un existant dans la bdd
+     * Enregistre si l'id est à 0, sinon modifie.
+     * 
+     * @param Post $post : Le post à mettre à jour, ou enregistrer
+     * 
+     * @return boolean : true si la requête a été executée avec succès, false sinon.
+     */
     public function setPost(Post $post) {
         if ($post->id == 0) {
             $req = $this->_db->prepare('INSERT INTO posts(date_publication, id_user, title, content, published) VALUES (?, ?, ?, ?, ?)');

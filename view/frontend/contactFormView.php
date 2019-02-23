@@ -1,4 +1,14 @@
 <?php
+/**
+ * Gère l'affichage du formulaire de contact du site.
+ * 
+ * Le formulaire envoie à / en post les valeurs suivantes :
+ * @var string action : sendContactForm
+ * @var string name : Nom de la personne qui envoie le formulaire (required)
+ * @var string email : Email de la personne qui envoie le formulaire (required)
+ * @var string email_confirm : Confirmation de l'email (doit être identique à email) (required)
+ * @var string message : Message de l'utilisateur (required)
+ */
 $title = "Formulaire de contact";
 ob_start();
 ?>

@@ -1,8 +1,23 @@
 <?php
-
+/**
+ * Classe gérant les interactions avec la bdd en rapport avec la table comments
+ * 
+ * @var int COMMENT_PAGE : Constante définissant le nombre de commentaires à afficher par page
+ * 
+ * @see Manager : classe parente
+ */
 class CommentManager extends Manager {
+
     const COMMENT_PAGE = 2000;
 
+    /**
+     * Retourne tous les commentaires liés à un post, par page (par défaut page 1)
+     * 
+     * @param int $id_post : L'identifiant du post dont on veut les commentaires
+     * @param int $page : Optionnel, numéro de page de commentaires (par défaut 1)
+     * 
+     * @return array : Tableau d'objets Comment représentant les commentaires du post, triés par date d'envoi.
+     */
     public function getComments(int $id_post, $page = 1) {
         $req = $this->_db->prepare('SELECT a.*, COUNT(b.id) AS replies_nbr FROM comments a LEFT JOIN comments b ON a.id = b.reply_to WHERE a.id_post=:id_post GROUP BY a.id ORDER BY a.date_publication ASC LIMIT '.(($page-1)*self::COMMENT_PAGE).','.$page*self::COMMENT_PAGE);
         $req->bindParam(":id_post", $id_post);
@@ -16,10 +31,17 @@ class CommentManager extends Manager {
             return $comments;
         }
         else {
-            throw new Exception("Aucun commentaire trouvé.");
+            throw new Exception("CommentManager: Aucun commentaire trouvé.");
         }
     } 
 
+    /**
+     * Récupère un commentaire par son identifiant
+     * 
+     * @param int $id : identifiant du commentaire à récupérer
+     * 
+     * @return Comment : L'objet Comment correspondant au commentaire demandé
+     */
     public function getCommentById(int $id) {
         $req = $this->_db->prepare('SELECT a.*, COUNT(b.id) AS replies_nbr FROM comments a LEFT JOIN comments b ON a.id = b.reply_to WHERE a.id=:id');
         $req->bindParam(":id", $id);
@@ -29,12 +51,20 @@ class CommentManager extends Manager {
             return $comment;
         }
         else {
-            throw new Exception("Commentaire $id non existant.");
+            throw new Exception("CommentManager: Commentaire $id non existant.");
         }
     }
 
+    /**
+     * Enregistre un nouveau commentaire, ou en modifie un existant dans la bdd
+     * Enregistre si l'id est à 0, sinon modifie.
+     * 
+     * @param Comment $comment : Le commentaire à mettre à jour, ou enregistrer
+     * 
+     * @return boolean : true si la requête a été executée avec succès, false sinon.
+     */
     public function setComment(Comment $comment) {
-        if ($comment->id == 0) {
+        if ($comment->id == 0) { // Si c'est un nouveau commentaire
             $req = $this->_db->prepare('INSERT INTO comments(id_post, id_user, reply_to, ip, name, content) VALUES (?, ?, ?, ?, ?, ?)');
             $exec = $req->execute([
                 $comment->id_post,
@@ -46,7 +76,7 @@ class CommentManager extends Manager {
             ]);
             
         }
-        else {
+        else { // Si le commentaire existe déjà
             $req = $this->_db->prepare('UPDATE comments SET id_post=?, id_user=?, reply_to=?, date_publication=?, ip=?, name=?, content=? WHERE id=?');
             $exec = $req->execute([
                 $comment->id_post,
@@ -63,19 +93,26 @@ class CommentManager extends Manager {
         return $exec;
     }
 
+    /**
+     * Récupère les réponses à un commentaire
+     * 
+     * @param Comment $comment : Le commentaire dont on veut récupérer les réponses
+     * 
+     * @return array : Un tableau d'objets Comment qui sont des réponses au commentaire passé en argument
+     */
     public function getReplies(Comment $comment) {
-        $req = $this->_db->prepare('SELECT * FROM comments WHERE reply_to=?');
+        $req = $this->_db->prepare('SELECT * FROM comments WHERE reply_to=? ORDER BY date_publication ASC');
         if($req->execute([$comment->id])) {
             $comments = [];
             while($line = $req->fetch()) {
-                $line['replies_nbr'] = 0;
+                $line['replies_nbr'] = 0; // Si le commentaire est une réponse, il ne peut pas avoir de réponses
                 $comments[] = new Comment($line);
             }
             $req->closeCursor();
             return $comments;
         }
         else {
-            throw new Exception("Commentaire $comment->id n'a aucune réponse.");
+            throw new Exception("CommentManager: Commentaire $comment->id n'a aucune réponse.");
         }
     }
 }

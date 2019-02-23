@@ -1,4 +1,7 @@
 <?php
+/**
+ * Gère l'affichage du footer de la partie frontend
+ */
 ob_start();
 ?>
 <footer>

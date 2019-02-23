@@ -1,6 +1,11 @@
-<?php require('header.php'); ?>
-<?php require('footer.php'); ?>
-<!DOCTYPE html>
+<?php 
+/**
+ * Template d'affichage de la page.
+ * On doit lui fournir $title pour le titre de la page, et $content pour son contenu.
+ */
+require('header.php');
+require('footer.php'); 
+?><!DOCTYPE html>
 <html>
     <head>
         <meta charset="utf-8" />
