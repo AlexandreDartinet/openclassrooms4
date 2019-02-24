@@ -148,7 +148,7 @@ class CommentManager extends Manager {
              * Si le commentaire parent n'a plus de réponses après la suppression, et a été supprimé, on le supprime définitivement
              */
             if($parentComment->replies_nbr <= 1 && $parentComment->ip == "0.0.0.0" && $parentComment->id_user == 0) {
-                return $this->removeComment($parentComment, true);
+                return $this->removeComment($parentComment, true); // On peut sortir de la fonction, cet appel va supprimer aussi le commentaire actuel
             }
         }
         if($remove) {
