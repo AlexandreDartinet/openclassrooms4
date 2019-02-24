@@ -167,4 +167,10 @@ session_start();
 if(!isset($_SESSION["user"])) { // Si aucun utilisateur enregistré en session, on enregistre l'utilisateur par défaut.
     $_SESSION["user"] = User::default();
 }
-define('PATH', $_GET['path']);
+if (preg_match('/\/retry\/\w+\//', $_GET['path'])) { // Si il y a une erreur, on crée une variable globale la contenant
+    define('RETRY', preg_replace('/^.*\/retry\/(\w+)\/.*$/', '$1', $_GET['path']));
+}
+else { // Sinon la variable est vide
+    define('RETRY','');
+}
+define('PATH', preg_replace('/retry\/\w+\//', '', $_GET['path'])); // On définit le path actuel, moins l'erreur s'il y en a une
