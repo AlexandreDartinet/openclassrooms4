@@ -48,6 +48,7 @@ class UserManager extends Manager {
     public function getUsers($page = 1) {
         if(is_int($page)) {
             $req = $this->_db->prepare('SELECT * FROM users LIMIT '.(($page-1)*self::USER_PAGE).','.$page*self::USER_PAGE);
+        }
         elseif($page = "all") {
             $req = $this->_db->prepare('SELECT * FROM users');
         }
