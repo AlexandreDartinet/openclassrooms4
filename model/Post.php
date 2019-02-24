@@ -10,6 +10,8 @@
  * @var string $content : Contenu du post
  * @var boolean $published : Est-ce que l'article est publié
  * @var int $comments_nbr : Nombre calculé de commentaires liés au post
+ * @var User $user : Utilisateur associé au post
+ * @var array $comments : Tous les commentaires associés à un post
  * 
  * @see DbObject : classe parente
  */
@@ -60,10 +62,55 @@ class Post extends DbObject {
             case "comments_nbr":
                 $this->_attributes[$name] = (int) $value;
                 break;
+            case "user":
+                if(is_a($value, 'User')) {
+                    $this->_attributes[$name] = $value; 
+                }
+                else {
+                    throw new Exception("Post: $name(".var_export($value).") n'est pas un User.");
+                }
+                break;
+            case "comments":
+                if(is_array($value)) {
+                    $this->_attributes[$name] = $value; 
+                }
+                else {
+                    throw new Exception("Post: $name(".var_export($value).") n'est pas un array.");
+                }
+                break;
             default:
                 throw new Exception("Post: $name($value) attribut inconnu.");
                 break;
         }
+    }
+
+    /**
+     * Cette fonction est appelée lorsqu'on appelle $objet->$name pour retourner les attributs de l'objet.
+     * 
+     * @param string $name : Nom de l'attribut à retourner
+     * 
+     * @return mixed : Dépend de l'attribut qu'on a demandé
+     */
+    public function __get(string $name) {
+        if(!isset($this->$name)) {
+            switch($name) {
+                case "user":
+                    if($this->id_user != 0) {
+                        $userManager = new UserManager();
+                        $user = $userManager->getUserById($this->id_user);
+                    }
+                    else {
+                        $user = User::default();
+                    }
+                    $this->$name = $user;
+                    break;
+                case "comments":
+                    $commentManager = new CommentManager();
+                    $this->$name = $commentManager->getComments($this->id, "all");
+                    break;
+            }
+        }
+        parent::__get($name);
     }
 
     /**

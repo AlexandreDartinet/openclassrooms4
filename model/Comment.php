@@ -11,6 +11,10 @@
  * @var string $name : Nom de l'auteur du commentaire
  * @var string $content : Corps du commentaire
  * @var int $replies_nbr : Nombre calculé de réponses à ce commentaire
+ * @var User $user : Utilisateur associé au commentaire
+ * @var Post $post : Post associé au commentaire
+ * @var array $replies : Tableau de commentaires qui sont des réponses à ce commentaire
+ * 
  * 
  * @see DbObject : classe parente
  */
@@ -70,11 +74,71 @@ class Comment extends DbObject {
             case "replies_nbr":
                 $this->_attributes[$name] = (int) $value;
                 break;
+            case "user":
+                if(is_a($value, 'User')) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("Comment: $name(".var_export($value).") n'est pas un User.");
+                }
+                break;
+            case "post":
+                if(is_a($value, 'Post')) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("Comment: $name(".var_export($value).") n'est pas un Post.");
+                }
+                break;
+            case "replies":
+                if(is_array($value)) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("Comment: $name(".var_export($value).") n'est pas un Array.");
+                }
+                break;
             default:
                 throw new Exception("Comment: $name($value) attribut inconnu.");
                 break;
         }
     }
+
+    /**
+     * Cette fonction est appelée lorsqu'on appelle $objet->$name pour retourner les attributs de l'objet.
+     * 
+     * @param string $name : Nom de l'attribut à retourner
+     * 
+     * @return mixed : Dépend de l'attribut qu'on a demandé
+     */
+    public function __get(string $name) {
+        if(!isset($this->$name)) {
+            switch($name) {
+                case "user":
+                    if($this->id_user != 0) {
+                        $userManager = new UserManager();
+                        $user = $userManager->getUserById($this->id_user);
+                    }
+                    else {
+                        $user = User::default();
+                    }
+                    $this->user = $user;
+                    break;
+                case "post":
+                    $postManager = new PostManager();
+                    $post = $postManager->getPostById($this->id_post);
+                    $this->post = $post;
+                    break;
+                case "replies":
+                    $commentManager = new CommentManager();
+                    $replies = $commentManager->getReplies($this);
+                    $this->replies = $replies;
+                    break;
+            }
+        }
+        parent::__get($name);
+    }
+
 
     /**
      * Fonction retournant un objet par défaut
@@ -107,9 +171,7 @@ class Comment extends DbObject {
             return $this->name;
         }
         else { // Si l'auteur n'est pas anonyme, on récupère son user pour retourner son nom
-            $userManager = new UserManager();
-            $user = $userManager->getUserById($this->id_user);
-            return $user->name_display;
+            return $this->user->name_display;
         }
     }
     

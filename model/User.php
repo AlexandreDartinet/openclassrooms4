@@ -124,7 +124,7 @@ class User extends DbObject {
         $postManager = new PostManager();
         return (int) $postManager->countPostsByUser($this, $published);
     }
-    
+
     /**
      * Retourne le niveau de l'utilisateur sous forme lisible
      * 
@@ -132,6 +132,15 @@ class User extends DbObject {
      */
     public function displayLevel() {
         return self::levelToText($this->level);
+    }
+
+    /**
+     * Retourne le nom d'un utilisateur avec un lien vers son profil
+     * 
+     * @return string : Lien vers le profil de l'utilisateur
+     */
+    public function displayName() {
+
     }
 
     /**

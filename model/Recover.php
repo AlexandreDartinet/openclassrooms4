@@ -43,10 +43,43 @@ class Recover extends DbObject {
                     throw new Exception("Recover: $name($value) invalide.");
                 }
                 break;
+            case "user":
+                if(is_a($value, 'User')) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("Recover: $name(".var_export($value).") n'est pas un User.");
+                }
+                break;
             default:
                 throw new Exception("Recover: $name($value) attribut inconnu.");
                 break;
         }
+    }
+
+    /**
+     * Cette fonction est appelée lorsqu'on appelle $objet->$name pour retourner les attributs de l'objet.
+     * 
+     * @param string $name : Nom de l'attribut à retourner
+     * 
+     * @return mixed : Dépend de l'attribut qu'on a demandé
+     */
+    public function __get(string $name) {
+        if(!isset($this->$name)) {
+            switch($name) {
+                case "user":
+                    if($this->id_user != 0) {
+                        $userManager = new UserManager();
+                        $user = $userManager->getUserById($this->id_user);
+                    }
+                    else {
+                        $user = User::default();
+                    }
+                    $this->user = $user;
+                    break;
+            }
+        }
+        parent::__get($name);
     }
 
     /**
