@@ -4,7 +4,7 @@
  */
 ob_start();
 ?>
-<p>Derniers billets :</p>
+<p>Articles :</p>
 <?php
 foreach($posts as &$post) {
     $author = $post->getAuthor();
