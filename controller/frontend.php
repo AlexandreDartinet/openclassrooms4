@@ -16,7 +16,7 @@
  */
 function listPosts(int $page = 1) {
     $postManager = new PostManager();
-    $posts = $postManager->getPosts();
+    $posts = $postManager->getPosts($page);
     $pageSelector = pageSelector(ceil($postManager->count()/PostManager::POST_PAGE), $page, PATH);
 
     require("view/frontend/listPostsView.php");
@@ -172,6 +172,15 @@ function commentPost(int $id_post, string $name, string $content, int $reply_to)
     header("Location: /post/$id_post/");
 }
 
+/**
+ * Modifie un commentaire si l'utilisateur actuel a le droit de le faire, et le renvoie à la page appropriée
+ * 
+ * @param int $id : Identifiant du commentaire à modifier
+ * @param string $name : Nouveau nom de l'auteur
+ * @param string $content : Nouveau contenu du commentaire
+ * 
+ * @return void
+ */
 function modifyComment(int $id, string $name, string $content) {
     $user = $_SESSION['user'];
     $commentManager = new CommentManager();
@@ -185,15 +194,40 @@ function modifyComment(int $id, string $name, string $content) {
                 header('Location: '.PATH);
             }
             else {
-                header('Location: '.PATH."edit/$id/retry/nothing_changed/");
+                header('Location: '.PATH."edit/$id/retry/modify_nothing_changed/");
             }
         }
         else {
-            header('Location: '.PATH.'retry/invalid_user/');
+            header('Location: '.PATH.'retry/modify_invalid_user/');
         }
     }
     else {
-        header('Location: '.PATH.'retry/id_comment/');
+        header('Location: '.PATH.'retry/modify_id_comment/');
+    }
+}
+
+/**
+ * Supprime un commentaire si l'utilisateur a le droit de le faire, et le renvoie à la page appropriée
+ * 
+ * @param int $id : Identifiant du commentaire à supprimer
+ * 
+ * @return void
+ */
+function deleteComment(int $id) {
+    $user = $_SESSION['user'];
+    $commentManager = new CommentManager();
+    if($commentManager->exists($id)) {
+        $comment = $commentManager->getCommentById($id);
+        if($comment->canEdit($user)) {
+            $commentManager->removeComment($comment);
+            header('Location: /post/'.$comment->id_post.'/');
+        }
+        else {
+            header('Location: /post/'.$comment->id_post.'/retry/delete_invalid_user/');
+        }
+    }
+    else {
+        header('Location: /post/'.$comment->id_post.'/retry/delete_id_comment/');
     }
 }
 

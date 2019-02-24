@@ -98,42 +98,50 @@ try { // Gestion des erreurs
                     break;
             }
         }
-        /**
-         * Routage vers les différentes pages en fonction de l'addresse fournie en utilisant le controlleur frontend
-         */
-        if (preg_match('/^\/logout\//', PATH)) {
-            logout();
-        }
-        elseif (preg_match('/^\/recover\/(retry\/\w+\/)?$/', PATH)) {
-            viewRecoverPassword();
-        }
-        elseif (preg_match('/^\/recover\/.+\/(retry\/\w+\/)?$/', PATH)) {
-            /**
-             * On passe la clé fournie dans la barre d'adresse au controlleur
-             */
-            $key = preg_replace('/^\/recover\/(.+)\/(retry\/\w+\/)?$/', '$1', PATH); 
-            viewRecoverPasswordLink($key);
-        }
-        elseif (preg_match('/^\/post\/\d+\//', PATH)) {
-            $id = (int) preg_replace('/^\/post\/(\d+)\/.*$/', '$1', PATH);
-            $page = getPage(PATH);
-            viewPost($id, $page);
-        }
-        elseif (preg_match('/^\/register\//', PATH)) {
-            viewRegister();
-        }
-        elseif (preg_match('/^\/profile\/edit\//', PATH)) {
-            viewProfileEdit();
-        }
-        elseif (preg_match('/^\/contact\//', PATH)) {
-            viewContactForm();
-        }
-        elseif (PATH == "/") {
-            $page = getPage(PATH);
-            listPosts($page);
-        }
         else {
-            header('Location: /');
+            /**
+             * Routage vers les différentes pages en fonction de l'addresse fournie en utilisant le controlleur frontend
+             */
+            if (preg_match('/^\/logout\//', PATH)) {
+                logout();
+            }
+            elseif (preg_match('/^\/recover\/(retry\/\w+\/)?$/', PATH)) {
+                viewRecoverPassword();
+            }
+            elseif (preg_match('/^\/recover\/.+\/(retry\/\w+\/)?$/', PATH)) {
+                /**
+                 * On passe la clé fournie dans la barre d'adresse au controlleur
+                 */
+                $key = preg_replace('/^\/recover\/(.+)\/(retry\/\w+\/)?$/', '$1', PATH); 
+                viewRecoverPasswordLink($key);
+            }
+            elseif (preg_match('/^\/post\/\d+\//', PATH)) {
+                if(preg_match('/delete\/\d+\//', PATH)) { // Si on a demandé la suppression d'un commentaire
+                    $id_comment = (int) preg_replace('/^.*delete\/(\d+)\/.*$/', '$1', PATH);
+                    deleteComment($id_comment);
+                }
+                else {
+                    $id_post = (int) preg_replace('/^\/post\/(\d+)\/.*$/', '$1', PATH);
+                    $page = getPage(PATH);
+                    viewPost($id_post, $page);
+                }
+            }
+            elseif (preg_match('/^\/register\//', PATH)) {
+                viewRegister();
+            }
+            elseif (preg_match('/^\/profile\/edit\//', PATH)) {
+                viewProfileEdit();
+            }
+            elseif (preg_match('/^\/contact\//', PATH)) {
+                viewContactForm();
+            }
+            elseif (preg_match('/^\/(page-\d+\/)?$/', PATH)) {
+                $page = getPage(PATH);
+                listPosts($page);
+            }
+            else {
+                header('Location: /');
+            }
         }
     }
 }
