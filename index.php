@@ -5,6 +5,7 @@
 require('init.php'); // On inclut le fichier d'initialisation du site
 
 try { // Gestion des erreurs
+    require('controller/common.php'); // Controlleur commun à toutes les sections
     /**
      * Bloc de la section backend
      */
