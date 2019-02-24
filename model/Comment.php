@@ -112,5 +112,25 @@ class Comment extends DbObject {
             return $user->name_display;
         }
     }
+    
+    /**
+     * Fonction déterminant si un utilisateur peut éditer un commentaire.
+     * @param User $user : L'utilisateur à tester
+     * 
+     * @return boolean : True si l'utilisateur peut éditer le commentaire
+     */
+    public function canEdit(User $user) {
+        if($user->id == 0) {
+            if($user->ip == $this->ip) {
+                return true;
+            }
+        }
+        else {
+            if($user->id == $this->id_user) {
+                return true;
+            }
+        }
+        return false;
+    }
 
 }
