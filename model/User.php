@@ -104,6 +104,28 @@ class User extends DbObject {
     }
 
     /**
+     * Retourne le nombre de commentaires postés par l'utilisateur
+     * 
+     * @return int : Nombre de commentaires
+     */
+    public function getCommentsNbr() {
+        $commentManager = new CommentManager();
+        return (int) $commentManager->countCommentsByUser($this);
+    }
+
+    /**
+     * Retourne le nombre de posts publiés par l'utilisateur
+     * 
+     * @param boolean $published : true si on ne veut que les posts publiés
+     * 
+     * @return int : Nombre de commentaires
+     */
+    public function getPostsNbr($published = true) {
+        $postManager = new PostManager();
+        return (int) $postManager->countPostsByUser($this, $published);
+    }
+
+    /**
      * Fonction retournant un objet par défaut
      * 
      * @see DbObject::default()
