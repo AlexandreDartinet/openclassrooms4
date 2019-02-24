@@ -124,6 +124,45 @@ class User extends DbObject {
         $postManager = new PostManager();
         return (int) $postManager->countPostsByUser($this, $published);
     }
+    
+    /**
+     * Retourne le niveau de l'utilisateur sous forme lisible
+     * 
+     * @return string : Niveau lisible de l'utilisateur
+     */
+    public function displayLevel() {
+        return self::levelToText($this->level);
+    }
+
+    /**
+     * Transforme un niveau en chaine lisible
+     * 
+     * @param int $level : Niveau que l'on souhaite afficher
+     * 
+     * @return string : Niveau lisible
+     */
+    public static function levelToText(int $level) {
+        switch($level) {
+            case self::LEVEL_ANON:
+                return "Anonyme";
+                break;
+            case self::LEVEL_USER:
+                return "Utilisateur";
+                break;
+            case self::LEVEL_MODERATOR:
+                return "Modérateur";
+                break;
+            case self::LEVEL_EDITOR:
+                return "Éditeur";
+                break;
+            case self::LEVEL_ADMIN:
+                return "Administrateur";
+                break;
+            default:
+                return "Inconnu";
+                break;
+        }
+    }
 
     /**
      * Fonction retournant un objet par défaut
