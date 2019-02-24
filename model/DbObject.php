@@ -130,4 +130,13 @@ abstract class DbObject {
     public static function now() {
         return date("Y-m-d H:i:s");
     }
+    
+    /**
+     * Fonction statique pour retourner une chaine lisible de la data actuelle
+     * 
+     * @return string : Chaine lisible représentant la date et l'heure actuelle
+     */
+    public static function rNow() {
+        return preg_replace('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', '$3/$2/$1 à $4h$5', self::now());
+    }
 }
