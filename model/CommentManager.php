@@ -125,7 +125,7 @@ class CommentManager extends Manager {
             throw new Exception("CommentManager: Commentaire $comment->id n'a aucune réponse.");
         }
     }
-    
+
     /**
      * Compte le nombre de commentaires d'un post
      * 
@@ -137,7 +137,7 @@ class CommentManager extends Manager {
     public function count(int $id_post, $replies = false) {
         $req = $this->_db->prepare('SELECT COUNT(*) as count FROM comments WHERE id_post=:id_post'.(($replies)?'':' AND reply_to=0'));
         $req->bindParam(':id_post', $id_post);
-        if($req->execute([])) {
+        if($req->execute()) {
             $res = $req->fetch();
             $req->closeCursor();
             return (int) $res['count'];

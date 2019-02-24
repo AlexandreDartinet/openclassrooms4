@@ -79,6 +79,7 @@ if($post->comments_nbr != 0) { // Si il y a des commentaires, on les affiche
             }
         }
     }
+echo $pageSelector;
 }
 
 $content = ob_get_clean();

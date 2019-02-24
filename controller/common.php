@@ -32,19 +32,20 @@ function pageSelector(int $pages_nbr, int $page, string $path) {
     if($pages_nbr == 1) {
         return '';
     }
+    $path = preg_replace('/^(.*)(page-\d+\/)?(.*)$/', '$1$3', $path);
     $selector = '<div id="page-selector">';
     if($page > 1) {
         $prevPage = $path."page-".($page-1)."/";
-        $selector += "<a class='page-prev' href='$prevPage'>&lt;</a>";
+        $selector .= "<a class='page-prev' href='$prevPage'>&lt;</a>";
     }
     for($i = 1; $i <= $pages_nbr; $i++) {
         $pageLink = $path."page-".$i."/";
-        $selector += "<a class='page-selector-item page-$i".(($i == $page)?' page-current':'')."' href='$pageLink'>$i</a>";
+        $selector .= "<a class='page-selector-item page-$i".(($i == $page)?' page-current':'')."' href='$pageLink'>$i</a>";
     }
     if($page < $pages_nbr) {
         $nextPage = $path."page-".($page+1)."/";
-        $selector += "<a class='page-next' href='$nextPage'>&gt;</a>";
+        $selector .= "<a class='page-next' href='$nextPage'>&gt;</a>";
     }
-    $selector += "</div>";
+    $selector .= "</div>";
     return $selector;
 }

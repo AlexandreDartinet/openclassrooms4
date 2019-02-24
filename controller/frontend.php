@@ -17,6 +17,7 @@
 function listPosts(int $page = 1) {
     $postManager = new PostManager();
     $posts = $postManager->getPosts();
+    $pageSelector = pageSelector(ceil($postManager->count()/PostManager::POST_PAGE), $page, $_GET['path']);
 
     require("view/frontend/listPostsView.php");
 }
@@ -35,8 +36,9 @@ function viewPost(int $id, $page = 1) {
     if($post->comments_nbr != 0) {
         $commentManager = new CommentManager();
         $comments = $commentManager->getComments($id, $page);
+        $pageSelector = pageSelector(ceil($commentManager->count($id)/CommentManager::COMMENT_PAGE), $page, $_GET['path']);
     }
-
+    
     require("view/frontend/postView.php");
 }
 
