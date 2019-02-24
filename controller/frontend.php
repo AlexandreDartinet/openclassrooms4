@@ -205,6 +205,26 @@ function viewDirectory(int $page) {
 }
 
 /**
+ * Affiche le profil d'un utilisateur, renvoie à l'accueil si le profil n'existe pas
+ * 
+ * @param int $id : Identifiant de l'utilisateur dont on veut voir le profil
+ * 
+ * @return void
+ */
+function viewProfile(int $id) {
+    $userManager = new UserManager();
+    if($userManager->exists('id', $id)) {
+        $user = $userManager->getUserById($id);
+        $title = "Profil de $user->name_display";
+        
+        require('view/frontend/profileView.php');
+    }
+    else {
+        header('Location: /');
+    }
+}
+
+/**
  * Fonctions relatives au traitement des données
  */
 

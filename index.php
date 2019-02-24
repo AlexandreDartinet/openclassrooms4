@@ -139,6 +139,10 @@ try { // Gestion des erreurs
                 $page = getPage(PATH);
                 viewDirectory($page);
             }
+            elseif (preg_match('/^\/profile\/\d+\//', PATH)) {
+                $id = (int) preg_replace('/^\/profile\/(\d+)\/.*$/', '$1', PATH);
+                viewProfile($id);
+            }
             elseif (preg_match('/^\/archive\//', PATH)) {
                 $year = 0;
                 $month = 0;
