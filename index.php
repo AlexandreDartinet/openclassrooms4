@@ -116,7 +116,8 @@ try { // Gestion des erreurs
         }
         elseif (preg_match('/^\/post\/\d+\//', $_GET['path'])) {
             $id = (int) preg_replace('/^\/post\/(\d+)\/.*$/', '$1', $_GET['path']);
-            viewPost($id);
+            $page = getPage($_GET['path']);
+            viewPost($id, $page);
         }
         elseif (preg_match('/^\/register\//', $_GET['path'])) {
             viewRegister();
@@ -128,7 +129,8 @@ try { // Gestion des erreurs
             viewContactForm();
         }
         elseif ($_GET['path'] == "/") {
-            listPosts();
+            $page = getPage($_GET['path']);
+            listPosts($page);
         }
         else {
             header('Location: /');
