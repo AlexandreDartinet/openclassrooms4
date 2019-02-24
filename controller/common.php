@@ -32,7 +32,7 @@ function pageSelector(int $pages_nbr, int $page, string $path) {
     if($pages_nbr == 1) {
         return '';
     }
-    $path = preg_replace('/^(.*)(page-\d+\/)?(.*)$/', '$1$3', $path);
+    $path = preg_replace('/page-\d+\//', '', $path);
     $selector = '<div id="page-selector">';
     if($page > 1) {
         $prevPage = $path."page-".($page-1)."/";
