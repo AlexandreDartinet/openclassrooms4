@@ -30,6 +30,13 @@ try { // Gestion des erreurs
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                     }
                     break;
+                case "modifyComment":
+                    if(isset($_POST['id']) && isset($_POST['name']) && isset($_POST['content'])) {
+                        modifyComment((int) $_POST['id'], $_POST['name'], $_POST['content']);
+                    }
+                    else {
+                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                    }
                 case "login":
                     if(isset($_POST['name']) && isset($_POST['password'])) {
                         login($_POST['name'], $_POST['password'], PATH);
@@ -90,13 +97,6 @@ try { // Gestion des erreurs
                     throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: l\'action n\'existe pas.');
                     break;
             }
-        }
-
-        if (preg_match('/\/retry\/\w+\//', PATH)) { // Si il y a une erreur, on crée une variable globale la contenant
-            define('RETRY', preg_replace('/^.*\/retry\/(\w+)\/.*$/', '$1', PATH));
-        }
-        else { // Sinon la variable est vide
-            define('RETRY','');
         }
         /**
          * Routage vers les différentes pages en fonction de l'addresse fournie en utilisant le controlleur frontend

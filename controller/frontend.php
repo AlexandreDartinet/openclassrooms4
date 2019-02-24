@@ -42,10 +42,23 @@ function viewPost(int $id, $page = 1) {
         $comments = $commentManager->getComments($id, $page);
         if(preg_match('/\/reply_to\/\d+\//', PATH)) {
             $reply_to = (int) preg_replace('/^.*reply_to\/(\d+)\/.*$/', '$1', PATH);
-            $reply_toComment = $commentManager->getCommentById($reply_to);
+            $reply_to_comment = $commentManager->getCommentById($reply_to);
         }
         if(preg_match('/\/edit\/\d+\//', PATH)) {
-            $id = (int) preg_replace('/^.*edit\/(\d+)\/.*$/', '$1', PATH);
+            $edit_id = (int) preg_replace('/^.*edit\/(\d+)\/.*$/', '$1', PATH);
+            if($commentManager->exists($edit_id)) {
+                $editedComment = $commentManager->getCommentById($edit_id);
+                if($_SESSION['user']->id == 0) {
+                    if($_SESSION['user']->ip == $editedComment->ip) {
+                        $edit = true;
+                    }
+                }
+                else {
+                    if($_SESSION['user']->id == $editedComment->id_user) {
+                        $edit = true;
+                    }
+                }
+            }
 
         }
         $pageSelector = pageSelector(ceil($commentManager->count($id)/CommentManager::COMMENT_PAGE), $page, PATH);
@@ -157,6 +170,31 @@ function commentPost(int $id_post, string $name, string $content, int $reply_to)
     $comment->reply_to = $reply_to;
     $commentManager->setComment($comment);
     header("Location: /post/$id_post/");
+}
+
+function modifyComment(int $id, string $name, string $content) {
+    $user = $_SESSION['user'];
+    $commentManager = new CommentManager();
+    if($commentManager->exists($id)) {
+        $comment = $commentManager->getCommentById($id);
+        if($comment->canEdit($user)) {
+            if(($content != $comment->content) || ($name != $comment->getName())) {
+                $comment->name = $name;
+                $comment->content = $content."\nModifié le ".Comment::rNow();
+                $commentManager->setComment($comment);
+                header('Location: '.PATH);
+            }
+            else {
+                header('Location: '.PATH."edit/$id/retry/nothing_changed/");
+            }
+        }
+        else {
+            header('Location: '.PATH.'retry/invalid_user/');
+        }
+    }
+    else {
+        header('Location: '.PATH.'retry/id_comment/');
+    }
 }
 
 /**
