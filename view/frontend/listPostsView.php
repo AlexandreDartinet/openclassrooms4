@@ -10,9 +10,9 @@ foreach($posts as &$post) {
 ?>
     <div>
         <h3><a href="/post/<?= $post->id ?>/">
-            <?= htmlspecialchars($post->title) ?>
+            <?= htmlspecialchars($post->title) ?></a>
             <em>le <?= $post->rDate("date_publication") ?> par <?= $post->user->displayName() ?></em>
-        </a></h3>
+        </h3>
 
         <p>
             <?= nl2br(htmlspecialchars($post->getExtract())) ?>
