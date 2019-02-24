@@ -3,13 +3,12 @@
  * Gère l'affichage d'un post
  */
 $title = htmlspecialchars($post->title); 
-$author = $post->getAuthor();
 ob_start();
 ?>
 <div>
     <h3>
         <?= htmlspecialchars($post->title) ?>
-        <em>le <?= $post->rDate('date_publication') ?> par <?= $author->name_display ?></em>
+        <em>le <?= $post->rDate('date_publication') ?> par <?= $post->user->displayName() ?></em>
     </h3>
 
     <p>
@@ -81,7 +80,7 @@ if($isComments) { // Si il y a des commentaires, on les affiche
 ?>
 <div class="comment <?= ($comment->id == $reply_to)?' reply_to':'' // Si on est en train de répondre au commentaire, on le met en surbrillance ?>" id="comment-<?= $comment->id ?>">
     <p>
-        <strong><?= htmlspecialchars($comment->getName()) ?></strong> le <?= $comment->rDate('date_publication') ?> 
+        <strong><?= $comment->displayName() ?></strong> le <?= $comment->rDate('date_publication') ?> 
         <?= (($reply_to == 0) && !$edit)?'<a class="comment-reply-link" id="comment-reply-link-'.$comment->id.'" href="'.PATH.'reply_to/'.$comment->id.'/">Répondre</a>':'' ?>
         <?= ($comment->canEdit($_SESSION['user']) && ($reply_to == 0) && !$edit)?'<a class="comment-edit-link" id="comment-edit-link-'.$comment->id.'" href="'.PATH.'edit/'.$comment->id.'/">Editer</a> <a class="comment-delete-link" id="comment-delete-link-'.$comment->id.'" href="'.PATH.'delete/'.$comment->id.'/">Supprimer</a>':'' ?>
     </p>
@@ -89,12 +88,12 @@ if($isComments) { // Si il y a des commentaires, on les affiche
 </div>
 <?php
             if($comment->replies_nbr != 0) { // Si il y a des réponses au commentaire, on les récupère et les affiche
-                $replies = $commentManager->getReplies($comment);
+                $replies = $comment->replies;
                 foreach($replies as &$reply) {
 ?>
 <div class="comment reply" id="comment-<?= $reply->id ?>">
     <p>
-        <strong><?= htmlspecialchars($reply->getName()) ?></strong> le <?= $reply->rDate('date_publication') ?>
+        <strong><?= $reply->displayName() ?></strong> le <?= $reply->rDate('date_publication') ?>
         <?= ($reply->canEdit($_SESSION['user']) && ($reply_to == 0) && !$edit)?'<a class="comment-edit-link" id="comment-edit-link-'.$reply->id.'" href="'.PATH.'edit/'.$reply->id.'/">Editer</a> <a class="comment-delete-link" id="comment-delete-link-'.$reply->id.'" href="'.PATH.'delete/'.$reply->id.'/">Supprimer</a>':'' ?>
     </p>
     <p><?= nl2br(htmlspecialchars($reply->content)) ?></p>

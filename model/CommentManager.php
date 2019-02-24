@@ -123,6 +123,7 @@ class CommentManager extends Manager {
         }
         else {
             throw new Exception("CommentManager: Commentaire $comment->id n'a aucune réponse.");
+            return [];
         }
     }
 

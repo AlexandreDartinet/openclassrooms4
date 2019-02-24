@@ -153,8 +153,7 @@ function viewRecoverPasswordLink($key) {
     if($recoverManager->exists('recover_key', $key)) {
         $recover = $recoverManager->getRecoverByKey($key);
         if($recover->isValid()) {
-            $userManager = new UserManager();
-            $user = $userManager->getUserById($recover->id_user);
+            $user = $recover->user;
             require('view/frontend/recoverPasswordLinkView.php');
         }
         else {
@@ -223,6 +222,7 @@ function commentPost(int $id_post, string $name, string $content, int $reply_to)
     $commentManager = new CommentManager();
     $comment = Comment::default();
     $comment->id_post = $id_post;
+    $comment->id_user = $_SESSION['user']->id;
     $comment->name = $name;
     $comment->content = $content;
     $comment->reply_to = $reply_to;
@@ -369,11 +369,11 @@ Ceci est un mail automatique, merci de ne pas y répondre.";
  * @return void
  */
 function registerUser(string $name, string $password, string $password_confirm, string $email, string $email_confirm, string $name_display) {
-    $userManager = new UserManager();
     if($_SESSION['user']->id != 0) {
         header('Location: /');
         return;
     }
+    $userManager = new UserManager();
     if($userManager->exists('name', $name)) {
         header('Location: /register/retry/name/');
         return;
@@ -570,7 +570,7 @@ function useRecover(string $key, int $id_user, string $password, string $passwor
         return;
     }
     $userManager = new UserManager();
-    $user = $userManager->getUserById($id_user);
+    $user = $recover->user;
     $user->password = password_hash($password, PASSWORD_DEFAULT);
     $userManager->setUser($user);
     $recoverManager->removeRecover($recover);

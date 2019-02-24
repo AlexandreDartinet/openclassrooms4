@@ -180,6 +180,20 @@ class Comment extends DbObject {
             return $this->user->name_display;
         }
     }
+
+    /**
+     * Fonction retournant le lien vers le profil de l'auteur du commentaire, si le profil existe
+     * 
+     * @return string : Lien vers le profil
+     */
+    public function displayName() {
+        if($this->id_user == 0) {
+            return htmlspecialchars($this->name);
+        }
+        else {
+            return $this->user->displayName();
+        }
+    }
     
     /**
      * Fonction déterminant si un utilisateur peut éditer un commentaire.
