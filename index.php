@@ -9,7 +9,7 @@ try { // Gestion des erreurs
     /**
      * Bloc de la section backend
      */
-    if(preg_match('/^\/admin\//', $_GET['path'])) {
+    if(preg_match('/^\/admin\//', PATH)) {
         require('controller/backend.php');
     }
     /**
@@ -31,8 +31,8 @@ try { // Gestion des erreurs
                     }
                     break;
                 case "login":
-                    if(isset($_POST['name']) && isset($_POST['password']) && isset($_GET['path'])) {
-                        login($_POST['name'], $_POST['password'], $_GET['path']);
+                    if(isset($_POST['name']) && isset($_POST['password'])) {
+                        login($_POST['name'], $_POST['password'], PATH);
                     }
                     else {
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
@@ -92,8 +92,8 @@ try { // Gestion des erreurs
             }
         }
 
-        if (preg_match('/\/retry\/\w+\//', $_GET['path'])) { // Si il y a une erreur, on crée une variable globale la contenant
-            define('RETRY', preg_replace('/^.*\/retry\/(\w+)\/.*$/', '$1', $_GET['path']));
+        if (preg_match('/\/retry\/\w+\//', PATH)) { // Si il y a une erreur, on crée une variable globale la contenant
+            define('RETRY', preg_replace('/^.*\/retry\/(\w+)\/.*$/', '$1', PATH));
         }
         else { // Sinon la variable est vide
             define('RETRY','');
@@ -101,35 +101,35 @@ try { // Gestion des erreurs
         /**
          * Routage vers les différentes pages en fonction de l'addresse fournie en utilisant le controlleur frontend
          */
-        if (preg_match('/^\/logout\//', $_GET['path'])) {
+        if (preg_match('/^\/logout\//', PATH)) {
             logout();
         }
-        elseif (preg_match('/^\/recover\/(retry\/\w+\/)?$/', $_GET['path'])) {
+        elseif (preg_match('/^\/recover\/(retry\/\w+\/)?$/', PATH)) {
             viewRecoverPassword();
         }
-        elseif (preg_match('/^\/recover\/.+\/(retry\/\w+\/)?$/', $_GET['path'])) {
+        elseif (preg_match('/^\/recover\/.+\/(retry\/\w+\/)?$/', PATH)) {
             /**
              * On passe la clé fournie dans la barre d'adresse au controlleur
              */
-            $key = preg_replace('/^\/recover\/(.+)\/(retry\/\w+\/)?$/', '$1', $_GET['path']); 
+            $key = preg_replace('/^\/recover\/(.+)\/(retry\/\w+\/)?$/', '$1', PATH); 
             viewRecoverPasswordLink($key);
         }
-        elseif (preg_match('/^\/post\/\d+\//', $_GET['path'])) {
-            $id = (int) preg_replace('/^\/post\/(\d+)\/.*$/', '$1', $_GET['path']);
-            $page = getPage($_GET['path']);
+        elseif (preg_match('/^\/post\/\d+\//', PATH)) {
+            $id = (int) preg_replace('/^\/post\/(\d+)\/.*$/', '$1', PATH);
+            $page = getPage(PATH);
             viewPost($id, $page);
         }
-        elseif (preg_match('/^\/register\//', $_GET['path'])) {
+        elseif (preg_match('/^\/register\//', PATH)) {
             viewRegister();
         }
-        elseif (preg_match('/^\/profile\/edit\//', $_GET['path'])) {
+        elseif (preg_match('/^\/profile\/edit\//', PATH)) {
             viewProfileEdit();
         }
-        elseif (preg_match('/^\/contact\//', $_GET['path'])) {
+        elseif (preg_match('/^\/contact\//', PATH)) {
             viewContactForm();
         }
-        elseif ($_GET['path'] == "/") {
-            $page = getPage($_GET['path']);
+        elseif (PATH == "/") {
+            $page = getPage(PATH);
             listPosts($page);
         }
         else {

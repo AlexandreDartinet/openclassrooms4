@@ -18,10 +18,10 @@ ob_start();
 </div>
 <h2>Commentaires</h2>
 <?php
-if(preg_match('/reply_to\//', $_GET['path'])) { // On récupère l'id du commentaire auquel on veut répondre, si il a été fourni
-    $reply_to = (int) preg_replace('/^.*reply_to\/(\d+)\/.*$/', '$1', $_GET['path']);
+if(preg_match('/reply_to\//', PATH)) { // On récupère l'id du commentaire auquel on veut répondre, si il a été fourni
+    $reply_to = (int) preg_replace('/^.*reply_to\/(\d+)\/.*$/', '$1', PATH);
 ?>
-<p>Répondre au commentaire <a href="<?= preg_replace('/^(.*)reply_to\/\d+\/(.*)$/', '$1$2', $_GET['path']) ?>">Annuler</a></p>
+<p>Répondre au commentaire <a href="<?= preg_replace('/^(.*)reply_to\/\d+\/(.*)$/', '$1$2', PATH) ?>">Annuler</a></p>
 <?php
 }
 else { // Sinon, on n'est pas en train de répondre à un commentaire
@@ -37,7 +37,7 @@ else { // Sinon, on n'est pas en train de répondre à un commentaire
  * @var string content : Corps du commentaire (required)
  */
 ?>
-<form action="<?= $_GET['path'] ?>" method="post">
+<form action="<?= PATH ?>" method="post">
     <input type="hidden" name="action" value="commentPost"/>
     <input type="hidden" name="id_post" value="<?= $post->id ?>"/>
     <input type="hidden" name="reply_to" value="<?= $reply_to ?>"/>
@@ -62,7 +62,7 @@ if($post->comments_nbr != 0) { // Si il y a des commentaires, on les affiche
         if($comment->reply_to == 0) { // Si le commentaire n'est pas une réponse, on l'affiche
 ?>
 <div <?= ($comment->id == $reply_to)?'style="background-color:red;"':'' // Si on est en train de répondre au commentaire, on le met en surbrillance ?>>
-    <p><strong><?= htmlspecialchars($comment->getName()) ?></strong> le <?= $comment->rDate('date_publication') ?> <?= ($reply_to == 0)?'<a href="'.$_GET['path'].'reply_to/'.$comment->id.'/">Répondre</a></p>':'' ?>
+    <p><strong><?= htmlspecialchars($comment->getName()) ?></strong> le <?= $comment->rDate('date_publication') ?> <?= ($reply_to == 0)?'<a href="'.PATH.'reply_to/'.$comment->id.'/">Répondre</a></p>':'' ?>
     <p><?= nl2br(htmlspecialchars($comment->content)) ?></p>
 </div>
 <?php

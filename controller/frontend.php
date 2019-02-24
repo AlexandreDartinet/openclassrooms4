@@ -17,7 +17,7 @@
 function listPosts(int $page = 1) {
     $postManager = new PostManager();
     $posts = $postManager->getPosts();
-    $pageSelector = pageSelector(ceil($postManager->count()/PostManager::POST_PAGE), $page, $_GET['path']);
+    $pageSelector = pageSelector(ceil($postManager->count()/PostManager::POST_PAGE), $page, PATH);
 
     require("view/frontend/listPostsView.php");
 }
@@ -33,10 +33,22 @@ function listPosts(int $page = 1) {
 function viewPost(int $id, $page = 1) {
     $postManager = new PostManager();
     $post = $postManager->getPostById($id);
+    $reply_to = 0;
+    $isComments = false;
+    $edit = false;
     if($post->comments_nbr != 0) {
+        $isComments = true;
         $commentManager = new CommentManager();
         $comments = $commentManager->getComments($id, $page);
-        $pageSelector = pageSelector(ceil($commentManager->count($id)/CommentManager::COMMENT_PAGE), $page, $_GET['path']);
+        if(preg_match('/\/reply_to\/\d+\//', PATH)) {
+            $reply_to = (int) preg_replace('/^.*reply_to\/(\d+)\/.*$/', '$1', PATH);
+            $reply_toComment = $commentManager->getCommentById($reply_to);
+        }
+        if(preg_match('/\/edit\/\d+\//', PATH)) {
+            $id = (int) preg_replace('/^.*edit\/(\d+)\/.*$/', '$1', PATH);
+
+        }
+        $pageSelector = pageSelector(ceil($commentManager->count($id)/CommentManager::COMMENT_PAGE), $page, PATH);
     }
     
     require("view/frontend/postView.php");

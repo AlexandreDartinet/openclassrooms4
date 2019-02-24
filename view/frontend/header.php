@@ -34,7 +34,7 @@ else { // Si l'utilisateur est anonyme, on affiche le formulaire de connexion, u
  * @var string password : Le mot de passe de l'utilisateur (required)
  */
 ?>
-        <form method="post" action="<?= $_GET['path'] ?>">
+        <form method="post" action="<?= PATH ?>">
             <input type="hidden" name="action" value="login" required/>
             <input type="text" name="name" placeholder="Pseudonyme" required/>
             <input type="password" name="password" placeholder="Mot de passe" required/>

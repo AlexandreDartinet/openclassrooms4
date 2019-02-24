@@ -167,3 +167,4 @@ session_start();
 if(!isset($_SESSION["user"])) { // Si aucun utilisateur enregistré en session, on enregistre l'utilisateur par défaut.
     $_SESSION["user"] = User::default();
 }
+define('PATH', $_GET['path']);
