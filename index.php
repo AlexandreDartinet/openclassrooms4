@@ -135,6 +135,10 @@ try { // Gestion des erreurs
             elseif (preg_match('/^\/contact\//', PATH)) {
                 viewContactForm();
             }
+            elseif (preg_match('/^\/directory\//', PATH)) {
+                $page = getPage(PATH);
+                viewDirectory($page);
+            }
             elseif (preg_match('/^\/archive\//', PATH)) {
                 $year = 0;
                 $month = 0;

@@ -218,7 +218,8 @@ class CommentManager extends Manager {
      */
     public function countCommentsByUser(User $user) {
         $req = $this->_db->prepare('SELECT COUNT(*) AS count FROM comments WHERE id_user=:id_user');
-        $req->bindParam(':id_user', $user->id);
+        $id = $user->id;
+        $req->bindParam(':id_user', $id);
         if($req->execute()) {
             $res = $req->fetch();
             $req->closeCursor();

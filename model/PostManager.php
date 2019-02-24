@@ -222,8 +222,9 @@ class PostManager extends Manager {
      * @return int : Nombre de posts
      */
     public function countPostsByUser(User $user, $published = true) {
-        $req = $this->_db->prepare('SELECT COUNT(*) AS count FROM posts WHERE id_user=:id_user'.($published?' AND published = 1 AND date_publication<=NOW() AND':''));
-        $req->bindParam(':id_user', $user->id);
+        $req = $this->_db->prepare('SELECT COUNT(*) AS count FROM posts WHERE id_user=:id_user'.($published?' AND published = 1 AND date_publication<=NOW()':''));
+        $id = $user->id;
+        $req->bindParam(':id_user', $id);
         if($req->execute()) {
             $res = $req->fetch();
             $req->closeCursor();
