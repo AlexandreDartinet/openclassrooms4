@@ -127,6 +127,45 @@ class CommentManager extends Manager {
     }
 
     /**
+     * Fonction pour supprimer un commentaire de la bdd, en s'assurant qu'on ne laisse pas de réponses orphelines
+     * 
+     * @param Comment $comment : Commentaire à supprimer
+     * @param boolean $force : Si on veut forcer la suppression d'un commentaire qu'il y aie des réponses ou non
+     * 
+     * @return boolean : true si execution réussie
+     */
+    public function removeComment(Comment $comment, $force = false) {
+        $remove = $force; // Par défaut, on modifie le commentaire plutôt que de le supprimer, sauf si on force la suppression
+        if($comment->reply_to == 0) { // Si le commentaire n'est pas une réponse
+            if($comment->replies_nbr == 0) { // Si le commentaire n'a aucune réponse, on le supprime
+                $remove = true;
+            }
+        }
+        else { // Si le commentaire est une réponse, on peut toujours le supprimer
+            $remove = true;
+            $parentComment = $this->getCommentById($comment->reply_to);
+            /**
+             * Si le commentaire parent n'a plus de réponses après la suppression, et a été supprimé, on le supprime définitivement
+             */
+            if($parentComment->replies_nbr <= 1 && $parentComment->ip == "0.0.0.0" && $parentComment->id_user == 0) {
+                return $this->removeComment($parentComment, true);
+            }
+        }
+        if($remove) {
+            $req = $this->_db->prepare('DELETE FROM comments WHERE id=:id OR reply_to=:id');
+            $req->bindParam(':id', $comment->id);
+            return $req->execute();
+        }
+        else {
+            $comment->content = '<Supprimé>';
+            $comment->id_user = 0;
+            $comment->name = 'Supprimé';
+            $comment->ip = '0.0.0.0';
+            return $this->setComment($comment);
+        }
+    }
+
+    /**
      * Compte le nombre de commentaires d'un post
      * 
      * @param int $id_post : Identifiant du post
