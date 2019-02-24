@@ -191,6 +191,21 @@ function viewArchive(int $page, int $year, int $month, int $day) {
 }
 
 /**
+ * Affiche l'annuaire du site
+ * 
+ * @param int $page : Page de l'annuaire
+ * 
+ * @return void
+ */
+function viewDirectory(int $page) {
+    $userManager = new UserManager();
+    $users = $userManager->getUsers($page);
+    $pageSelector = pageSelector(ceil($userManager->countUsers()/UserManager::USER_PAGE), $page, PATH);
+
+    require('view/frontend/directoryView.php');    
+}
+
+/**
  * Fonctions relatives au traitement des données
  */
 
