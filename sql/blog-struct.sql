@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  localhost:3306
--- Généré le :  Mer 20 Février 2019 à 14:04
+-- Généré le :  Dim 24 Février 2019 à 20:39
 -- Version du serveur :  10.1.37-MariaDB-0+deb9u1
 -- Version de PHP :  7.0.33-0+deb9u1
 
@@ -16,6 +16,21 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `bans`
+--
+
+CREATE TABLE IF NOT EXISTS `bans` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ip` varchar(255) NOT NULL,
+  `date_ban` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `type` int(11) NOT NULL DEFAULT '0',
+  `comment` varchar(255) NOT NULL DEFAULT 'Aucun commentaire',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
 
@@ -38,21 +53,6 @@ CREATE TABLE IF NOT EXISTS `comments` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `ip_bans`
---
-
-CREATE TABLE IF NOT EXISTS `ip_bans` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(255) NOT NULL,
-  `date_ban` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `type` int(11) NOT NULL DEFAULT '0',
-  `comment` varchar(255) NOT NULL DEFAULT 'Aucun commentaire',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
--- --------------------------------------------------------
-
---
 -- Structure de la table `posts`
 --
 
@@ -69,7 +69,23 @@ CREATE TABLE IF NOT EXISTS `posts` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `reported_comments`
+-- Structure de la table `recovers`
+--
+
+CREATE TABLE IF NOT EXISTS `recovers` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_user` int(11) NOT NULL,
+  `recover_key` varchar(100) NOT NULL,
+  `date_sent` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `key` (`recover_key`),
+  UNIQUE KEY `id_user` (`id_user`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `reports`
 --
 
 CREATE TABLE IF NOT EXISTS `reports` (
