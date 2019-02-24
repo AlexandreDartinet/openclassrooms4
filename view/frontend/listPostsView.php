@@ -7,12 +7,11 @@ ob_start();
 <p>Articles :</p>
 <?php
 foreach($posts as &$post) {
-    $author = $post->getAuthor();
 ?>
     <div>
         <h3><a href="/post/<?= $post->id ?>/">
             <?= htmlspecialchars($post->title) ?>
-            <em>le <?= $post->rDate("date_publication") ?> par <?= $author->name_display ?></em>
+            <em>le <?= $post->rDate("date_publication") ?> par <?= $post->user->displayName() ?></em>
         </a></h3>
 
         <p>

@@ -18,7 +18,7 @@
 class Post extends DbObject {
 
     const EXTRACT_LENGTH = 500;
-
+    
     /**
      * Fonction d'encapsulation
      * 
@@ -116,15 +116,6 @@ class Post extends DbObject {
         else {
             throw new Exception("Post: L'attribut $name n'existe pas pour l'objet.");
         }
-    }
-
-    /**
-     * Retourne l'User correspondant à l'auteur du post
-     * 
-     * @return User : Auteur du post
-     */
-    public function getAuthor() {
-        return $this->user->displayName();
     }
 
     /**
