@@ -18,3 +18,33 @@ function getPage(string $path) {
         return 1;
     }
 }
+
+/**
+ * Retourne le sélecteur de pages à afficher
+ * 
+ * @param int $pages_nbr : Nombre de pages total
+ * @param int $page : Page actuelle
+ * @param string $path : Chemin à ajouter avant la page
+ * 
+ * @return string : Retourne chaine vide s'il n'y a qu'une page, div page-selector remplie sinon
+ */
+function pageSelector(int $pages_nbr, int $page, string $path) {
+    if($pages_nbr == 1) {
+        return '';
+    }
+    $selector = '<div id="page-selector">';
+    if($page > 1) {
+        $prevPage = $path."page-".($page-1)."/";
+        $selector += "<a class='page-prev' href='$prevPage'>&lt;</a>";
+    }
+    for($i = 1; $i <= $pages_nbr; $i++) {
+        $pageLink = $path."page-".$i."/";
+        $selector += "<a class='page-selector-item page-$i".(($i == $page)?' page-current':'')."' href='$pageLink'>$i</a>";
+    }
+    if($page < $pages_nbr) {
+        $nextPage = $path."page-".($page+1)."/";
+        $selector += "<a class='page-next' href='$nextPage'>&gt;</a>";
+    }
+    $selector += "</div>";
+    return $selector;
+}
