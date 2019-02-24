@@ -90,7 +90,7 @@ class PostManager extends Manager {
             return Post::default();
         }
     }
-    
+
     /**
      * Retourne un tableau du nombre de posts par année/mois/jour
      * 
@@ -209,6 +209,27 @@ class PostManager extends Manager {
         }
         else {
             throw new Exception("PostManager: Aucun post trouvé.");
+            return 0;
+        }
+    }
+
+    /**
+     * Retourne le nombre de posts créés par un utilisateur.
+     * 
+     * @param User $user : Utilisateur dont on veut récupérer le nombre de posts
+     * @param boolean $published : true si on ne veut que le nombre de posts publiés
+     * 
+     * @return int : Nombre de posts
+     */
+    public function countPostsByUser(User $user, $published = true) {
+        $req = $this->_db->prepare('SELECT COUNT(*) AS count FROM posts WHERE id_user=:id_user'.($published?' AND published = 1 AND date_publication<=NOW() AND':''));
+        $req->bindParam(':id_user', $user->id);
+        if($req->execute()) {
+            $res = $req->fetch();
+            $req->closeCursor();
+            return (int) $res['count'];
+        }
+        else {
             return 0;
         }
     }

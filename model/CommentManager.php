@@ -198,12 +198,33 @@ class CommentManager extends Manager {
         $req = $this->_db->prepare('SELECT COUNT(*) as count FROM comments WHERE id=:id');
         $req->bindParam(':id', $id);
         if($req->execute()) {
-            $res = (int) $req->fetch();
+            $res = $req->fetch();
+            $count = (int) $res['count'];
             $req->closeCursor();
-            return ($res > 0);
+            return ($count > 0);
         }
         else {
             return false;
+        }
+    }
+
+    /**
+     * Retourne le nombre de commentaires créés par un utilisateur.
+     * 
+     * @param User $user : Utilisateur dont on veut récupérer le nombre de commentaires
+     * 
+     * @return int : Nombre de commentaires
+     */
+    public function countCommentsByUser(User $user) {
+        $req = $this->_db->prepare('SELECT COUNT(*) AS count FROM comments WHERE id_user=:id_user');
+        $req->bindParam(':id_user', $user->id);
+        if($req->execute()) {
+            $res = $req->fetch();
+            $req->closeCursor();
+            return (int) $res['count'];
+        }
+        else {
+            return 0;
         }
     }
 }
