@@ -7,6 +7,7 @@
  * @var int $id_user : Identifiant de l'utilisateur lié au recover
  * @var string $recover_key : La clé unique du recover
  * @var string $date_sent : Date d'envoi du recover au format DateTime
+ * @var User $user : Utilisateur lié au recover
  * 
  * @see DbObject : classe parente
  */
