@@ -41,12 +41,20 @@ class UserManager extends Manager {
     /**
      * Retourne la liste de tous les utilisateurs
      * 
-     * @param int $page : page à retourner (défaut 1)
+     * @param mixed $page : page à retourner (défaut 1) "all" si on veut récupérer tous les utilisateurs
      * 
      * @return array : Tableau d'objets User représentant la totalité des utilisateurs de la page.
      */
     public function getUsers($page = 1) {
-        $req = $this->_db->prepare('SELECT * FROM users LIMIT '.(($page-1)*self::USER_PAGE).','.$page*self::USER_PAGE);
+        if(is_int($page)) {
+            $req = $this->_db->prepare('SELECT * FROM users LIMIT '.(($page-1)*self::USER_PAGE).','.$page*self::USER_PAGE);
+        elseif($page = "all") {
+            $req = $this->_db->prepare('SELECT * FROM users');
+        }
+        else {
+            throw new Exception("UserManager: Paramètre \$page($page) invalide.");
+            return [];
+        }
         if($req->execute()) {
             $users = [];
             while($line = $req->fetch()) {
