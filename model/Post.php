@@ -110,7 +110,12 @@ class Post extends DbObject {
                     break;
             }
         }
-        parent::__get($name);
+        if (isset($this->_attributes[$name])) {
+            return $this->_attributes[$name];
+        }
+        else {
+            throw new Exception("Post: L'attribut $name n'existe pas pour l'objet.");
+        }
     }
 
     /**
@@ -119,9 +124,7 @@ class Post extends DbObject {
      * @return User : Auteur du post
      */
     public function getAuthor() {
-        $userManager = new UserManager();
-        $author = $userManager->getUserById($this->id_user);
-        return $author;
+        return $this->user->displayName();
     }
 
     /**

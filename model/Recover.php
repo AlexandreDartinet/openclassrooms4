@@ -79,7 +79,12 @@ class Recover extends DbObject {
                     break;
             }
         }
-        parent::__get($name);
+        if (isset($this->_attributes[$name])) {
+            return $this->_attributes[$name];
+        }
+        else {
+            throw new Exception("Recover: L'attribut $name n'existe pas pour l'objet.");
+        }
     }
 
     /**

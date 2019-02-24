@@ -110,6 +110,7 @@ class Comment extends DbObject {
      * @param string $name : Nom de l'attribut à retourner
      * 
      * @return mixed : Dépend de l'attribut qu'on a demandé
+     * 
      */
     public function __get(string $name) {
         if(!isset($this->$name)) {
@@ -136,7 +137,12 @@ class Comment extends DbObject {
                     break;
             }
         }
-        parent::__get($name);
+        if (isset($this->_attributes[$name])) {
+            return $this->_attributes[$name];
+        }
+        else {
+            throw new Exception("Comment: L'attribut $name n'existe pas pour l'objet.");
+        }
     }
 
 

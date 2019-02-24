@@ -104,6 +104,22 @@ class User extends DbObject {
     }
 
     /**
+     * Cette fonction est appelée lorsqu'on appelle $objet->$name pour retourner les attributs de l'objet.
+     * 
+     * @param string $name : Nom de l'attribut à retourner
+     * 
+     * @return mixed : Dépend de l'attribut qu'on a demandé
+     */
+    public function __get(string $name) {
+        if (isset($this->_attributes[$name])) {
+            return $this->_attributes[$name];
+        }
+        else {
+            throw new Exception("User: L'attribut $name n'existe pas pour l'objet.");
+        }
+    }
+
+    /**
      * Retourne le nombre de commentaires postés par l'utilisateur
      * 
      * @return int : Nombre de commentaires

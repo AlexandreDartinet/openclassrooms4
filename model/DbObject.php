@@ -36,14 +36,7 @@ abstract class DbObject {
      * 
      * @return mixed : Dépend de l'attribut qu'on a demandé
      */
-    public function __get(string $name) {
-        if (isset($this->_attributes[$name])) {
-            return $this->_attributes[$name];
-        }
-        else {
-            throw new Exception("DbObject: L'attribut $name n'existe pas pour l'objet.");
-        }
-    }
+    abstract public function __get(string $name);
     
     /**
      * Fonction appelée lorsqu'on va appeler isset($objet->$name)
