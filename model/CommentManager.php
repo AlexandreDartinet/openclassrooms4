@@ -147,4 +147,24 @@ class CommentManager extends Manager {
             return 0;
         }
     }
+
+    /**
+     * Détermine si un commentaire existe
+     * 
+     * @param int $id : Identifiant du commentaire
+     * 
+     * @return boolean : True si le commentaire exite
+     */
+    public function exists(int $id) {
+        $req = $this->_db->prepare('SELECT COUNT(*) as count FROM comments WHERE id=:id');
+        $req->bindParam(':id', $id);
+        if($req->execute()) {
+            $res = (int) $req->fetch();
+            $req->closeCursor();
+            return ($res > 0);
+        }
+        else {
+            return false;
+        }
+    }
 }
