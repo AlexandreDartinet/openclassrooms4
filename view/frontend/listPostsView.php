@@ -2,7 +2,6 @@
 /**
  * Gère l'affichage de la liste des posts
  */
-$title = "Mon blog";
 ob_start();
 ?>
 <p>Derniers billets :</p>

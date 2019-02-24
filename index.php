@@ -135,6 +135,22 @@ try { // Gestion des erreurs
             elseif (preg_match('/^\/contact\//', PATH)) {
                 viewContactForm();
             }
+            elseif (preg_match('/^\/archive\//', PATH)) {
+                $year = 0;
+                $month = 0;
+                $day = 0;
+                if(preg_match('/^\/archive\/\d{4}\//', PATH)) {
+                    $year = (int) preg_replace('/^\/archive\/(\d{4})\/.*$/', '$1', PATH);
+                }
+                if(preg_match('/^\/archive\/\d{4}\/\d{2}\//', PATH)) {
+                    $month = (int) preg_replace('/^\/archive\/\d{4}\/(\d{2})\/.*$/', '$1', PATH);
+                }
+                if(preg_match('/^\/archive\/\d{4}\/\d{2}\/\d{2}\//', PATH)) {
+                    $day = (int) preg_replace('/^\/archive\/\d{4}\/\d{2}\/(\d{2})\/.*$/', '$1', PATH);
+                }
+                $page = getPage(PATH);
+                viewArchive($page, $year, $month, $day);
+            }
             elseif (preg_match('/^\/(page-\d+\/)?$/', PATH)) {
                 $page = getPage(PATH);
                 listPosts($page);

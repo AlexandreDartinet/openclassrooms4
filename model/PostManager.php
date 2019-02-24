@@ -87,6 +87,49 @@ class PostManager extends Manager {
         }
         else {
             throw new Exception("PostManager: Aucun post correspondant à l'id $id.");
+            return Post::default();
+        }
+    }
+    
+    /**
+     * Retourne un tableau du nombre de posts par année/mois/jour
+     * 
+     * @param boolean $published : true si on ne veut que les posts publiés (true par défaut)
+     * 
+     * @return array : Tableau demandé
+     */
+    public function getDateTable($published = true) {
+        $req = $this->_db->prepare('SELECT YEAR(date_publication) as `year`, MONTH(date_publication) as `month`, DAY(date_publication) as `day` FROM posts'.($published?' WHERE published = 1 AND date_publication<=NOW()':''));//.' GROUP BY DATE(date_publication)');
+        if($req->execute()) {
+            $table = [];
+            while($line = $req->fetch()) {
+                $year = (string) $line['year'];
+                $month = (string) $line['month'];
+                $day = (string) $line['day'];
+                if(!isset($table[$year])) {
+                    $table[$year] = ["count" => 1];
+                }
+                else {
+                    $table[$year]["count"]++;
+                }
+                if(!isset($table[$year][$month])) {
+                    $table[$year][$month] = ["count" => 1];
+                }
+                else {
+                    $table[$year][$month]["count"]++;
+                }
+                if(!isset($table[$year][$month][$day])) {
+                    $table[$year][$month][$day] = ["count" => 1];
+                }
+                else {
+                    $table[$year][$month][$day]["count"]++;
+                }
+            }
+            return $table;
+        }
+        else {
+            throw new Exception("Postmanager: Aucune date à retourner.");
+            return [];
         }
     }
 

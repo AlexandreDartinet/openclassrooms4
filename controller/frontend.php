@@ -11,13 +11,34 @@
  * Liste les posts
  * 
  * @param int $page : Quelle page on souhaite afficher (par défaut 1)
+ * @param int $year : Année des posts (par défaut 0)
+ * @param int $month : Mois des posts (par défaut 0)
+ * @param int $day : Jour des posts (par défaut 0)
  * 
  * @return void
  */
-function listPosts(int $page = 1) {
+function listPosts($page = 1, $year = 0, $month = 0, $day = 0) {
     $postManager = new PostManager();
     $posts = $postManager->getPosts($page);
     $pageSelector = pageSelector(ceil($postManager->count()/PostManager::POST_PAGE), $page, PATH);
+    if($year != 0) {
+        if($month != 0) {
+            $sMonth = (string) (($month < 10)?'0':'').$month;
+            if($day != 0) {
+                $sDay = (string) (($day < 10)?'0':'').$day;
+                $title = "Archives $sDay/$sMonth/$year";
+            }
+            else {
+                $title = "Archives $sMonth/$year";
+            }
+        }
+        else {
+            $title = "Archives $year";
+        }
+    }
+    else {
+        $title = "Mon blog";
+    }
 
     require("view/frontend/listPostsView.php");
 }
@@ -144,6 +165,28 @@ function viewRecoverPasswordLink($key) {
     else {
         header('Location: /recover/retry/recover_key/');
         return;
+    }
+}
+
+/**
+ * Affiche les archives du site
+ * 
+ * @param int $page : page
+ * @param int $year : Année
+ * @param int $month : mois
+ * @param int $day : Jour
+ * 
+ * @return void
+ */
+function viewArchive(int $page, int $year, int $month, int $day) {
+    if($year == 0) {
+        $postManager = new PostManager();
+        $dateTable = $postManager->getDateTable();
+
+        require('view/frontend/archiveView.php');
+    }
+    else {
+        listPosts($page, $year, $month, $day);
     }
 }
 
