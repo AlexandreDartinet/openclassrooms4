@@ -27,9 +27,9 @@ class Report extends DbObject {
     const TYPE_SPAM = 1;
     const TYPE_INSULT = 2;
     const TYPES = [
-        0 => "Autre",
-        1 => "Spam",
-        2 => "Langage inapproprié"
+        self::TYPE_OTHER => "Autre",
+        self::TYPE_SPAM => "Spam",
+        self::TYPE_INSULT => "Langage inapproprié"
     ];
 
     /**
