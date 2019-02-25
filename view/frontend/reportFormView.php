@@ -3,7 +3,6 @@
  * Gère l'affichage du formulaire de signalement
  * On lui fournit $comment, le commentaire à signaler et $path ou envoyer les données
  */
-$title = "Signaler le commentaire de ".htmlspecialchars($comment->getName());
 ob_start();
 echo $comment->display(false, false, false);
 /**

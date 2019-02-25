@@ -2,7 +2,6 @@
 /**
  * Gère l'affichage du formulaire d'inscription
  */
-$title = "Inscription";
 ob_start();
 ?>
 <h2>Formulaire d'inscription :</h2>

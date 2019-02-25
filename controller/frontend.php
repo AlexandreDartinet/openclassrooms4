@@ -37,7 +37,7 @@ function listPosts($page = 1, $year = 0, $month = 0, $day = 0) {
         }
     }
     else {
-        $title = "Mon blog";
+        $title = "Accueil";
     }
 
     require("view/frontend/listPostsView.php");
@@ -77,6 +77,7 @@ function viewPost(int $id, $page = 1) {
         }
         $pageSelector = pageSelector(ceil($post->comments_nbr/CommentManager::COMMENT_PAGE), $page, PATH);
     }
+    $title = 'Article "'.htmlspecialchars($post->title).'"';
     
     require("view/frontend/postView.php");
 }
@@ -91,6 +92,8 @@ function viewRegister() {
         header('Location: /');
     }
     else {
+        $title = "Inscription";
+
         require("view/frontend/registerView.php");
     }
 }
@@ -106,6 +109,8 @@ function viewProfileEdit() {
     }
     else {
         $user = $_SESSION['user'];
+        $title = "Modification de votre profil";
+
         require("view/frontend/profileEditView.php");
     }
 }
@@ -124,6 +129,7 @@ function viewContactForm() {
         $name = '';
         $email = '';
     }
+    $title = "Formulaire de contact";
     
     require('view/frontend/contactFormView.php');
 }
@@ -133,6 +139,8 @@ function viewContactForm() {
  * @return void
  */
 function viewRecoverPassword() {
+    $title = "Mot de passe oublié";
+
     require('view/frontend/recoverPasswordView.php');
 }
 
@@ -147,6 +155,8 @@ function viewRecoverPasswordLink($key) {
         $recover = $recoverManager->getRecoverByKey($key);
         if($recover->isValid()) {
             $user = $recover->user;
+            $title = "Changement de mot de passe pour $user->name";
+
             require('view/frontend/recoverPasswordLinkView.php');
         }
         else {
@@ -174,6 +184,7 @@ function viewArchive(int $page, int $year, int $month, int $day) {
     if($year == 0) {
         $postManager = new PostManager();
         $dateTable = $postManager->getDateTable();
+        $title = "Archives - index";
 
         require('view/frontend/archiveView.php');
     }
@@ -193,6 +204,7 @@ function viewDirectory(int $page) {
     $userManager = new UserManager();
     $users = $userManager->getUsers($page);
     $pageSelector = pageSelector(ceil(sizeof($users)/UserManager::USER_PAGE), $page, PATH);
+    $title = "Annuaire";
 
     require('view/frontend/directoryView.php');    
 }
@@ -229,6 +241,7 @@ function viewReportForm(int $id, string $path) {
     $commentManager = new CommentManager();
     if($commentManager->exists('id', $id)) {
         $comment = $commentManager->getCommentById($id);
+        $title = "Signaler le commentaire de \"".htmlspecialchars($comment->getName()).'"';
 
         require('view/frontend/reportFormView.php');
     }

@@ -15,7 +15,7 @@ require('footer.php');
         <link href="/public/css/style.css" rel="stylesheet" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="mobile-web-app-capable" content="yes">
-        <title><?= $title ?></title>
+        <title>Mon site - <?= $title ?></title>
     </head>
     <body>
         <?= $header ?>

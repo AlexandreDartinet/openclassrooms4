@@ -9,7 +9,6 @@
  * @var string email_confirm : Confirmation de l'email (doit être identique à email) (required)
  * @var string message : Message de l'utilisateur (required)
  */
-$title = "Formulaire de contact";
 ob_start();
 ?>
 <h2>Formulaire de contact</h2>

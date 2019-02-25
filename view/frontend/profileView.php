@@ -2,7 +2,6 @@
 /**
  * Gère l'affichage du profil d'un utilisateur
  */
-
 ob_start();
 ?>
 <div class="directory-item" id="directory-item-<?= $user->id ?>">

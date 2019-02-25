@@ -2,7 +2,6 @@
 /**
  * Gère l'affichage de l'index des archives
  */
-$title = "Archives - index";
 ob_start();
 ?>
 <h2>Index des archives</h2>

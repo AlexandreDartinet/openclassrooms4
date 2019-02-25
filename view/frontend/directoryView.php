@@ -2,7 +2,6 @@
 /**
  * Gère l'affichage de l'annuaire
  */
-$title = "Annuaire";
 ob_start();
 ?>
 <h2>Utilisateurs inscrits sur le site</h2>

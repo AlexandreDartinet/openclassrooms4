@@ -2,7 +2,6 @@
 /**
  * Affiche le formulaire d'envoi de mail en cas de mot de passe oublié
  */
-$title = "Mot de passe oublié";
 ob_start();
 ?>
 <h2>Vous avez oublié votre mot de passe</h2>

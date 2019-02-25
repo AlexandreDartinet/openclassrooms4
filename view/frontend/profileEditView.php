@@ -2,7 +2,6 @@
 /**
  * Gère l'affichage du formulaire de modification du profil de l'utilisateur
  */
-$title = "Modification de votre profil";
 ob_start();
 ?>
 <h2>Modification de votre profil</h2>

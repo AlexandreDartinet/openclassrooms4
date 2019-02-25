@@ -2,7 +2,6 @@
 /**
  * Gère l'affichage de changement de mot de passe en cas de mot de passe oublié
  */
-$title = "Changement de mot de passe pour $user->name";
 ob_start();
 ?>
 <h2>Vous avez oublié votre mot de passe <?= $user->name ?></h2>

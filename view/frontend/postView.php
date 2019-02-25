@@ -2,7 +2,6 @@
 /**
  * Gère l'affichage d'un post
  */
-$title = htmlspecialchars($post->title); 
 ob_start();
 echo $post->display();
 ?>
