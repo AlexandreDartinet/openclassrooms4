@@ -315,5 +315,36 @@ class Comment extends DbObject {
         }
         return false;
     }
+    /**
+     * Retourne une chaine de caractères prête à être affichée en html
+     * 
+     * @param boolean $display_buttons : Doit-on afficher les boutons (par défaut false)
+     * @param boolean $highlight : Doit-on mettre le commentaire en avant (par défaut false)
+     * 
+     * @return string : Commentaire prêt à être affiché
+     */
+    public function display($display_buttons = true, $highlight = false) {
+        $display = '';
+        $class = 'comment'.(($this->reply_to != 0)?' comment-reply':'').(($highlight)?' comment-highlight':'');
+        $display .= "<div class='$class'>";
+        $author = $this->displayName();
+        $date = $this->rDate('date_publication');
+        $display .= "<p>";
+        $display .= "<strong>$author</strong> le $date ";
+        if($display_buttons) {
+            if($this->reply_to == 0) {
+                $display .= " <a class='comment-reply-link' id='comment-reply-link-$this->id' href='".PATH."reply_to/$this->id/'>Répondre</a> ";
+            }
+            if($this->canEdit($_SESSION['user'])) {
+                $display .= " <a class='comment-edit-link' id='comment-edit-link-$this->id' href='".PATH."edit/$this->id/'>Éditer</a> ";
+                $display .= " <a class='comment-delete-link' id='comment-delete-link-$this->id' href='".PATH."delete/$this->id/'>Supprimer</a> ";
+            }
+            $display .= " <a class='comment-report-link' id='comment-report-link-$this->id' href='".PATH."report/$this->id/'>Signaler</a> ";
+        }
+        $display .= "</p><p>";
+        $display .= nl2br(htmlspecialchars($this->content));
+        $display .= "</p></div>";
+        return $display;
+    }
 
 }
