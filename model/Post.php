@@ -177,4 +177,43 @@ class Post extends DbObject {
         return $post;
     }
 
+    /**
+     * Retourne une chaine de caractères prête à être affichée en html
+     * 
+     * @param boolean : Le post fait-il partie d'une liste (false par défaut)
+     * 
+     * @return string : Commentaire prêt à être affiché
+     */
+    public function display($in_list = false) {
+        $title = htmlspecialchars($this->title);
+        $author = $this->user->displayName();
+        $date = $this->rDate('date_publication');
+        if($in_list) {
+            $content = nl2br(htmlspecialchars($this->getExtract()));
+            $display = "<div class='post' id='post-$this->id'>";
+            $display .= "<h3 class='post-title'>";
+            $display .= "<a href='/post/$this->id/'>$title</a>";
+            $display .= "<em> le $date par $author</em>";
+            $display .= "</h3>";
+            $display .= "<p>$content</p>";
+            $display .= "<p><a href='/post/$this->id/'>";
+            $display .= ($this->comments_nbr > 0)?"$this->comments_nbr commentaires.":"Aucun commentaire.";
+            $display .= "</a></p>";
+            $display .= "</div>";
+        }
+        else {
+            $content = nl2br(htmlspecialchars($this->content));
+            $display = "<article class='post'>";
+            $display .= "<h3 class='post-title'>";
+            $display .= $title;
+            $display .= " <em>le $date par $author</em>";
+            $display .= "</h3>";
+            $display .= "<div class='post-content'>";
+            $display .= $content;
+            $display .= "</div>";
+            $display .= "</article>";
+        }
+        return $display;
+    }
+
 }

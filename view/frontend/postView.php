@@ -4,22 +4,14 @@
  */
 $title = htmlspecialchars($post->title); 
 ob_start();
+echo $post->display();
 ?>
-<div>
-    <h3>
-        <?= htmlspecialchars($post->title) ?>
-        <em>le <?= $post->rDate('date_publication') ?> par <?= $post->user->displayName() ?></em>
-    </h3>
-
-    <p>
-        <?= nl2br(htmlspecialchars($post->content)) ?>
-    </p>
-</div>
-<h2>Commentaires</h2>
+<aside id="comments">
+    <h2>Commentaires</h2>
 <?php
 if($edit){
 ?>
-<p>Editer le commentaire <a href="<?= preg_replace('/edit\/\d+\//', '', PATH) ?>">Annuler</a></p>
+    <p>Editer le commentaire <a id="comments-cancel-edit" href="<?= preg_replace('/edit\/\d+\//', '', PATH) ?>">Annuler</a></p>
 <?php
     $action = "modifyComment";
     $reply_to = $editedComment->reply_to;
@@ -30,8 +22,8 @@ if($edit){
 else {
     if($reply_to > 0) { // Si on répond à un commentaire
 ?>
-<p>Répondre au commentaire <a href="<?= preg_replace('/reply_to\/\d+\//', '', PATH) ?>">Annuler</a></p>
-<?= $reply_to_comment->display(false, true, false) ?>
+    <p>Répondre au commentaire <a id="comments-cancel-reply" href="<?= preg_replace('/reply_to\/\d+\//', '', PATH) ?>">Annuler</a></p>
+    <?= $reply_to_comment->display(false, true, false) ?>
 <?php
     }
     $action = "commentPost";
@@ -50,26 +42,26 @@ else {
  * @var string content : Corps du commentaire (required)
  */
 ?>
-<form action="/post/<?= $post->id ?>/" method="post">
-    <input type="hidden" name="action" value="<?= $action ?>"/>
-    <input type="hidden" name="id_post" value="<?= $post->id ?>"/>
-    <input type="hidden" name="reply_to" value="<?= $reply_to ?>"/>
-    <input type="hidden" name="id" value="<?= $commentId ?>"/>
+    <form action="/post/<?= $post->id ?>/" method="post">
+        <input type="hidden" name="action" value="<?= $action ?>"/>
+        <input type="hidden" name="id_post" value="<?= $post->id ?>"/>
+        <input type="hidden" name="reply_to" value="<?= $reply_to ?>"/>
+        <input type="hidden" name="id" value="<?= $commentId ?>"/>
 
-    <div>
+        <div>
 
-        <label for="name">Auteur</label><br/>
-        <input type="text" id="name" name="name" value="<?= $commentName ?>" required<?= ($_SESSION['user']->id != 0)?' readonly':'' ?>/>
+            <label for="name">Auteur</label><br/>
+            <input type="text" id="name" name="name" value="<?= $commentName ?>" required<?= ($_SESSION['user']->id != 0)?' readonly':'' ?>/>
 
-    </div>
-    <div>
-        <label for="content">Commentaire</label><br/>
-        <textarea id="content" name="content" required><?= $commentContent ?></textarea>
-    </div>
-    <div>
-        <input type="submit"/>
-    </div>
-</form>
+        </div>
+        <div>
+            <label for="content">Commentaire</label><br/>
+            <textarea id="content" name="content" required><?= $commentContent ?></textarea>
+        </div>
+        <div>
+            <input type="submit"/>
+        </div>
+    </form>
 <?php
 if($isComments) { // Si il y a des commentaires, on les affiche
     foreach($comments as &$comment) {
@@ -84,6 +76,9 @@ if($isComments) { // Si il y a des commentaires, on les affiche
     }
 echo $pageSelector;
 }
+?>
+</aside>
+<?php
 
 $content = ob_get_clean();
 
