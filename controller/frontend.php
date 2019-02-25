@@ -218,6 +218,26 @@ function viewProfile(int $id) {
 }
 
 /**
+ * Affiche le formulaire de signalement d'un commentaire, renvoie à $path si le commentaire n'existe pas
+ * 
+ * @param int $id : Identifiant du commentaire
+ * @param string $path : Ou on doit renvoyer l'utilisateur
+ * 
+ * @return void
+ */
+function viewReportForm(int $id, string $path) {
+    $commentManager = new CommentManager();
+    if($commentManager->exists('id', $id)) {
+        $comment = $commentManager->getCommentById($id);
+
+        require('view/frontend/reportFormView.php');
+    }
+    else {
+        header("Location: $path");
+    }
+}
+
+/**
  * Fonctions relatives au traitement des données
  */
 
@@ -590,4 +610,32 @@ function useRecover(string $key, int $id_user, string $password, string $passwor
     $recover->delete();
     $_SESSION['user'] = $user;
     header('Location: /');
+}
+
+/**
+ * Enregistre un signalement dans la bdd et renvoie au PATH
+ * 
+ * @param int $id : Identifiant du commentaire à signaler
+ * @param int $type : Type de signalement
+ * @param string $content : Commentaire du signalement
+ * 
+ * @return void
+ */
+function sendReport(int $id, int $type, string $content) {
+    $commentManager = new CommentManager();
+    if($commentManager->exists('id', $id)) {
+        $report = Report::default();
+        $report->user = $_SESSION['user'];
+        $report->ip = $_SERVER['REMOTE_ADDR'];
+        $report->id_comment = $id;
+        $report->type = $type;
+        if($content != '') {
+            $report->content = $content;
+        }
+        $report->save();
+        header('Location: '.PATH);
+    }
+    else {
+        header('Location: '.PATH.'retry/report_id_comment/');
+    }
 }

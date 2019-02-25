@@ -5,6 +5,7 @@
  * @var int TYPE_OTHER : Code d'un signalement "Autre"
  * @var int TYPE_SPAM : Code d'un signalement "Spam"
  * @var int TYPE_INSULT : Code d'un signalement "Insulte"
+ * @var array TYPES : Tableau de tous les types de signalement avec leur correspondance lisible
  * 
  * @var int $id : Identifiant du report
  * @var int $id_comment : Identifiant du commentaire lié au report
@@ -25,6 +26,11 @@ class Report extends DbObject {
     const TYPE_OTHER = 0;
     const TYPE_SPAM = 1;
     const TYPE_INSULT = 2;
+    const TYPES = [
+        0 => "Autre",
+        1 => "Spam",
+        2 => "Langage inapproprié"
+    ];
 
     /**
      * Fonction d'encapsulation
@@ -80,7 +86,7 @@ class Report extends DbObject {
                 break;
             case "user":
                 if(is_a($value, 'User')) {
-                    $this->_attrinutes["id_user"] = $value->id;
+                    $this->_attributes["id_user"] = $value->id;
                     $this->_attributes[$name] = $value;
                 }
                 else {

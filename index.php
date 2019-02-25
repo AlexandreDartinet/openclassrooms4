@@ -93,6 +93,13 @@ try { // Gestion des erreurs
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                     }
                     break;
+                case "sendReport":
+                    if(isset($_POST['id_comment']) && isset($_POST['type']) && isset($_POST['content'])) {
+                        sendReport((int) $_POST['id_comment'], (int) $_POST['type'], $_POST['content']);
+                    }
+                    else {
+                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                    }
                 default:
                     throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: l\'action n\'existe pas.');
                     break;
@@ -119,6 +126,11 @@ try { // Gestion des erreurs
                 if(preg_match('/delete\/\d+\//', PATH)) { // Si on a demandé la suppression d'un commentaire
                     $id_comment = (int) preg_replace('/^.*delete\/(\d+)\/.*$/', '$1', PATH);
                     deleteComment($id_comment);
+                }
+                elseif(preg_match('/report\/\d+\//', PATH)) {
+                    $id_comment = (int) preg_replace('/^.*report\/(\d+)\/.*$/', '$1', PATH);
+                    $path = preg_replace('/report\/\d+\//', '', PATH);
+                    viewReportForm($id_comment, $path);
                 }
                 else {
                     $id_post = (int) preg_replace('/^\/post\/(\d+)\/.*$/', '$1', PATH);
