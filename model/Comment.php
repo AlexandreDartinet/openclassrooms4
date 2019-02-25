@@ -325,10 +325,9 @@ class Comment extends DbObject {
      * @return string : Commentaire prêt à être affiché
      */
     public function display($display_buttons = true, $highlight = false, $append_id = true) {
-        $display = '';
         $class = 'comment'.((($this->reply_to != 0) && $append_id)?' comment-reply':'').(($highlight)?' comment-highlight':'');
         $id = ($append_id)?" id='comment-$this->id'":"";
-        $display .= "<div class='$class'$id>";
+        $display = "<div class='$class'$id>";
         $author = $this->displayName();
         $date = $this->rDate('date_publication');
         $display .= "<p>";
