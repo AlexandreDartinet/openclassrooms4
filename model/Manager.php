@@ -4,10 +4,12 @@
  * Ses filles auront accès à un objet $_db dès l'initialisation leur permettant d'interragir avec la bdd
  * 
  * @var PDO $_db : Objet PDO connecté à la bdd
+ * @var string TABLE_NAME : Nom de la table, abstract pour forcer les classes filles à la déclarer
  */
 abstract class Manager
 {
     protected $_db;
+    const TABLE_NAME = 'abstract';
 
     /**
      * Fonction appelée à l'initialisation de l'objet, initialise l'attribut $_db
@@ -16,6 +18,9 @@ abstract class Manager
      */
     public function __construct() {
         $this->_db = $this->dbConnect();
+        if(static::TABLE_NAME == 'abstract') {
+            throw new Exception("Manager: TABLE_NAME non déclaré.");
+        }
     }
 
     /**
@@ -33,6 +38,97 @@ abstract class Manager
         }
         catch (PDOException $e) { // On fait remonter les erreurs PDO
             throw new Exception("Manager: Erreur PDO: ".$e->getMessage());
+        }
+    }
+
+    /**
+     * Vérifie s'il existe des lignes dans la table ou le champ $name est égal à $value
+     * 
+     * @param string $name : Nom du champ qu'on veut tester
+     * @param mixed $value : Valeur avec laquelle on veut tester le champ
+     * 
+     * @return boolean : true si une ou plusieurs lignes existent
+     */
+    public function exists(string $name, $value) {
+        $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM ".'`'.static::TABLE_NAME.'`'." WHERE `$name`=?");
+        if($req->execute([$value])) {
+            $res = $req->fetch();
+            $req->closeCursor();
+            $count = (int) $res['count'];
+            if($count == 0) {
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        else {
+            return false;
+        }
+    }
+
+    /**
+     * Supprime des données de la bdd ou le champ $name est égal à $value
+     * 
+     * @param string $name : Nom du champ qu'on veut tester
+     * @param mixed $value : Valeur avec laquelle on veut tester le champ
+     * 
+     * @return boolean : true si exécuté avec succès
+     */
+    public function removeBy(string $name, $value) {
+        $req = $this->_db->prepare("DELETE FROM ".'`'.static::TABLE_NAME.'`'." WHERE `$name`=?");
+        return $req->execute([$value]);
+    }
+
+    /**
+     * Compte les lignes de la table, optionnellement avec un test sur le champ $name avec $value
+     * 
+     * @param string $name : Nom du champ à tester (optionnel)
+     * @param mixed $value : Valeur avec laquelle on veut tester le champ (optionnel)
+     * 
+     * @return int : Nombre de lignes
+     */
+    public function count($name = 'noQuery', $value = 'noQuery') {
+        if($name = 'noQuery') {
+            $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM ".'`'.static::TABLE_NAME.'`'."");
+            if($req->execute()) {
+                $res = $req->fetch();
+                $req->closeCursor();
+                return (int) $res['count'];
+            }
+            else {
+                return 0;
+            }
+        }
+        else {
+            $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM ".'`'.static::TABLE_NAME.'`'." WHERE `$name`=?");
+            if($req->execute([$value])) {
+                $res = $req->fetch();
+                $req->closeCursor();
+                return (int) $res['count'];
+            }
+            else {
+                return 0;
+            }
+        }
+    }
+    
+    /**
+     * Retourne une requête à partir d'un test de champs
+     * 
+     * @param string $name : Nom du champ à tester
+     * @param mixed $value : Valeur avec laquelle on teste le champ
+     * 
+     * @return PDOStatement : Requête correspondante
+     */
+    protected function getBy(string $name, $value) {
+        $req = $this->_db->prepare("SELECT * FROM ".'`'.static::TABLE_NAME.'`'." WHERE `$name`=?");
+        if($req->execute([$value])) {
+            return $req;
+        }
+        else {
+            throw new Exception("DbObject: getBy erreur dans la requête \$name($name) \$value($value).");
+            return false;
         }
     }
 }

@@ -3,12 +3,14 @@
  * Classe gérant les interactions avec la bdd en rapport avec la table comments
  * 
  * @var int COMMENT_PAGE : Constante définissant le nombre de commentaires à afficher par page
+ * @var string TABLE_NAME : Nom de la table
  * 
  * @see Manager : classe parente
  */
 class CommentManager extends Manager {
 
     const COMMENT_PAGE = 20;
+    const TABLE_NAME = 'comments';
 
     /**
      * Retourne tous les commentaires liés à un post, par page (par défaut page 1)
@@ -174,7 +176,7 @@ class CommentManager extends Manager {
      * 
      * @return int : Nombre de commentaires
      */
-    public function count(int $id_post, $replies = false) {
+    public function countByPostId(int $id_post, $replies = false) {
         $req = $this->_db->prepare('SELECT COUNT(*) as count FROM comments WHERE id_post=:id_post'.(($replies)?'':' AND reply_to=0'));
         $req->bindParam(':id_post', $id_post);
         if($req->execute()) {
@@ -195,19 +197,19 @@ class CommentManager extends Manager {
      * 
      * @return boolean : True si le commentaire exite
      */
-    public function exists(int $id) {
-        $req = $this->_db->prepare('SELECT COUNT(*) as count FROM comments WHERE id=:id');
-        $req->bindParam(':id', $id);
-        if($req->execute()) {
-            $res = $req->fetch();
-            $count = (int) $res['count'];
-            $req->closeCursor();
-            return ($count > 0);
-        }
-        else {
-            return false;
-        }
-    }
+    // public function exists(int $id) {
+    //     $req = $this->_db->prepare('SELECT COUNT(*) as count FROM comments WHERE id=:id');
+    //     $req->bindParam(':id', $id);
+    //     if($req->execute()) {
+    //         $res = $req->fetch();
+    //         $count = (int) $res['count'];
+    //         $req->closeCursor();
+    //         return ($count > 0);
+    //     }
+    //     else {
+    //         return false;
+    //     }
+    // }
 
     /**
      * Retourne le nombre de commentaires créés par un utilisateur.
@@ -217,16 +219,6 @@ class CommentManager extends Manager {
      * @return int : Nombre de commentaires
      */
     public function countCommentsByUser(User $user) {
-        $req = $this->_db->prepare('SELECT COUNT(*) AS count FROM comments WHERE id_user=:id_user');
-        $id = $user->id;
-        $req->bindParam(':id_user', $id);
-        if($req->execute()) {
-            $res = $req->fetch();
-            $req->closeCursor();
-            return (int) $res['count'];
-        }
-        else {
-            return 0;
-        }
+        return $this->count('id_user', $user->id);
     }
 }

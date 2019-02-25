@@ -65,7 +65,7 @@ spl_autoload_register("loadClass");
  * Initialisation de la base de données si nécessaire.
  */
 $userManager = new UserManager();
-if($userManager->countUsers() == 0) { // Si aucun utilisateur n'existe, on crée un nouvel utilisateur admin avec le mot de passe 123456
+if($userManager->count() == 0) { // Si aucun utilisateur n'existe, on crée un nouvel utilisateur admin avec le mot de passe 123456
     $user = new User([
         "id" => 0,
         "name" => "admin",

@@ -3,12 +3,14 @@
  * Classe gérant les interactions avec la bdd en rapport avec la table posts
  * 
  * @var int POST_PAGE : Constante définissant le nombre de posts à afficher par page
+ * @var string TABLE_NAME : Nom de la table
  * 
  * @see Manager : classe parente
  */
 class PostManager extends Manager {
 
     const POST_PAGE = 5;
+    const TABLE_NAME = 'posts';
 
     /**
      * Retourne la liste des posts selon différents critères.
@@ -178,7 +180,7 @@ class PostManager extends Manager {
      * 
      * @return int : Nombre de posts
      */
-    public function count($published = true, $year = 0, $month = 0, $day = 0) {
+    public function countPosts($published = true, $year = 0, $month = 0, $day = 0) {
         $query_start = 'SELECT COUNT(*) as count FROM posts ';
         if($year != 0) {// Si $year est renseigné
             if($month != 0) {// Si $month est renseigné

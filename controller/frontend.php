@@ -20,7 +20,7 @@
 function listPosts($page = 1, $year = 0, $month = 0, $day = 0) {
     $postManager = new PostManager();
     $posts = $postManager->getPosts($page);
-    $pageSelector = pageSelector(ceil($postManager->count()/PostManager::POST_PAGE), $page, PATH);
+    $pageSelector = pageSelector(ceil($postManager->countPosts(true, $year, $month, $day)/PostManager::POST_PAGE), $page, PATH);
     if($year != 0) {
         if($month != 0) {
             $sMonth = (string) (($month < 10)?'0':'').$month;
@@ -67,7 +67,7 @@ function viewPost(int $id, $page = 1) {
         }
         if(preg_match('/\/edit\/\d+\//', PATH)) {
             $edit_id = (int) preg_replace('/^.*edit\/(\d+)\/.*$/', '$1', PATH);
-            if($commentManager->exists($edit_id)) {
+            if($commentManager->exists('id',$edit_id)) {
                 $editedComment = $commentManager->getCommentById($edit_id);
                 if($_SESSION['user']->id == 0) {
                     if($_SESSION['user']->ip == $editedComment->ip) {
@@ -82,7 +82,7 @@ function viewPost(int $id, $page = 1) {
             }
 
         }
-        $pageSelector = pageSelector(ceil($commentManager->count($id)/CommentManager::COMMENT_PAGE), $page, PATH);
+        $pageSelector = pageSelector(ceil($commentManager->countByPostId($id)/CommentManager::COMMENT_PAGE), $page, PATH);
     }
     
     require("view/frontend/postView.php");
@@ -199,7 +199,7 @@ function viewArchive(int $page, int $year, int $month, int $day) {
 function viewDirectory(int $page) {
     $userManager = new UserManager();
     $users = $userManager->getUsers($page);
-    $pageSelector = pageSelector(ceil($userManager->countUsers()/UserManager::USER_PAGE), $page, PATH);
+    $pageSelector = pageSelector(ceil($userManager->count()/UserManager::USER_PAGE), $page, PATH);
 
     require('view/frontend/directoryView.php');    
 }
@@ -262,7 +262,7 @@ function commentPost(int $id_post, string $name, string $content, int $reply_to)
 function modifyComment(int $id, string $name, string $content) {
     $user = $_SESSION['user'];
     $commentManager = new CommentManager();
-    if($commentManager->exists($id)) {
+    if($commentManager->exists('id',$id)) {
         $comment = $commentManager->getCommentById($id);
         if($comment->canEdit($user)) {
             if(($content != $comment->content) || ($name != $comment->getName())) {
@@ -294,7 +294,7 @@ function modifyComment(int $id, string $name, string $content) {
 function deleteComment(int $id) {
     $user = $_SESSION['user'];
     $commentManager = new CommentManager();
-    if($commentManager->exists($id)) {
+    if($commentManager->exists('id', $id)) {
         $comment = $commentManager->getCommentById($id);
         if($comment->canEdit($user)) {
             $commentManager->removeComment($comment);

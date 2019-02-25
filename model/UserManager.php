@@ -3,12 +3,14 @@
  * Classe gérant les interactions avec la bdd en rapport avec la table users
  * 
  * @var int USER_PAGE : Nombre d'utilisateurs à afficher par page
+ * @var string TABLE_NAME : Nom de la table
  * 
  * @see Manager : classe parente
  */
 class UserManager extends Manager {
 
     const USER_PAGE = 20;
+    const TABLE_NAME = 'users';
 
     /**
      * Fonction permettant l'authentification d'un utilisateur, enregistre l'utilisateur retourné dans la session et efface le recover associé à l'utilisateur s'il existe.
@@ -20,8 +22,8 @@ class UserManager extends Manager {
      * @return boolean : true en cas de succès
      */
     public function login(string $name, string $password) {
-        $req = $this->_db->prepare('SELECT * FROM users WHERE name=?');
-        if($req->execute([$name])) {
+        $req = $this->getBy('name', $name);
+        if(!is_bool($req)) {
             $user = new User($req->fetch());
             $req->closeCursor();
             if(password_verify($password, $user->password)) {
@@ -79,8 +81,8 @@ class UserManager extends Manager {
      * @return User : Utilisateur demandé
      */
     public function getUserById(int $id) {
-        $req = $this->_db->prepare('SELECT * FROM users WHERE id=?');
-        if($req->execute([$id])) {
+        $req = $this->getBy('id', $id);
+        if(!is_bool($req)) {
             $user = new User($req->fetch());
             $req->closeCursor();
             return $user;
@@ -100,8 +102,8 @@ class UserManager extends Manager {
      * @return array : Tableau d'User dont les critères correspondent à la demande
      */
     public function getUsersBy(string $name, $value) {
-        $req = $this->_db->prepare("SELECT * FROM users WHERE `$name`=?");
-        if($req->execute([$value])) {
+        $req = $this->getBy($name, $value);
+        if(!is_bool($req)) {
             $users = [];
             while($line = $req->fetch()) {
                 $user = new User($line);
@@ -157,12 +159,12 @@ class UserManager extends Manager {
      * Vérifie s'il existe des lignes dans la table ou le champ $name est égal à $value et ou l'id est différent de $id (0 par défaut)
      * 
      * @param string $name : Nom du champ qu'on veut tester
-     * @param string $value : Valeur avec laquelle on veut tester le champ
+     * @param mixed $value : Valeur avec laquelle on veut tester le champ
      * @param int $id : Identifiant à exclure du résultat
      * 
      * @return boolean : true si une ou plusieurs lignes existent
      */
-    public function exists(string $name, string $value, $id = 0) {
+    public function exists(string $name, $value, $id = 0) {
         $id = (int) $id;
         $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM users WHERE `$name`=? AND id!=?");
         if($req->execute([$value, $id])) {
@@ -178,23 +180,6 @@ class UserManager extends Manager {
         }
         else {
             return false;
-        }
-    }
-
-    /**
-     * Retourne le nombre d'utilisateurs
-     * 
-     * @return int : Nombre d'utilisateurs enregistrés
-     */
-    public function countUsers() {
-        $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM users");
-        if($req->execute()) {
-            $res = $req->fetch();
-            $req->closeCursor();
-            return (int) $res['count'];
-        }
-        else {
-            return 0;
         }
     }
 }

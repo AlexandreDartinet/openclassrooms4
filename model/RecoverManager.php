@@ -2,9 +2,13 @@
 /**
  * Classe gérant les interactions avec la bdd en rapport avec la table recovers
  * 
+ * @var string TABLE_NAME : Nom de la table
+ * 
  * @see Manager : classe parente
  */
 class RecoverManager extends Manager {
+
+    const TABLE_NAME = 'recovers';
     
     /**
      * Retourne le recover associé à un identifiant
@@ -14,14 +18,14 @@ class RecoverManager extends Manager {
      * @return Recover : Recover demandé
      */
     public function getRecoverById(int $id) {
-        $req = $this->_db->prepare('SELECT * FROM recovers WHERE id=?');
-        if($req->execute([$id])) {
+        $req = $this->getBy('id', $id);
+        if(!is_bool($req)) {
             $recover = new Recover($req->fetch());
             $req->closeCursor();
             return $recover;
         }
         else {
-            throw new Exception("Aucun recover correspondant à l'id $id.");
+            throw new Exception("RecoverManager: Aucun recover correspondant à l'id $id.");
             return false;
         }
     }
@@ -34,14 +38,14 @@ class RecoverManager extends Manager {
      * @return Recover : Recover demandé
      */
     public function getRecoverByKey(string $key) {
-        $req = $this->_db->prepare('SELECT * FROM recovers WHERE recover_key=?');
-        if($req->execute([$key])) {
+        $req = $this->getBy('recover_key', $key);
+        if(!is_bool($req)) {
             $recover = new Recover($req->fetch());
             $req->closeCursor();
             return $recover;
         }
         else {
-            throw new Exception("Aucun recover correspondant à la clé $key.");
+            throw new Exception("RecoverManager: Aucun recover correspondant à la clé $key.");
             return false;
         }
     }
@@ -54,14 +58,14 @@ class RecoverManager extends Manager {
      * @return Recover : Recover demandé
      */
     public function getRecoverByUser(User $user) {
-        $req = $this->_db->prepare('SELECT * FROM recovers WHERE id_user=?');
-        if($req->execute([$user->id])) {
+        $req = $this->getBy('id_user', $user->id);
+        if(!is_bool($req)) {
             $recover = new Recover($req->fetch());
             $req->closeCursor();
             return $recover;
         }
         else {
-            throw new Exception("Aucun recover correspondant à l'utilisateur $user->name.");
+            throw new Exception("RecoverManager: Aucun recover correspondant à l'utilisateur $user->name.");
             return false;
         }
     }
@@ -104,8 +108,7 @@ class RecoverManager extends Manager {
      * @return boolean : true si la requête s'est exécutée avec succès
      */
     public function removeRecoverByUser(User $user) {
-        $req = $this->_db->prepare('DELETE FROM recovers WHERE id_user=?');
-        return $req->execute([$user->id]);
+        return $this->removeBy('id_user', $user->id);
     }
 
     /**
@@ -116,33 +119,6 @@ class RecoverManager extends Manager {
      * @return boolean : true si succès
      */
     public function removeRecover(Recover $recover) {
-        $req = $this->_db->prepare('DELETE FROM recovers WHERE id=?');
-        return $req->execute([$recover->id]);
-    }
-
-    /**
-     * Vérifie s'il existe des lignes dans la table ou le champ $name est égal à $value
-     * 
-     * @param string $name : Nom du champ qu'on veut tester
-     * @param string $value : Valeur avec laquelle on veut tester le champ
-     * 
-     * @return boolean : true si une ou plusieurs lignes existent
-     */
-    public function exists(string $name, string $value) {
-        $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM recovers WHERE `$name`=?");
-        if($req->execute([$value])) {
-            $res = $req->fetch();
-            $req->closeCursor();
-            $count = (int) $res['count'];
-            if($count == 0) {
-                return false;
-            }
-            else {
-                return true;
-            }
-        }
-        else {
-            return false;
-        }
+        return $this->removeBy('id', $recover->id);
     }
 }
