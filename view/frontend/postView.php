@@ -31,10 +31,7 @@ else {
     if($reply_to > 0) { // Si on répond à un commentaire
 ?>
 <p>Répondre au commentaire <a href="<?= preg_replace('/reply_to\/\d+\//', '', PATH) ?>">Annuler</a></p>
-<div>
-    <p><strong><?= htmlspecialchars($reply_to_comment->getName()) ?></strong> le <?= $reply_to_comment->rDate('date_publication') ?>
-    <p><?= nl2br(htmlspecialchars($reply_to_comment->content)) ?></p>
-</div>
+<?= $reply_to_comment->display(false, true) ?>
 <?php
     }
     $action = "commentPost";
@@ -77,27 +74,10 @@ else {
 if($isComments) { // Si il y a des commentaires, on les affiche
     foreach($comments as &$comment) {
         if($comment->reply_to == 0) { // Si le commentaire n'est pas une réponse, on l'affiche
-?>
-<div class="comment <?= ($comment->id == $reply_to)?' reply_to':'' // Si on est en train de répondre au commentaire, on le met en surbrillance ?>" id="comment-<?= $comment->id ?>">
-    <p>
-        <strong><?= $comment->displayName() ?></strong> le <?= $comment->rDate('date_publication') ?> 
-        <?= (($reply_to == 0) && !$edit)?'<a class="comment-reply-link" id="comment-reply-link-'.$comment->id.'" href="'.PATH.'reply_to/'.$comment->id.'/">Répondre</a>':'' ?>
-        <?= ($comment->canEdit($_SESSION['user']) && ($reply_to == 0) && !$edit)?'<a class="comment-edit-link" id="comment-edit-link-'.$comment->id.'" href="'.PATH.'edit/'.$comment->id.'/">Editer</a> <a class="comment-delete-link" id="comment-delete-link-'.$comment->id.'" href="'.PATH.'delete/'.$comment->id.'/">Supprimer</a>':'' ?>
-    </p>
-    <p><?= nl2br(htmlspecialchars($comment->content)) ?></p>
-</div>
-<?php
+            echo $comment->display((($reply_to == 0) && !$edit), ($comment->id == $reply_to));
             if($comment->replies_nbr != 0) { // Si il y a des réponses au commentaire, on les récupère et les affiche
-                foreach($comment->replies as &$reply) {
-?>
-<div class="comment reply" id="comment-<?= $reply->id ?>">
-    <p>
-        <strong><?= $reply->displayName() ?></strong> le <?= $reply->rDate('date_publication') ?>
-        <?= ($reply->canEdit($_SESSION['user']) && ($reply_to == 0) && !$edit)?'<a class="comment-edit-link" id="comment-edit-link-'.$reply->id.'" href="'.PATH.'edit/'.$reply->id.'/">Editer</a> <a class="comment-delete-link" id="comment-delete-link-'.$reply->id.'" href="'.PATH.'delete/'.$reply->id.'/">Supprimer</a>':'' ?>
-    </p>
-    <p><?= nl2br(htmlspecialchars($reply->content)) ?></p>
-</div>
-<?php
+                foreach($comment->replies as $reply) {
+                    echo $reply->display((($reply_to == 0) && !$edit), ($reply->id == $reply_to));
                 }
             }
         }

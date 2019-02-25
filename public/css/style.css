@@ -2,9 +2,9 @@
     padding:0;
     margin:0;
 }
-.reply {
+.comment-reply {
     margin-left:20px;
 }
-.reply_to {
+.comment-highlight {
     background-color:red;
 }
