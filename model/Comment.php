@@ -312,6 +312,9 @@ class Comment extends DbObject {
             if($user->id == $this->id_user) {
                 return true;
             }
+            if($user->level >= User::LEVEL_MODERATOR) {
+                return true;
+            }
         }
         return false;
     }
@@ -341,6 +344,9 @@ class Comment extends DbObject {
                 $display .= " <a class='comment-delete-link' id='comment-delete-link-$this->id' href='".PATH."delete/$this->id/'>Supprimer</a> ";
             }
             $display .= " <a class='comment-report-link' id='comment-report-link-$this->id' href='".PATH."report/$this->id/'>Signaler</a> ";
+            if($_SESSION['user']->level >= User::LEVEL_MODERATOR) {
+                $display .= " <a class='comment-reports-link' id='comment-reports-link-$this->id' href='/admin/reports/comment/$this->id/'>Signalements($this->reports_nbr)</a> ";
+            }
         }
         $display .= "</p><p>";
         $display .= nl2br(htmlspecialchars($this->content));
