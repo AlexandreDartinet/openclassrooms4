@@ -12,6 +12,7 @@
  * @var int $comments_nbr : Nombre calculé de commentaires liés au post
  * @var User $user : Utilisateur associé au post
  * @var array $comments : Tous les commentaires associés à un post
+ * @var PostManager $manager : PostManager
  * 
  * @see DbObject : classe parente
  */
@@ -64,6 +65,7 @@ class Post extends DbObject {
                 break;
             case "user":
                 if(is_a($value, 'User')) {
+                    $this->_attributes["id_user"] = $value->id;
                     $this->_attributes[$name] = $value; 
                 }
                 else {
@@ -76,6 +78,14 @@ class Post extends DbObject {
                 }
                 else {
                     throw new Exception("Post: $name(".var_export($value).") n'est pas un array.");
+                }
+                break;
+            case "manager":
+                if(is_a($value, 'PostManager')) {
+                    $this->_attributes[$name] = $value; 
+                }
+                else {
+                    throw new Exception("Post: $name(".var_export($value).") n'est pas un PostManager.");
                 }
                 break;
             default:
@@ -109,8 +119,10 @@ class Post extends DbObject {
                     break;
                 case "comments":
                     $commentManager = new CommentManager();
-                    $this->$name = $commentManager->getComments($this->id, "all");
+                    $this->$name = $commentManager->getComments($this->id, "all", true);
                     break;
+                case "manager":
+                    $this->$name = new PostManager();
             }
         }
         return parent::__get($name);
@@ -123,6 +135,28 @@ class Post extends DbObject {
      */
     public function getExtract() {
         return (strlen($this->content) > self::EXTRACT_LENGTH) ? substr($this->content, 0, self::EXTRACT_LENGTH).'...' : $this->content;
+    }
+
+    /**
+     * @see DbObject::save()
+     */
+    public function save() {
+        return $this->manager->setPost($this);
+    }
+
+    /**
+     * @see DbObject::delete()
+     */
+    public function delete() {
+        if($this->comments_nbr > 0) {
+            $reportManager = new ReportManager();
+            $commentManager = new CommentManager();
+            foreach($this->comments as &$comment) {
+                $reportManager->removeReportsByComment($comment);
+            }
+            $commentManager->removeCommentsByPost($this);
+        }
+        return $this->manager->removeBy('id', $this->id);
     }
 
     /**

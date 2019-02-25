@@ -16,6 +16,7 @@
  * @var string $content : Contenu du signalement
  * @var Comment $comment : Commentaire lié au signalement
  * @var User $user : Utilisateur lié au signalement
+ * @var ReportManager $manager : ReportManager
  * 
  * @see DbObject : classe parente
  */
@@ -70,6 +71,7 @@ class Report extends DbObject {
                 break;
             case "comment":
                 if(is_a($value, 'Comment')) {
+                    $this->_attributes["id_comment"] = $value->id;
                     $this->_attributes[$name] = $value;
                 }
                 else {
@@ -78,10 +80,19 @@ class Report extends DbObject {
                 break;
             case "user":
                 if(is_a($value, 'User')) {
+                    $this->_attrinutes["id_user"] = $value->id;
                     $this->_attributes[$name] = $value;
                 }
                 else {
                     throw new Exception("Report: $name(".var_export($value).") n'est pas un User.");
+                }
+                break;
+            case "manager":
+                if(is_a($value, 'ReportManager')) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("Report: $name(".var_export($value).") n'est pas un ReportManager.");
                 }
                 break;
             default:
@@ -118,9 +129,26 @@ class Report extends DbObject {
                     $comment = $commentManager->getCommentById($this->id_comment);
                     $this->$name = $comment;
                     break;
+                case "manager":
+                    $this->$name = new ReportManager();
+                    break;
             }
         }
         return parent::__get($name);
+    }
+
+    /**
+     * @see DbObject::save()
+     */
+    public function save() {
+        return $this->manager->setReport($this);
+    }
+
+    /**
+     * @see DbObject::delete()
+     */
+    public function delete() {
+        return $this->manager->removeReport($this);
     }
 
     /**

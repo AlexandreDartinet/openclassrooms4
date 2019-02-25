@@ -17,6 +17,13 @@
  * @var int $level : Niveau de l'utilisateur
  * @var string $ip : Ip de l'utilisateur
  * @var string $name_display : Nom à afficher sur le site
+ * @var int $comments_nbr : Nombre de commentaires par l'utilisateur
+ * @var int $posts_nbr : Nombre de posts par l'utilisateur
+ * @var int $reports_nbr : Nombre de signalements par l'utilisateur
+ * @var array $comments : Commentaires postés par l'utilisateur
+ * @var array $posts : Posts publiés par l'utilisateur
+ * @var array $reports : Signalements envoyés par l'utilisateur
+ * @var UserManager $manager : UserManager
  * 
  * @see DbObject : classe parente
  */
@@ -97,6 +104,47 @@ class User extends DbObject {
                     throw new Exception("User: $name($value) invalide.");
                 }
                 break;
+            case "comments_nbr":
+                $this->_attributes[$name] = (int) $value;
+                break;
+            case "posts_nbr":
+                $this->_attributes[$name] = (int) $value;
+                break;
+            case "reports_nbr":
+                $this->_attributes[$name] = (int) $value;
+                break;
+            case "comments":
+                if(is_array($value)) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("User: $name(".var_export($value).") n'est pas un Array.");
+                }
+                break;
+            case "posts":
+                if(is_array($value)) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("User: $name(".var_export($value).") n'est pas un Array.");
+                }
+                break;
+            case "reports":
+                if(is_array($value)) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("User: $name(".var_export($value).") n'est pas un Array.");
+                }
+                break;
+            case "manager":
+                if(is_a($value, 'UserManager')) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("User: $name(".var_export($value).") n'est pas un UserManager.");
+                }
+                break;
             default:
                 throw new Exception("User: $name($value) inconnu.");
                 break;
@@ -104,25 +152,69 @@ class User extends DbObject {
     }
 
     /**
-     * Retourne le nombre de commentaires postés par l'utilisateur
+     * Cette fonction est appelée lorsqu'on appelle $objet->$name pour retourner les attributs de l'objet.
+     * Instancie dynamiquement les objets si ils ne le sont pas déjà.
      * 
-     * @return int : Nombre de commentaires
+     * @param string $name : Nom de l'attribut à retourner
+     * 
+     * @return mixed : Dépend de l'attribut qu'on a demandé
+     * 
+     * @see DbObject::__get()
      */
-    public function getCommentsNbr() {
-        $commentManager = new CommentManager();
-        return (int) $commentManager->countCommentsByUser($this);
-    }
-
-    /**
-     * Retourne le nombre de posts publiés par l'utilisateur
-     * 
-     * @param boolean $published : true si on ne veut que les posts publiés
-     * 
-     * @return int : Nombre de commentaires
-     */
-    public function getPostsNbr($published = true) {
-        $postManager = new PostManager();
-        return (int) $postManager->countPostsByUser($this, $published);
+    public function __get(string $name) {
+        if(!isset($this->$name)) {
+            switch($name) {
+                case "comments_nbr":
+                    if(isset($this->comments)) {
+                        $count = sizeof($this->comments);
+                    }
+                    else {
+                        $commentManager = new CommentManager();
+                        $count = $commentManager->countCommentsByUser($this);
+                    }
+                    $this->$name = $count;
+                    break;
+                case "posts_nbr":
+                    if(isset($this->posts)) {
+                        $count = sizeof($this->posts);
+                    }
+                    else {
+                        $postManager = new PostManager();
+                        $count = $postManager->countPostsByUser($this, false);
+                    }
+                    $this->$name = $count;
+                    break;
+                case "reports_nbr":
+                    if(isset($this->reports)) {
+                        $count = sizeof($this->reports);
+                    }
+                    else {
+                        $reportManager = new ReportManager();
+                        $count = $reportManager->count('id_user', $this->id);
+                    }
+                    $this->$name = $count;
+                    break;
+                case "comments":
+                    $commentManager = new CommentManager();
+                    $comments = $commentManager->getCommentsByUser($this);
+                    $this->$name = $comments;
+                    break;
+                case "posts":
+                    $postManager = new PostManager();
+                    $posts = $postManager->getPostsByUser($this);
+                    $this->$name = $posts;
+                    break;
+                case "reports":
+                    $reportManager = new ReportManager();
+                    $reports = $reportManager->getReportsByUser($this);
+                    $this->$name = $reports;
+                    break;
+                case "manager":
+                    $this->$name = new UserManager();
+                    break;
+            }
+        }
+        return parent::__get($name);
     }
 
     /**
@@ -176,6 +268,26 @@ class User extends DbObject {
                 return "Inconnu";
                 break;
         }
+    }
+
+    /**
+     * @see DbObject::save()
+     */
+    public function save() {
+        return $this->manager->setUser($this);
+    }
+
+    /**
+     * @see DbObject::delete()
+     */
+    public function delete() {
+        $postManager = new PostManager();
+        $postManager->removeUser($this);
+        $commentManager = new CommentManager();
+        $commentManager->removeUser($this);
+        $reportManager = new ReportManager();
+        $reportManager->removeUser($this);
+        return $this->manager->removeBy('id',$this->id);
     }
 
     /**

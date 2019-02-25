@@ -8,6 +8,7 @@
  * @var string $recover_key : La clé unique du recover
  * @var string $date_sent : Date d'envoi du recover au format DateTime
  * @var User $user : Utilisateur lié au recover
+ * @var RecoverManager $manager : RecoverManager
  * 
  * @see DbObject : classe parente
  */
@@ -46,10 +47,19 @@ class Recover extends DbObject {
                 break;
             case "user":
                 if(is_a($value, 'User')) {
+                    $this->_attributes["id_user"] = $value->id;
                     $this->_attributes[$name] = $value;
                 }
                 else {
                     throw new Exception("Recover: $name(".var_export($value).") n'est pas un User.");
+                }
+                break;
+            case "user":
+                if(is_a($value, 'RecoverManager')) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("Recover: $name(".var_export($value).") n'est pas un RecoverManager.");
                 }
                 break;
             default:
@@ -79,7 +89,10 @@ class Recover extends DbObject {
                     else {
                         $user = User::default();
                     }
-                    $this->user = $user;
+                    $this->$name = $user;
+                    break;
+                case "manager":
+                    $this->$name = new RecoverManager();
                     break;
             }
         }
@@ -96,6 +109,20 @@ class Recover extends DbObject {
         $date->add(new DateInterval("PT".self::HOURS_VALID."H"));
         $now = new DateTime("now");
         return $date >= $now;
+    }
+
+    /**
+     * @see DbObject::save()
+     */
+    public function save() {
+        return $this->manager->setRecover($this);
+    }
+
+    /**
+     * @see DbObject::delete()
+     */
+    public function delete() {
+        return $this->manager->removeBy('id', $this->id);
     }
 
     /**

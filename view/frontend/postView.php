@@ -88,8 +88,7 @@ if($isComments) { // Si il y a des commentaires, on les affiche
 </div>
 <?php
             if($comment->replies_nbr != 0) { // Si il y a des réponses au commentaire, on les récupère et les affiche
-                $replies = $comment->replies;
-                foreach($replies as &$reply) {
+                foreach($comment->replies as &$reply) {
 ?>
 <div class="comment reply" id="comment-<?= $reply->id ?>">
     <p>

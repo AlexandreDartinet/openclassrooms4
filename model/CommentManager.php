@@ -69,6 +69,29 @@ class CommentManager extends Manager {
     }
 
     /**
+     * Récupère les commentaires d'un utilisateur
+     * 
+     * @param User $user : L'user dont on veut récupérer les commentaires
+     * 
+     * @return array : Un tableau d'objets Comment
+     */
+    public function getCommentsByUser(User $user) {
+        $req = $this->_db->prepare('SELECT a.*, COUNT(b.id) AS replies_nbr FROM comments a LEFT JOIN comments b ON a.id = b.reply_to WHERE a.id_user=?');
+        if($req->execute([$user->id])) {
+            $comments = [];
+            while($line = $req->fetch()) {
+                $comments[] = new Comment($line);
+            }
+            $req->closeCursor();
+            return $comments;
+        }
+        else {
+            throw new Exception("CommentManager: Utilisateur $user->id n'a aucun commentaire.");
+            return [];
+        }
+    }
+
+    /**
      * Enregistre un nouveau commentaire, ou en modifie un existant dans la bdd
      * Enregistre si l'id est à 0, sinon modifie.
      * 
@@ -130,49 +153,27 @@ class CommentManager extends Manager {
     }
 
     /**
-     * Fonction pour supprimer un commentaire de la bdd, en s'assurant qu'on ne laisse pas de réponses orphelines
+     * Fonction pour supprimer un commentaire de la bdd et ses réponses
      * 
      * @param Comment $comment : Commentaire à supprimer
-     * @param boolean $force : Si on veut forcer la suppression d'un commentaire qu'il y aie des réponses ou non
      * 
      * @return boolean : true si execution réussie
      */
-    public function removeComment(Comment $comment, $force = false) {
-        $remove = $force; // Par défaut, on modifie le commentaire plutôt que de le supprimer, sauf si on force la suppression
-        $reportManager = new ReportManager();
-        $reportManager->removeBy('id_comment', $comment->id); // On supprime les reports en rapport avec le commentaire
-        if($force and ($comment->replies_nbr > 0)) { // Si on force la suppression, et qu'il y a des réponses, on supprime également les reports des réponses
-            foreach($comment->replies as &$reply) {
-                $reportManager->removeBy('id_comment', $reply->id);
-            }
-        }
-        if($comment->reply_to == 0) { // Si le commentaire n'est pas une réponse
-            if($comment->replies_nbr == 0) { // Si le commentaire n'a aucune réponse, on le supprime
-                $remove = true;
-            }
-        }
-        else { // Si le commentaire est une réponse, on peut toujours le supprimer
-            $remove = true;
-            $parentComment = $this->getCommentById($comment->reply_to);
-            /**
-             * Si le commentaire parent n'a plus de réponses après la suppression, et a été supprimé, on le supprime définitivement
-             */
-            if($parentComment->replies_nbr <= 1 && $parentComment->ip == "0.0.0.0" && $parentComment->id_user == 0) {
-                return $this->removeComment($parentComment, true); // On peut sortir de la fonction, cet appel va supprimer aussi le commentaire actuel
-            }
-        }
-        if($remove) {
-            $req = $this->_db->prepare('DELETE FROM comments WHERE id=:id OR reply_to=:id');
-            $req->bindParam(':id', $comment->id);
-            return $req->execute();
-        }
-        else {
-            $comment->content = '<Supprimé>';
-            $comment->id_user = 0;
-            $comment->name = 'Supprimé';
-            $comment->ip = '0.0.0.0';
-            return $this->setComment($comment);
-        }
+    public function removeComment(Comment $comment) {
+        $req = $this->_db->prepare('DELETE FROM comments WHERE id=:id OR reply_to=:id');
+        $req->bindParam(':id', $comment->id);
+        return $req->execute();
+    }
+    
+    /**
+     * Fonction pour supprimer tous les commentaires associés à un post
+     * 
+     * @param Post $post : Post dont on veut supprimer les commentaires
+     * 
+     * @return boolean : true si execution réussie
+     */
+    public function removeCommentsByPost(Post $post) {
+        return $this->removeBy('id_post', $post->id);
     }
 
     /**
@@ -198,27 +199,6 @@ class CommentManager extends Manager {
     }
 
     /**
-     * Détermine si un commentaire existe
-     * 
-     * @param int $id : Identifiant du commentaire
-     * 
-     * @return boolean : True si le commentaire exite
-     */
-    // public function exists(int $id) {
-    //     $req = $this->_db->prepare('SELECT COUNT(*) as count FROM comments WHERE id=:id');
-    //     $req->bindParam(':id', $id);
-    //     if($req->execute()) {
-    //         $res = $req->fetch();
-    //         $count = (int) $res['count'];
-    //         $req->closeCursor();
-    //         return ($count > 0);
-    //     }
-    //     else {
-    //         return false;
-    //     }
-    // }
-
-    /**
      * Retourne le nombre de commentaires créés par un utilisateur.
      * 
      * @param User $user : Utilisateur dont on veut récupérer le nombre de commentaires
@@ -227,5 +207,17 @@ class CommentManager extends Manager {
      */
     public function countCommentsByUser(User $user) {
         return $this->count('id_user', $user->id);
+    }
+
+    /**
+     * Retire un utilisateur des commentaires et le change en anonyme.
+     * 
+     * @param User $user : Utilisateur qu'on souhaite retirer
+     * 
+     * @return boolean : true si succès
+     */
+    public function removeUser(User $user) {
+        $req = $this->_db->prepare('UPDATE comments SET id_user=0 WHERE id_user=?');
+        return $req->execute([$user->id]);
     }
 }

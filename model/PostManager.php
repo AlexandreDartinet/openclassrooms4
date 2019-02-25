@@ -94,6 +94,30 @@ class PostManager extends Manager {
     }
 
     /**
+     * Retourne les posts publiés par un User
+     * 
+     * @param User $user : Utilisateur dont on veut les posts
+     * 
+     * @return array : Tableau de Post
+     */
+    public function getPostsByUser(User $user) {
+        $req = $this->_db->prepare('SELECT posts.*, COUNT(comments.id) AS comments_nbr FROM posts LEFT JOIN comments ON posts.id = comments.id_post WHERE posts.id_user=?');
+        if($req->execute([$user->id])) {
+            $posts = [];
+            while($line = $req->fetch()) {
+                $post = new Post($line);
+                $posts[] = $post;
+            }
+            $req->closeCursor();
+            return $posts;
+        }
+        else {
+            throw new Exception("PostManager: Aucun post correspondant à l'utilisateur $user->id.");
+            return [];
+        }
+    }
+
+    /**
      * Retourne un tableau du nombre de posts par année/mois/jour
      * 
      * @param boolean $published : true si on ne veut que les posts publiés (true par défaut)
@@ -235,5 +259,17 @@ class PostManager extends Manager {
         else {
             return 0;
         }
+    }
+
+    /**
+     * Retire un utilisateur des posts et le change en anonyme.
+     * 
+     * @param User $user : Utilisateur qu'on souhaite retirer
+     * 
+     * @return boolean : true si succès
+     */
+    public function removeUser(User $user) {
+        $req = $this->_db->prepare('UPDATE posts SET id_user=0 WHERE id_user=?');
+        return $req->execute([$user->id]);
     }
 }

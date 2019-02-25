@@ -41,7 +41,7 @@ abstract class DbObject {
             return $this->_attributes[$name];
         }
         else {
-            throw new Exception("Comment: L'attribut $name n'existe pas pour l'objet.");
+            throw new Exception("DbObject: L'attribut $name n'existe pas pour l'objet.");
         };
     }
 
@@ -70,6 +70,20 @@ abstract class DbObject {
             }
         }
     }
+
+    /**
+     * On s'assure que les classes fille auront une fonction save() pour enregistrer l'objet dans la bdd
+     * 
+     * @return boolean : true si la requête s'est exécutée avec succès
+     */
+    abstract public function save();
+
+    /**
+     * On s'assure que les classes filles auront une fonction delete() pour supprimer l'objet de la bdd
+     * 
+     * @return boolean : true si la requête s'est exécutée avec succès
+     */
+    abstract public function delete();
 
     /**
      * On s'assure que les classes filles auront une fonction statique default() pour retourner un objet par défaut de la classe.

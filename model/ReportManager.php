@@ -42,7 +42,31 @@ class ReportManager extends Manager {
             return $reports;
         }
         else {
-            throw new Exception("ReportManager: Aucun commentaire trouvé \$id_comment($id_comment), \$page($page).");
+            throw new Exception("ReportManager: Aucun signalement trouvé \$id_comment($id_comment), \$page($page).");
+            return [];
+        }
+    }
+
+    /**
+     * Retourne les reports associés à un User
+     * 
+     * @param User $user : Utilisateur dont on veut les reports
+     * 
+     * @return array : Tableau de Report
+     */
+    public function getReportsByUser(User $user) {
+        $req = $this->getBy('id_user', $user->id);
+        if(!is_bool($req)) {
+            $reports = [];
+            while($line = $req->fetch()) {
+                $report = new Report($line);
+                $reports[] = $report;
+            }
+            $req->closeCursor();
+            return $reports;
+        }
+        else {
+            throw new Exception("ReportManager: L'utilisateur $user->id n'a aucun signalement.");
             return [];
         }
     }
@@ -122,5 +146,17 @@ class ReportManager extends Manager {
      */
     public function removeReport(Report $report) {
         return $this->removeBy('id', $report->id);
+    }
+
+    /**
+     * Retire un utilisateur des reports et le change en anonyme.
+     * 
+     * @param User $user : Utilisateur qu'on souhaite retirer
+     * 
+     * @return boolean : true si succès
+     */
+    public function removeUser(User $user) {
+        $req = $this->_db->prepare('UPDATE reports SET id_user=0 WHERE id_user=?');
+        return $req->execute([$user->id]);
     }
 }

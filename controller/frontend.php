@@ -69,20 +69,13 @@ function viewPost(int $id, $page = 1) {
             $edit_id = (int) preg_replace('/^.*edit\/(\d+)\/.*$/', '$1', PATH);
             if($commentManager->exists('id',$edit_id)) {
                 $editedComment = $commentManager->getCommentById($edit_id);
-                if($_SESSION['user']->id == 0) {
-                    if($_SESSION['user']->ip == $editedComment->ip) {
-                        $edit = true;
-                    }
-                }
-                else {
-                    if($_SESSION['user']->id == $editedComment->id_user) {
-                        $edit = true;
-                    }
+                if($editedComment->canEdit($_SESSION['user'])) {
+                    $edit = true;
                 }
             }
 
         }
-        $pageSelector = pageSelector(ceil($commentManager->countByPostId($id)/CommentManager::COMMENT_PAGE), $page, PATH);
+        $pageSelector = pageSelector(ceil($post->comments_nbr/CommentManager::COMMENT_PAGE), $page, PATH);
     }
     
     require("view/frontend/postView.php");
@@ -157,7 +150,7 @@ function viewRecoverPasswordLink($key) {
             require('view/frontend/recoverPasswordLinkView.php');
         }
         else {
-            $recoverManager->removeRecover($recover);
+            $recover->delete();
             header('Location: /recover/retry/date_sent/');
         }
     }
@@ -199,7 +192,7 @@ function viewArchive(int $page, int $year, int $month, int $day) {
 function viewDirectory(int $page) {
     $userManager = new UserManager();
     $users = $userManager->getUsers($page);
-    $pageSelector = pageSelector(ceil($userManager->count()/UserManager::USER_PAGE), $page, PATH);
+    $pageSelector = pageSelector(ceil(sizeof($users)/UserManager::USER_PAGE), $page, PATH);
 
     require('view/frontend/directoryView.php');    
 }
@@ -239,14 +232,13 @@ function viewProfile(int $id) {
  * @return void
  */
 function commentPost(int $id_post, string $name, string $content, int $reply_to) {
-    $commentManager = new CommentManager();
     $comment = Comment::default();
     $comment->id_post = $id_post;
     $comment->id_user = $_SESSION['user']->id;
     $comment->name = $name;
     $comment->content = $content;
     $comment->reply_to = $reply_to;
-    $commentManager->setComment($comment);
+    $comment->save();
     header("Location: /post/$id_post/");
 }
 
@@ -268,7 +260,7 @@ function modifyComment(int $id, string $name, string $content) {
             if(($content != $comment->content) || ($name != $comment->getName())) {
                 $comment->name = $name;
                 $comment->content = $content."\nModifié le ".Comment::rNow();
-                $commentManager->setComment($comment);
+                $comment->save();
                 header('Location: '.PATH);
             }
             else {
@@ -297,7 +289,7 @@ function deleteComment(int $id) {
     if($commentManager->exists('id', $id)) {
         $comment = $commentManager->getCommentById($id);
         if($comment->canEdit($user)) {
-            $commentManager->removeComment($comment);
+            $comment->delete();
             header('Location: /post/'.$comment->id_post.'/');
         }
         else {
@@ -322,6 +314,9 @@ function login(string $name, string $password, string $path) {
     $userManager = new UserManager();
     if($userManager->login($name, $password)) {
         header("Location: $path");
+    }
+    else {
+        header("Location: ".$path."retry/login_fail/");
     }
 }
 
@@ -417,7 +412,7 @@ function registerUser(string $name, string $password, string $password_confirm, 
     $_SESSION['user']->last_seen = User::now();
     $_SESSION['user']->level = User::LEVEL_USER;
     $_SESSION['user']->name_display = $name_display;
-    $userManager->setUser($_SESSION['user']);
+    $_SESSION['user']->save();
     $userManager->login($name, $password);
     smtpMailer($email, "noreply@".SITE_URL, "noreply", "Nouveau compte sur ".SITE_URL, "Le compte $name a été créé.\nCeci est un mail automatique, merci de ne pas y répondre.");
     header('Location: /');
@@ -444,21 +439,6 @@ function modifyUser(int $id, string $name, string $name_display, string $email, 
     $userManager = new UserManager();
     if($id != $user->id) {
         header('Location: /');
-    }
-    if($old_password != '' && $password != '') {
-        if(password_verify($old_password, $user->password)) {
-            if($password == $password_confirm) {
-                $user->password = password_hash($password, PASSWORD_DEFAULT);
-            }
-            else {
-                header('Location: /profile/edit/retry/password_confirm/');
-                return;
-            }
-        }
-        else {
-            header('Location: /profile/edit/retry/password/');
-            return;
-        }
     }
     if($name != $user->name) {
         if($userManager->exists('name', $name, $id)) {
@@ -487,9 +467,24 @@ function modifyUser(int $id, string $name, string $name_display, string $email, 
             return;
         }
     }
+    if($old_password != '' && $password != '') {
+        if(password_verify($old_password, $user->password)) {
+            if($password == $password_confirm) {
+                $user->password = password_hash($password, PASSWORD_DEFAULT);
+            }
+            else {
+                header('Location: /profile/edit/retry/password_confirm/');
+                return;
+            }
+        }
+        else {
+            header('Location: /profile/edit/retry/password/');
+            return;
+        }
+    }
     $user->ip = $_SERVER['REMOTE_ADDR'];
     $user->last_seen = User::now();
-    $userManager->setUser($user);
+    $user->save();
     $_SESSION['user'] = $user;
     header('Location: /profile/edit/');
 }
@@ -531,7 +526,7 @@ function sendRecover(string $value) {
                 $send = false;
             }
             else {
-                $recoverManager->removeRecover($recover);
+                $recover->delete();
                 $send = true;
             }
         }
@@ -540,9 +535,9 @@ function sendRecover(string $value) {
         }
         if($send) {
             $recover = Recover::default();
-            $recover->id_user = $user->id;
+            $recover->user = $user;
             $recover->recover_key = password_hash($user->email, PASSWORD_DEFAULT);
-            $recoverManager->setRecover($recover);
+            $recover->save();
             $subject = "Lien de modification du mot de passe ".SITE_URL;
             $body = 
 "Une demande de réinitialisation a été soumise pour votre compte $user->name sur le site ".SITE_URL.".
@@ -585,15 +580,14 @@ function useRecover(string $key, int $id_user, string $password, string $passwor
         return;
     }
     if(!$recover->isValid()) {
-        $recoverManager->removeRecover($recover);
+        $recover->delete();
         header("Location: /recover/retry/expired/");
         return;
     }
-    $userManager = new UserManager();
     $user = $recover->user;
     $user->password = password_hash($password, PASSWORD_DEFAULT);
-    $userManager->setUser($user);
-    $recoverManager->removeRecover($recover);
+    $user->save();
+    $recover->delete();
     $_SESSION['user'] = $user;
     header('Location: /');
 }

@@ -16,6 +16,8 @@
  * @var Post $post : Post associé au commentaire
  * @var array $replies : Tableau de commentaires qui sont des réponses à ce commentaire
  * @var array $reports : Tableau des signalement de ce commentaire
+ * @var Comment $parent : Commentaire duquel celui ci est une réponse, default si pas une réponse
+ * @var CommentManager $manager : CommentManager
  * 
  * @see DbObject : classe parente
  */
@@ -80,6 +82,7 @@ class Comment extends DbObject {
                 break;
             case "user":
                 if(is_a($value, 'User')) {
+                    $this->_attributes["id_user"] = $value->id;
                     $this->_attributes[$name] = $value;
                 }
                 else {
@@ -88,6 +91,7 @@ class Comment extends DbObject {
                 break;
             case "post":
                 if(is_a($value, 'Post')) {
+                    $this->_attributes["id_post"] = $value->id;
                     $this->_attributes[$name] = $value;
                 }
                 else {
@@ -108,6 +112,22 @@ class Comment extends DbObject {
                 }
                 else {
                     throw new Exception("Comment: $name(".var_export($value).") n'est pas un Array.");
+                }
+                break;
+            case "parent":
+                if(is_a($value, 'Comment')) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("Comment: $name(".var_export($value).") n'est pas un Comment.");
+                }
+                break;
+            case "manager":
+                if(is_a($value, 'CommentManager')) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("Comment: $name(".var_export($value).") n'est pas un CommentManager.");
                 }
                 break;
             default:
@@ -137,37 +157,95 @@ class Comment extends DbObject {
                     else {
                         $user = User::default();
                     }
-                    $this->user = $user;
+                    $this->$name = $user;
                     break;
                 case "post":
                     $postManager = new PostManager();
                     $post = $postManager->getPostById($this->id_post);
-                    $this->post = $post;
+                    $this->$name = $post;
                     break;
                 case "replies":
-                    $commentManager = new CommentManager();
-                    $replies = $commentManager->getReplies($this);
-                    $this->replies = $replies;
+                    $replies = $this->manager->getReplies($this);
+                    $this->$name = $replies;
                     break;
                 case "reports":
                     $reportManager = new ReportManager();
                     $reports = $reportManager->getReports($this->id, "all");
-                    $this->reports = $reports;
+                    $this->$name = $reports;
                     break;
                 case "reports_nbr":
                     if(isset($this->reports)) {
-                        $this->reports_nbr = sizeof($this->reports);
+                        $this->$name = sizeof($this->reports);
                     }
                     else {
                         $reportManager = new ReportManager();
-                        $this->reports_nbr = $reportManager->count('id_comment', $this->id);
+                        $this->$name = $reportManager->count('id_comment', $this->id);
                     }
+                    break;
+                case "parent":
+                    if($this->reply_to != 0) {
+                        $parent = $this->manager->getCommentById($this->reply_to);
+                    }
+                    else {
+                        $parent = Comment::default();
+                    }
+                    $this->$name = $parent;
+                    break;
+                case "manager":
+                    $this->$name = new CommentManager();
                     break;
             }
         }
         return parent::__get($name);
     }
 
+    /**
+     * @see DbObject::save()
+     */
+    public function save() {
+        return $this->manager->setComment($this);
+    }
+
+    /**
+     * @param boolean $force : true si on veut forcer la suppression
+     * 
+     * @see DbObject::delete()
+     */
+    public function delete($force = false) {
+        $remove = $force; // Par défaut on ne force pas la suppression
+        $reportManager = new ReportManager();
+        $reportManager->removeBy('id_comment', $this->id); // On supprime les reports en rapport avec le commentaire
+        if($force and ($this->replies_nbr > 0)) { // Si on force la suppression, et qu'il y a des réponses, on supprime également les reports des réponses
+            foreach($this->replies as &$reply) {
+                $reportManager->removeBy('id_comment', $reply->id);
+            }
+        }
+        if($this->reply_to == 0) { // Si le commentaire n'est pas une réponse
+            if($this->replies_nbr == 0) { // Si le commentaire n'a aucune réponse, on le supprime
+                $remove = true;
+            }
+        }
+        else { // Si le commentaire est une réponse, on peut toujours le supprimer
+            $remove = true;
+            $parentComment = $this->parent;
+            /**
+             * Si le commentaire parent n'a plus de réponses après la suppression, et a été supprimé, on le supprime définitivement
+             */
+            if($parentComment->replies_nbr <= 1 && $parentComment->ip == "0.0.0.0" && $parentComment->id_user == 0) {
+                return $parentComment->delete(true); // On peut sortir de la fonction, cet appel va supprimer aussi le commentaire actuel
+            }
+        }
+        if($remove) {
+            return $this->manager->removeComment($this);
+        }
+        else {
+            $this->content = '<Supprimé>';
+            $this->id_user = 0;
+            $this->name = 'Supprimé';
+            $this->ip = '0.0.0.0';
+            return $this->save();
+        }
+    }
 
     /**
      * Fonction retournant un objet par défaut
