@@ -11,10 +11,11 @@
  * @var string $name : Nom de l'auteur du commentaire
  * @var string $content : Corps du commentaire
  * @var int $replies_nbr : Nombre calculé de réponses à ce commentaire
+ * @var int $reports_nbr : Nombre de signalements à ce commentaire
  * @var User $user : Utilisateur associé au commentaire
  * @var Post $post : Post associé au commentaire
  * @var array $replies : Tableau de commentaires qui sont des réponses à ce commentaire
- * 
+ * @var array $reports : Tableau des signalement de ce commentaire
  * 
  * @see DbObject : classe parente
  */
@@ -74,6 +75,9 @@ class Comment extends DbObject {
             case "replies_nbr":
                 $this->_attributes[$name] = (int) $value;
                 break;
+            case "reports_nbr":
+                $this->_attributes[$name] = (int) $value;
+                break;
             case "user":
                 if(is_a($value, 'User')) {
                     $this->_attributes[$name] = $value;
@@ -91,6 +95,14 @@ class Comment extends DbObject {
                 }
                 break;
             case "replies":
+                if(is_array($value)) {
+                    $this->_attributes[$name] = $value;
+                }
+                else {
+                    throw new Exception("Comment: $name(".var_export($value).") n'est pas un Array.");
+                }
+                break;
+            case "reports":
                 if(is_array($value)) {
                     $this->_attributes[$name] = $value;
                 }
@@ -136,6 +148,20 @@ class Comment extends DbObject {
                     $commentManager = new CommentManager();
                     $replies = $commentManager->getReplies($this);
                     $this->replies = $replies;
+                    break;
+                case "reports":
+                    $reportManager = new ReportManager();
+                    $reports = $reportManager->getReports($this->id, "all");
+                    $this->reports = $reports;
+                    break;
+                case "reports_nbr":
+                    if(isset($this->reports)) {
+                        $this->reports_nbr = sizeof($this->reports);
+                    }
+                    else {
+                        $reportManager = new ReportManager();
+                        $this->reports_nbr = $reportManager->count('id_comment', $this->id);
+                    }
                     break;
             }
         }

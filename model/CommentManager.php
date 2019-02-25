@@ -139,6 +139,13 @@ class CommentManager extends Manager {
      */
     public function removeComment(Comment $comment, $force = false) {
         $remove = $force; // Par défaut, on modifie le commentaire plutôt que de le supprimer, sauf si on force la suppression
+        $reportManager = new ReportManager();
+        $reportManager->removeBy('id_comment', $comment->id); // On supprime les reports en rapport avec le commentaire
+        if($force and ($comment->replies_nbr > 0)) { // Si on force la suppression, et qu'il y a des réponses, on supprime également les reports des réponses
+            foreach($comment->replies as &$reply) {
+                $reportManager->removeBy('id_comment', $reply->id);
+            }
+        }
         if($comment->reply_to == 0) { // Si le commentaire n'est pas une réponse
             if($comment->replies_nbr == 0) { // Si le commentaire n'a aucune réponse, on le supprime
                 $remove = true;
