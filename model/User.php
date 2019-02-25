@@ -233,7 +233,7 @@ class User extends DbObject {
      */
     public function displayName() {
         if($this->id == 0) {
-            return htmlspecialchars($this->name_display);
+            return "<a class='no-profile-link'>".htmlspecialchars($this->name_display)."</a>";
         }   
         else {
             return "<a class='profile-link profile-link-$this->id' href='/profile/$this->id/'>".htmlspecialchars($this->name_display)."</a>";
