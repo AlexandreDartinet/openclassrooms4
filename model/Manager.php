@@ -89,7 +89,7 @@ abstract class Manager
      * @return int : Nombre de lignes
      */
     public function count($name = 'noQuery', $value = 'noQuery') {
-        if($name = 'noQuery') {
+        if($name == 'noQuery') {
             $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM ".'`'.static::TABLE_NAME.'`'."");
             if($req->execute()) {
                 $res = $req->fetch();
