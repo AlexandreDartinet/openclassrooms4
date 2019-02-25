@@ -7,6 +7,7 @@
  * @var int LEVEL_MODERATOR : Niveau d'un modérateur
  * @var int LEVEL_EDITOR : Niveau d'un éditeur
  * @var int LEVEL_ADMIN : Niveau d'un administrateur
+ * @var array LEVELS : Tableau représentant tous les niveaux
  * 
  * @var int $id : Identifiant de l'utilisateur
  * @var string $name : Nom de l'utilisateur
@@ -34,6 +35,13 @@ class User extends DbObject {
     const LEVEL_MODERATOR = 3;
     const LEVEL_EDITOR = 4;
     const LEVEL_ADMIN = 5;
+    const LEVELS = [
+        self::LEVEL_ANON => "Anonyme",
+        self::LEVEL_USER => "Utilisateur",
+        self::LEVEL_MODERATOR => "Modérateur",
+        self::LEVEL_EDITOR => "Éditeur",
+        self::LEVEL_ADMIN => "Administrateur"
+    ];
 
     /**
      * Fonction d'encapsulation
@@ -248,26 +256,7 @@ class User extends DbObject {
      * @return string : Niveau lisible
      */
     public static function levelToText(int $level) {
-        switch($level) {
-            case self::LEVEL_ANON:
-                return "Anonyme";
-                break;
-            case self::LEVEL_USER:
-                return "Utilisateur";
-                break;
-            case self::LEVEL_MODERATOR:
-                return "Modérateur";
-                break;
-            case self::LEVEL_EDITOR:
-                return "Éditeur";
-                break;
-            case self::LEVEL_ADMIN:
-                return "Administrateur";
-                break;
-            default:
-                return "Inconnu";
-                break;
-        }
+        return (isset(self::LEVELS[$level])?self::LEVELS[$level]:"Inconnu");
     }
 
     /**
