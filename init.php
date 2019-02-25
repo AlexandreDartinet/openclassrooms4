@@ -77,7 +77,7 @@ if($userManager->count() == 0) { // Si aucun utilisateur n'existe, on crée un n
         "ip" => $_SERVER["REMOTE_ADDR"],
         "name_display" => "Administrateur"
     ]);
-    $userManager->setUser($user);
+    $user->save();
 }
 
 /**
