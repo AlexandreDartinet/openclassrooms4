@@ -110,12 +110,7 @@ class Post extends DbObject {
                     break;
             }
         }
-        if (isset($this->_attributes[$name])) {
-            return $this->_attributes[$name];
-        }
-        else {
-            throw new Exception("Post: L'attribut $name n'existe pas pour l'objet.");
-        }
+        return parent::__get($name);
     }
 
     /**
