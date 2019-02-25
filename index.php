@@ -12,6 +12,8 @@ try { // Gestion des erreurs
     if(preg_match('/^\/admin\//', PATH)) {
         if($_SESSION['user']->level >= User::LEVEL_MODERATOR) {
             require('controller/backend.php');
+
+            viewAdmin();
         }
         else {
             header('Location: /');
