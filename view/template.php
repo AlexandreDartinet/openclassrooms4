@@ -1,8 +1,10 @@
 <?php 
 /**
  * Template d'affichage de la page.
- * On doit lui fournir $title pour le titre de la page, et $body pour son contenu.
+ * On doit lui fournir $title pour le titre de la page, $menu pour son menu et $content pour son contenu.
  */
+require('header.php');
+require('footer.php');
 ?><!DOCTYPE html>
 <html>
     <head>
@@ -16,7 +18,11 @@
         <title><?= $title ?></title>
     </head>
     <body>
-    <?= $body ?>
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <?= $header ?>
+        <main>
+        <?= $content ?>
+        </main>
+        <?= $footer ?>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     </body>
 </html>
