@@ -106,11 +106,13 @@ class Comment extends DbObject {
 
     /**
      * Cette fonction est appelée lorsqu'on appelle $objet->$name pour retourner les attributs de l'objet.
+     * Instancie dynamiquement les objets si ils ne le sont pas déjà.
      * 
      * @param string $name : Nom de l'attribut à retourner
      * 
      * @return mixed : Dépend de l'attribut qu'on a demandé
      * 
+     * @see DbObject::__get()
      */
     public function __get(string $name) {
         if(!isset($this->$name)) {
