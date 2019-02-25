@@ -10,7 +10,18 @@ try { // Gestion des erreurs
      * Bloc de la section backend
      */
     if(preg_match('/^\/admin\//', PATH)) {
-        require('controller/backend.php');
+        if($_SESSION['user']->level >= User::LEVEL_MODERATOR) {
+            require('controller/backend.php');
+        }
+        else {
+            header('Location: /');
+        }
+    }
+    /**
+     * Bloc des requêtes ajax
+     */
+    elseif(preg_match('/^\/ajax\//', PATH)) {
+        require('controller/ajax.php');
     }
     /**
      * Bloc de la section frontend
