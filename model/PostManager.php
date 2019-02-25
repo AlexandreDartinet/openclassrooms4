@@ -40,19 +40,19 @@ class PostManager extends Manager {
             if($month != 0) {// Si $month est renseigné
                 if($day != 0) {// Si $day est renseigné, on recherche par année, mois et jour
                     $req = $this->_db->prepare($query_start.'WHERE'.($published?' posts.published = 1 AND posts.date_publication<=NOW() AND':'').' YEAR(posts.date_publication) = :year AND MONTH(posts.date_publication) = :month AND DAY(posts.date_publication) = :day'.$query_end);
-                    $req->bindParam(":year",(int) $year);
-                    $req->bindParam(":month",(int) $month);
-                    $req->bindParam(":day",(int) $day);
+                    $req->bindParam(":year", $year);
+                    $req->bindParam(":month", $month);
+                    $req->bindParam(":day", $day);
                 }
                 else {// Si $day n'est pas renseigné, on recherche par année et mois
                     $req = $this->_db->prepare($query_start.'WHERE'.($published?' posts.published = 1 AND posts.date_publication<=NOW() AND':'').' YEAR(posts.date_publication) = :year AND MONTH(posts.date_publication) = :month'.$query_end);
-                    $req->bindParam(":year",(int) $year);
-                    $req->bindParam(":month",(int) $month);
+                    $req->bindParam(":year", $year);
+                    $req->bindParam(":month", $month);
                 }
             }
             else {// Si $month n'est pas renseigné, on recherche par année
                 $req = $this->_db->prepare($query_start.'WHERE'.($published?' posts.published = 1 AND posts.date_publication<=NOW() AND':'').' YEAR(posts.date_publication) = :year'.$query_end);
-                $req->bindParam(":year",(int) $year);
+                $req->bindParam(":year", $year);
             }
         }
         else {// Si $year n'est pas renseigné, on recherche les derniers posts publiés
@@ -210,19 +210,19 @@ class PostManager extends Manager {
             if($month != 0) {// Si $month est renseigné
                 if($day != 0) {// Si $day est renseigné, on recherche par année, mois et jour
                     $req = $this->_db->prepare($query_start.'WHERE'.($published?' published = 1 AND date_publication<=NOW() AND':'').' YEAR(date_publication) = :year AND MONTH(date_publication) = :month AND DAY(date_publication) = :day');
-                    $req->bindParam(":year",(int) $year);
-                    $req->bindParam(":month",(int) $month);
-                    $req->bindParam(":day",(int) $day);
+                    $req->bindParam(":year", $year);
+                    $req->bindParam(":month", $month);
+                    $req->bindParam(":day", $day);
                 }
                 else {// Si $day n'est pas renseigné, on recherche par année et mois
                     $req = $this->_db->prepare($query_start.'WHERE'.($published?' published = 1 AND date_publication<=NOW() AND':'').' YEAR(date_publication) = :year AND MONTH(date_publication) = :month');
-                    $req->bindParam(":year",(int) $year);
-                    $req->bindParam(":month",(int) $month);
+                    $req->bindParam(":year", $year);
+                    $req->bindParam(":month", $month);
                 }
             }
             else {// Si $month n'est pas renseigné, on recherche par année
                 $req = $this->_db->prepare($query_start.'WHERE'.($published?' published = 1 AND date_publication<=NOW() AND':'').' YEAR(date_publication) = :year');
-                $req->bindParam(":year",(int) $year);
+                $req->bindParam(":year", $year);
             }
         }
         else {// Si $year n'est pas renseigné, on recherche les derniers posts publiés
