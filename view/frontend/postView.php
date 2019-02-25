@@ -31,7 +31,7 @@ else {
     if($reply_to > 0) { // Si on répond à un commentaire
 ?>
 <p>Répondre au commentaire <a href="<?= preg_replace('/reply_to\/\d+\//', '', PATH) ?>">Annuler</a></p>
-<?= $reply_to_comment->display(false, true) ?>
+<?= $reply_to_comment->display(false, true, false) ?>
 <?php
     }
     $action = "commentPost";

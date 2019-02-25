@@ -5,7 +5,7 @@
  */
 $title = "Signaler le commentaire de ".htmlspecialchars($comment->getName());
 ob_start();
-echo $comment->display(false);
+echo $comment->display(false, false, false);
 /**
  * Formulaire gérant l'envoi d'un signalement de commentaire.
  * Renvoie les données à $path en post

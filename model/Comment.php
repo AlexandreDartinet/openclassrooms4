@@ -320,13 +320,15 @@ class Comment extends DbObject {
      * 
      * @param boolean $display_buttons : Doit-on afficher les boutons (par défaut false)
      * @param boolean $highlight : Doit-on mettre le commentaire en avant (par défaut false)
+     * @param boolean $append_id : Doit-on ajouter l'id à la div du commentaire
      * 
      * @return string : Commentaire prêt à être affiché
      */
-    public function display($display_buttons = true, $highlight = false) {
+    public function display($display_buttons = true, $highlight = false, $append_id = true) {
         $display = '';
-        $class = 'comment'.(($this->reply_to != 0)?' comment-reply':'').(($highlight)?' comment-highlight':'');
-        $display .= "<div class='$class'>";
+        $class = 'comment'.((($this->reply_to != 0) && $append_id)?' comment-reply':'').(($highlight)?' comment-highlight':'');
+        $id = ($append_id)?" id='comment-$this->id'":"";
+        $display .= "<div class='$class'$id>";
         $author = $this->displayName();
         $date = $this->rDate('date_publication');
         $display .= "<p>";
