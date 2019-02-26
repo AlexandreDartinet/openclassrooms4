@@ -197,8 +197,30 @@ define('RETRY_TABLE', [
     "no_match_name" => "Aucun utilisateur correspondant à ce nom.",
     "nothing_sent" => "Aucun email de récupération n'a été envoyé.",
     "recover_id_user" => "Erreur dans le formulaire, les identifiants d'utilisateurs ne correspondent pas.",
-    "report_id_comment" => "Le commentaire que vous essayez de signaler n'existe pas.",
+    "unknown_id_comment" => "Le commentaire n'existe pas.",
     "missing_fields" => "Il manque des champs du formulaire.",
-    "unknown_action" => "L'action demandée n'existe pas."
+    "unknown_action" => "L'action demandée n'existe pas.",
+    "no_reports" => "Aucun signalement."
 ]);
-define('PATH', preg_replace('/retry\/\w+\//', '', $_GET['path'])); // On définit le path actuel, moins l'erreur s'il y en a une
+if (preg_match('/\/success\/\w+\//', $_GET['path'])) { // Si il y a un message, on crée une variable globale le contenant
+    define('SUCCESS', preg_replace('/^.*\/success\/(\w+)\/.*$/', '$1', $_GET['path']));
+}
+else { // Sinon la variable est vide
+    define('SUCCESS','');
+}
+define('SUCCESS_TABLE', [
+    "default" => "Succes inconnu",
+    "report_sent" => "Signalement envoyé.",
+    "recover_used" => "Votre nouveau mot de passe a été enregistré.",
+    "recover_sent" => "Un email de récupération a été envoyé.",
+    "profile_updated" => "Votre profil a été mis à jour.",
+    "user_register" => "Vous vous êtes inscrit avec succès.",
+    "contact_form" => "Votre message a bien été envoyé.",
+    "logout" => "Au revoir ;)",
+    "login" => "Bienvenue !",
+    "deleted_comment" => "Commentaire supprimé.",
+    "modified_comment" => "Commentaire modifié.",
+    "added_comment" => "Commentaire ajouté."
+]);
+$path = preg_replace('/retry\/\w+\//', '', $_GET['path']);
+define('PATH', preg_replace('/success\/\w+\//', '', $path)); // On définit le path actuel, moins l'erreur ou succes s'il y en a

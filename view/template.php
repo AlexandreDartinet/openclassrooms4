@@ -36,6 +36,22 @@ if(RETRY != '') {
         </section>
 <?php
 }
+if(SUCCESS != '') {
+?>
+        <section id="success">
+<?php
+    if(isset(SUCCESS_TABLE[SUCCESS])) {
+        echo SUCCESS_TABLE[SUCCESS];
+    }
+    else {
+?>
+            <?= SUCCESS ?> : <?= SUCCESS_TABLE["default"] ?>
+<?php
+    }
+?>
+        </section>
+<?php
+}
 ?>
         <main>
         <?= $content ?>
