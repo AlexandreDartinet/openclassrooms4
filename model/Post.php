@@ -134,7 +134,12 @@ class Post extends DbObject {
      * @return string : Extrait du post
      */
     public function getExtract() {
-        return (strlen($this->content) > self::EXTRACT_LENGTH) ? substr($this->content, 0, self::EXTRACT_LENGTH).'...' : $this->content;
+        $extract = strip_tags($this->content);
+        if(strlen($extract) > self::EXTRACT_LENGTH) {
+            $last_space = strrpos(substr($extract, 0, self::EXTRACT_LENGTH), ' ');
+            $extract = substr($extract, 0, $last_space).'...';
+        }
+        return $extract;
     }
 
     /**
