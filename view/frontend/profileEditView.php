@@ -46,8 +46,12 @@ ob_start();
     </div>
     <input type="submit"/>
 </form>
-<script src="/public/js/passwordVerify.js"></script>
-<script src="/public/js/emailVerify.js"></script>
+
+
 <?php
+$scripts = [
+    '<script src="/public/js/passwordVerify.js"></script>',
+    '<script src="/public/js/emailVerify.js"></script>'
+];
 $content = ob_get_clean();
 require('template.php');

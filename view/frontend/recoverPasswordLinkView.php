@@ -27,7 +27,8 @@ ob_start();
     </div>
     <input type="submit"/>
 </form>
-<script src="/public/js/passwordVerify.js"></script>
+
 <?php
+$scripts = ['<script src="/public/js/passwordVerify.js"></script>'];
 $content = ob_get_clean();
 require('template.php');
