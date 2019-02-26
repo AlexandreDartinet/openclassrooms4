@@ -28,13 +28,13 @@ define('DB_BASE','XXX'); // Base qu'on utilise pour le site
 
 /**
  * Configuration de constantes relatives au site
- * /
+ */
 define('SITE_URL', 'xxx'); // Adresse du site
 define('CONTACT_MAIL','XXX'); // Mail de contact de l'administrateur
 
 /**
  * Configuration de PHPMailer
- * /
+ */
 define('USE_PHPMAILER', false); // true pour utiliser PHPMailer (à installer séparément : https://github.com/PHPMailer/PHPMailer )
 define('SMTP_HOST','XXX'); // L'addresse du serveur smtp
 define('SMTP_USER','XXX'); // Le nom d'utilisateur pour la connexion au serveur smtp
@@ -43,8 +43,13 @@ define('SMTP_PORT',465); // Le port de connexion au serveur smtp
 define('PHPMAILER_PATH', 'model/PHPMailer/'); // L'endroit ou est installé PHPMailer
 
 /**
+ * Configuration de TinyMCE
+ */
+define('TINYMCE_KEY', 'XXX'); // Clé de l'api TinyMce
+
+/**
  * Si vous avez tout lu et configuré correctement, passez CONFIG_SET à true.
- * /
+ */
 define('CONFIG_SET', false);
 ";
     fwrite($configfile, $config);
