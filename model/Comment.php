@@ -337,15 +337,15 @@ class Comment extends DbObject {
         $display .= "<strong>$author</strong> le $date ";
         if($display_buttons) {
             if($this->reply_to == 0) {
-                $display .= " <a class='comment-reply-link' id='comment-reply-link-$this->id' href='".PATH."reply_to/$this->id/'>Répondre</a> ";
+                $display .= " <a title='Répondre' class='fas fa-reply comment-reply-link' id='comment-reply-link-$this->id' href='".PATH."reply_to/$this->id/'></a> ";
             }
             if($this->canEdit($_SESSION['user'])) {
-                $display .= " <a class='comment-edit-link' id='comment-edit-link-$this->id' href='".PATH."edit/$this->id/'>Éditer</a> ";
-                $display .= " <a class='comment-delete-link' id='comment-delete-link-$this->id' href='".PATH."delete/$this->id/'>Supprimer</a> ";
+                $display .= " <a title='Éditer' class='fas fa-edit comment-edit-link' id='comment-edit-link-$this->id' href='".PATH."edit/$this->id/'></a> ";
+                $display .= " <a title='Supprimer' class='fas fa-trash comment-delete-link' id='comment-delete-link-$this->id' href='".PATH."delete/$this->id/'></a> ";
             }
-            $display .= " <a class='comment-report-link' id='comment-report-link-$this->id' href='".PATH."report/$this->id/'>Signaler</a> ";
-            if($_SESSION['user']->level >= User::LEVEL_MODERATOR) {
-                $display .= " <a class='comment-reports-link' id='comment-reports-link-$this->id' href='/admin/reports/comment/$this->id/'>Signalements($this->reports_nbr)</a> ";
+            $display .= " <a title='Signaler' class='fas fa-flag comment-report-link' id='comment-report-link-$this->id' href='".PATH."report/$this->id/'></a> ";
+            if($_SESSION['user']->level >= User::LEVEL_MODERATOR && $this->reports_nbr > 0) {
+                $display .= " <a title='Signalements($this->reports_nbr)' class='fas fa-exclamation-triangle comment-reports-link' id='comment-reports-link-$this->id' href='/admin/reports/comment/$this->id/'>($this->reports_nbr)</a> ";
             }
         }
         $display .= "</p><p>";
