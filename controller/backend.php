@@ -97,3 +97,24 @@ function deleteReport(int $id) {
         header('Location: '.$path.'retry/invalid_id_report/');
     }
 }
+
+/**
+ * Supprime un commentaire
+ * Renvoie à la page des signalements
+ * 
+ * @param int $id : Identifiant du commentaire
+ * 
+ * @return void
+ */
+function deleteComment(int $id) {
+    $commentManager = new CommentManager();
+    $path = preg_replace('/delete\/\d+\//', '', PATH);
+    if($commentManager->exists('id', $id)) {
+        $comment = $commentManager->getCommentById($id);
+        $comment->delete();
+        header('Location: /admin/reports/success/deleted_comment/');
+    }
+    else {
+        header('Location: /admin/reports/retry/unknown_id_comment/');
+    }
+}

@@ -14,14 +14,14 @@ try { // Gestion des erreurs
             require('controller/backend.php');
             if(preg_match('/\/reports\//', PATH)) {
                 $page = getPage(PATH);
-                if(preg_match('/\/comment\/\d+\//', PATH)) {
+                if(preg_match('/\/delete\/\d+\//', PATH)) {
+                    $id = (int) preg_replace('/^.*\/delete\/(\d+)\/.*$/', '$1', PATH);
+                    deleteComment($id);
+                }
+                elseif(preg_match('/\/comment\/\d+\//', PATH)) {
                     if(preg_match('/\/delete_report\/\d+\//', PATH)) {
                         $id = (int) preg_replace('/^.*\/delete_report\/(\d+)\/.*$/', '$1', PATH);
                         deleteReport($id);
-                    }
-                    elseif(preg_match('/\/delete\/\d+\//', PATH)) {
-                        $id = (int) preg_replace('/^.*\/delete\/(\d+)\/.*$/', '$1', PATH);
-                        deleteComment($id);
                     }
                     else {
                         $id = (int) preg_replace('/^.*\/comment\/(\d+)\/.*$/', '$1', PATH);
@@ -37,7 +37,7 @@ try { // Gestion des erreurs
             }
         }
         else {
-            header('Location: /');
+            header('Location: /retry/no_access/');
         }
     }
     /**
@@ -221,7 +221,7 @@ try { // Gestion des erreurs
                 listPosts($page);
             }
             else {
-                header('Location: /');
+                header('Location: /retry/no_access/');
             }
         }
     }
