@@ -12,8 +12,15 @@ try { // Gestion des erreurs
     if(preg_match('/^\/admin\//', PATH)) {
         if($_SESSION['user']->level >= User::LEVEL_MODERATOR) {
             require('controller/backend.php');
+            if(preg_match('/^\/reports\//' PATH)) {
+                if(preg_match('/comment\/\d+\//'), PATH) {
+                    $id = (int) preg_replace('/^.*comment\/(\d+)\/.*$/', '$1', PATH);
 
-            viewAdmin();
+                }
+            }
+            else {
+                viewAdmin();
+            }
         }
         else {
             header('Location: /');
@@ -41,6 +48,7 @@ try { // Gestion des erreurs
                     }
                     else {
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
                 case "modifyComment":
@@ -49,6 +57,7 @@ try { // Gestion des erreurs
                     }
                     else {
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        header('Location: '.PATH.'retry/missing_fields/');
                     }
                 case "login":
                     if(isset($_POST['name']) && isset($_POST['password'])) {
@@ -56,6 +65,7 @@ try { // Gestion des erreurs
                     }
                     else {
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
                 case "registerUser":
@@ -64,6 +74,7 @@ try { // Gestion des erreurs
                     }
                     else {
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
                 case "modifyUser":
@@ -81,6 +92,7 @@ try { // Gestion des erreurs
                     }
                     else {
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
                 case "sendContactForm":
@@ -89,6 +101,7 @@ try { // Gestion des erreurs
                     }
                     else {
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        header('Location: '.PATH.'retry/missing_fields/');
                     }
                 case "sendRecover":
                     if(isset($_POST['recover'])) {
@@ -96,6 +109,7 @@ try { // Gestion des erreurs
                     }
                     else {
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
                 case "useRecover":
@@ -104,6 +118,7 @@ try { // Gestion des erreurs
                     }
                     else {
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
                 case "sendReport":
@@ -112,9 +127,12 @@ try { // Gestion des erreurs
                     }
                     else {
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        header('Location: '.PATH.'retry/missing_fields/');
                     }
+                    break;
                 default:
                     throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: l\'action n\'existe pas.');
+                    header('Location: '.PATH.'retry/unknown_action/');
                     break;
             }
         }

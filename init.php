@@ -197,6 +197,8 @@ define('RETRY_TABLE', [
     "no_match_name" => "Aucun utilisateur correspondant à ce nom.",
     "nothing_sent" => "Aucun email de récupération n'a été envoyé.",
     "recover_id_user" => "Erreur dans le formulaire, les identifiants d'utilisateurs ne correspondent pas.",
-    "report_id_comment" => "Le commentaire que vous essayez de signaler n'existe pas."
+    "report_id_comment" => "Le commentaire que vous essayez de signaler n'existe pas.",
+    "missing_fields" => "Il manque des champs du formulaire.",
+    "unknown_action" => "L'action demandée n'existe pas."
 ]);
 define('PATH', preg_replace('/retry\/\w+\//', '', $_GET['path'])); // On définit le path actuel, moins l'erreur s'il y en a une
