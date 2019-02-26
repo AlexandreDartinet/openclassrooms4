@@ -10,33 +10,37 @@ try { // Gestion des erreurs
      * Bloc de la section backend
      */
     if(preg_match('/^\/admin\//', PATH)) {
-        if($_SESSION['user']->level >= User::LEVEL_MODERATOR) {
+        if($_SESSION['user']->level >= User::LEVEL_MODERATOR) { // L'utilisateur doit au moins être modérateur pour accéder à cette section
             require('controller/backend.php');
-            if(preg_match('/\/reports\//', PATH)) {
+            if(preg_match('/^\/admin\/reports\//', PATH)) { // Section signalement
                 $page = getPage(PATH);
-                if(preg_match('/\/delete\/\d+\//', PATH)) {
+                if(preg_match('/\/delete\/\d+\//', PATH)) { // Si one essaye de supprimer un commentaire
                     $id = (int) preg_replace('/^.*\/delete\/(\d+)\/.*$/', '$1', PATH);
                     deleteComment($id);
                 }
-                elseif(preg_match('/\/comment\/\d+\//', PATH)) {
-                    if(preg_match('/\/delete_report\/\d+\//', PATH)) {
+                elseif(preg_match('/\/comment\/\d+\//', PATH)) { // Signalements d'un commentaire
+                    if(preg_match('/\/delete_report\/\d+\//', PATH)) { // Si on supprime un signalement
                         $id = (int) preg_replace('/^.*\/delete_report\/(\d+)\/.*$/', '$1', PATH);
                         deleteReport($id);
                     }
-                    else {
+                    else { // On affiche les signalement du commentaire
                         $id = (int) preg_replace('/^.*\/comment\/(\d+)\/.*$/', '$1', PATH);
                         viewCommentReports($id, $page);
                     }
                 }
-                else {
+                else { // On affiche les commentaires signalés
                     listReports($page);
                 }
             }
-            else {
+            elseif(preg_match('/^\/admin\/posts\//', PATH) && $_SESSION['user']->level >= User::LEVEL_EDITOR) { // Section articles
+                $page = getPage(PATH);
+                listPosts($page);
+            }
+            else { // Page d'accueil de l'interface d'administration
                 viewAdmin();
             }
         }
-        else {
+        else { // On n'a pas le droit de voir cette page
             header('Location: /retry/no_access/');
         }
     }
@@ -172,7 +176,7 @@ try { // Gestion des erreurs
                     $id_comment = (int) preg_replace('/^.*delete\/(\d+)\/.*$/', '$1', PATH);
                     deleteComment($id_comment);
                 }
-                elseif(preg_match('/report\/\d+\//', PATH)) {
+                elseif(preg_match('/report\/\d+\//', PATH)) { // Si on signale un commentaire
                     $id_comment = (int) preg_replace('/^.*report\/(\d+)\/.*$/', '$1', PATH);
                     $path = preg_replace('/report\/\d+\//', '', PATH);
                     viewReportForm($id_comment, $path);

@@ -74,6 +74,22 @@ function viewCommentReports(int $id, int $page) {
 }
 
 /**
+ * Affiche la liste des posts dans l'interface d'administration
+ * 
+ * @param int $page : Page à afficher
+ * 
+ * @return void
+ */
+function listPosts(int $page) {
+    $postManager = new PostManager();
+    $posts = $postManager->getPosts($page, false);
+    $title = 'Articles';
+    $pageSelector = pageSelector(ceil($postManager->countPosts(false)/PostManager::POST_PAGE), $page, PATH);
+    
+    require('view/backend/listPostsView.php');
+}
+
+/**
  * Fonctions relatives au traitement des données
  */
 

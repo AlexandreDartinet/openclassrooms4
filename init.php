@@ -203,7 +203,8 @@ define('RETRY_TABLE', [
     "no_reports" => "Aucun signalement.",
     "no_comment_report" => "Aucun signalement pour ce commentaire.",
     "invalid_id_report" => "Le signalement que vous essayez de supprimer n'existe pas.",
-    "no_access" => "Vous n'avez pas accès à cette page."
+    "no_access" => "Vous n'avez pas accès à cette page.",
+    "id_post" => "L'article n'existe pas."
 ]);
 if (preg_match('/\/success\/\w+\//', $_GET['path'])) { // Si il y a un message, on crée une variable globale le contenant
     define('SUCCESS', preg_replace('/^.*\/success\/(\w+)\/.*$/', '$1', $_GET['path']));

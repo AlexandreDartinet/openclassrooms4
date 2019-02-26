@@ -303,6 +303,9 @@ class Comment extends DbObject {
      * @return boolean : True si l'utilisateur peut éditer le commentaire
      */
     public function canEdit(User $user) {
+        if(!$user->canComment()) {
+            return false;
+        }
         if($user->id == 0) {
             if($user->ip == $this->ip) {
                 return true;
@@ -339,7 +342,7 @@ class Comment extends DbObject {
         if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
             $display .= " IP(".$this->user->ip.") ";
         }
-        if($display_buttons) {
+        if($display_buttons && $_SESSION['user']->canComment()) {
             if($this->reply_to == 0 && !$noReply) {
                 $display .= " <a title='Répondre' class='fas fa-reply comment-reply-link' id='comment-reply-link-$this->id' href='".PATH."reply_to/$this->id/'></a> ";
             }

@@ -221,4 +221,32 @@ class Post extends DbObject {
         return $display;
     }
 
+    /**
+     * On veut savoir si l'utilisateur peut modifier le post
+     * 
+     * @param User $user : Utilisateur à tester
+     * 
+     * @return boolean : True si l'utilisateur peut éditer le post
+     */
+    public function canEdit(User $user) {
+        if($this->id_user == $user->id) {
+            return true;
+        }
+        if($user->level >= User::LEVEL_ADMIN) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * On veut savoir si le post est publié
+     * 
+     * @return boolean : True si le post est publié
+     */
+    public function isPublished() {
+        $date = new DateTime($this->date_publication);
+        $now = new DateTime("now");
+        return ($date <= $now) && $this->published;
+    }
+
 }

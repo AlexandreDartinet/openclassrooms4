@@ -42,7 +42,7 @@ class UserManager extends Manager {
                 return true;
             }
         }
-        throw new Exception("UserManager: Nom d'utilisateur ou mot de passe incorrect.");
+        //throw new Exception("UserManager: Nom d'utilisateur ou mot de passe incorrect.");
         return false;
     }
 

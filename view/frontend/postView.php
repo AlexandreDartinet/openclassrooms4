@@ -30,6 +30,7 @@ else {
     $commentName = $_SESSION['user']->name_display;
     $commentContent = '';
 }
+if($_SESSION['user']->canComment()) {
 /**
  * Formulaire gérant l'ajout d'un nouveau commentaire
  * Renvoie les données en post vers le chemin du post actuel
@@ -62,6 +63,7 @@ else {
         </div>
     </form>
 <?php
+}
 if($isComments) { // Si il y a des commentaires, on les affiche
     foreach($comments as &$comment) {
         if($comment->reply_to == 0) { // Si le commentaire n'est pas une réponse, on l'affiche

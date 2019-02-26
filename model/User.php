@@ -31,12 +31,14 @@
 class User extends DbObject {
 
     const LEVEL_ANON = 1;
-    const LEVEL_USER = 2;
-    const LEVEL_MODERATOR = 3;
-    const LEVEL_EDITOR = 4;
-    const LEVEL_ADMIN = 5;
+    const LEVEL_USER_NO_COMMENT = 2;
+    const LEVEL_USER = 3;
+    const LEVEL_MODERATOR = 4;
+    const LEVEL_EDITOR = 5;
+    const LEVEL_ADMIN = 10;
     const LEVELS = [
         self::LEVEL_ANON => "Anonyme",
+        self::LEVEL_USER_NO_COMMENT => "Utilisateur sans commentaires",
         self::LEVEL_USER => "Utilisateur",
         self::LEVEL_MODERATOR => "Modérateur",
         self::LEVEL_EDITOR => "Éditeur",
@@ -231,7 +233,7 @@ class User extends DbObject {
      * @return string : Niveau lisible de l'utilisateur
      */
     public function displayLevel() {
-        return self::levelToText($this->level);
+        return self::levelToText(($this->level == self::LEVEL_USER_NO_COMMENT && $_SESSION['user']->level < self::LEVEL_MODERATOR)?self::LEVEL_USER:$this->level);
     }
 
     /**
@@ -297,5 +299,20 @@ class User extends DbObject {
             "name_display" => "Anonyme"
         ]);
         return $user;
+    }
+
+    /**
+     * On veut savoir si l'utilisateur peut commenter
+     * 
+     * @return boolean : True si l'utilisateur peut commenter
+     */
+    public function canComment() {
+        if($this->id == 0) {
+            return true;
+        }
+        if($this->level >= self::LEVEL_USER) {
+            return true;
+        }
+        return false;
     }
 }

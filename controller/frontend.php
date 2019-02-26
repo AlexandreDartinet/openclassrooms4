@@ -53,33 +53,43 @@ function listPosts($page = 1, $year = 0, $month = 0, $day = 0) {
  */
 function viewPost(int $id, $page = 1) {
     $postManager = new PostManager();
-    $post = $postManager->getPostById($id);
-    $reply_to = 0;
-    $isComments = false;
-    $edit = false;
-    if($post->comments_nbr != 0) {
-        $isComments = true;
-        $commentManager = new CommentManager();
-        $comments = $commentManager->getComments($id, $page);
-        if(preg_match('/\/reply_to\/\d+\//', PATH)) {
-            $reply_to = (int) preg_replace('/^.*reply_to\/(\d+)\/.*$/', '$1', PATH);
-            $reply_to_comment = $commentManager->getCommentById($reply_to);
-        }
-        if(preg_match('/\/edit\/\d+\//', PATH)) {
-            $edit_id = (int) preg_replace('/^.*edit\/(\d+)\/.*$/', '$1', PATH);
-            if($commentManager->exists('id',$edit_id)) {
-                $editedComment = $commentManager->getCommentById($edit_id);
-                if($editedComment->canEdit($_SESSION['user'])) {
-                    $edit = true;
+    if($postManager->exists('id', $id)) {
+        $post = $postManager->getPostById($id);
+        if($post->isPublished() || $_SESSION['user']->level >= User::LEVEL_EDITOR) {
+            $reply_to = 0;
+            $isComments = false;
+            $edit = false;
+            if($post->comments_nbr != 0) {
+                $isComments = true;
+                $commentManager = new CommentManager();
+                $comments = $commentManager->getComments($id, $page);
+                if(preg_match('/\/reply_to\/\d+\//', PATH)) {
+                    $reply_to = (int) preg_replace('/^.*reply_to\/(\d+)\/.*$/', '$1', PATH);
+                    $reply_to_comment = $commentManager->getCommentById($reply_to);
                 }
-            }
+                if(preg_match('/\/edit\/\d+\//', PATH)) {
+                    $edit_id = (int) preg_replace('/^.*edit\/(\d+)\/.*$/', '$1', PATH);
+                    if($commentManager->exists('id',$edit_id)) {
+                        $editedComment = $commentManager->getCommentById($edit_id);
+                        if($editedComment->canEdit($_SESSION['user'])) {
+                            $edit = true;
+                        }
+                    }
 
+                }
+                $pageSelector = pageSelector(ceil($post->comments_nbr/CommentManager::COMMENT_PAGE), $page, PATH);
+            }
+            $title = 'Article "'.htmlspecialchars($post->title).'"';
+            
+            require("view/frontend/postView.php");
         }
-        $pageSelector = pageSelector(ceil($post->comments_nbr/CommentManager::COMMENT_PAGE), $page, PATH);
+        else {
+            header('Location: /retry/no_access/');
+        }
     }
-    $title = 'Article "'.htmlspecialchars($post->title).'"';
-    
-    require("view/frontend/postView.php");
+    else {
+        header('Location: /retry/id_post/');
+    }
 }
 
 /**
@@ -265,14 +275,32 @@ function viewReportForm(int $id, string $path) {
  * @return void
  */
 function commentPost(int $id_post, string $name, string $content, int $reply_to) {
-    $comment = Comment::default();
-    $comment->id_post = $id_post;
-    $comment->id_user = $_SESSION['user']->id;
-    $comment->name = $name;
-    $comment->content = $content;
-    $comment->reply_to = $reply_to;
-    $comment->save();
-    header("Location: /post/$id_post/success/added_comment/");
+    if($_SESSION['user']->canComment()) {
+        $postManager = new PostManager();
+        if($postManager->exists('id', $id_post)) {
+            if($reply_to != 0) {
+                $commentManager = new CommentManager();
+                if(!$commentManager->exists('id', $reply_to)) {
+                    header("Location: /post/$id_post/retry/unknown_id_comment/");
+                    return;
+                }
+            }
+            $comment = Comment::default();
+            $comment->id_post = $id_post;
+            $comment->id_user = $_SESSION['user']->id;
+            $comment->name = $name;
+            $comment->content = $content;
+            $comment->reply_to = $reply_to;
+            $comment->save();
+            header("Location: /post/$id_post/success/added_comment/");
+        }
+        else {
+            header("Location: /retry/id_post/");
+        }
+    }
+    else {
+        header("Location: /post/$id_post/retry/no_access/");
+    }
 }
 
 /**
