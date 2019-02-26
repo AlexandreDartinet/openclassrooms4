@@ -19,6 +19,24 @@ require('footer.php');
     </head>
     <body>
         <?= $header ?>
+<?php
+if(RETRY != '') {
+?>
+        <section id="error">
+<?php
+    if(isset(RETRY_TABLE[RETRY])) {
+        echo RETRY_TABLE[RETRY];
+    }
+    else {
+?>
+            <?= RETRY ?> : <?= RETRY_TABLE["default"] ?>
+<?php
+    }
+?>
+        </section>
+<?php
+}
+?>
         <main>
         <?= $content ?>
         </main>

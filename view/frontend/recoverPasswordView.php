@@ -7,11 +7,6 @@ ob_start();
 <h2>Vous avez oublié votre mot de passe</h2>
 <p>Entrez votre nom de compte ou votre adresse mail ci dessous </p>
 <?php
-if(RETRY != '') { // Si il y a une erreur, on l'affiche
-?>
-<p>Erreur : <?= RETRY ?></p>
-<?php
-}
 /**
  * Le formulaire envoie en post à / les valeurs suivantes :
  * @var string action : sendRecover (hidden)

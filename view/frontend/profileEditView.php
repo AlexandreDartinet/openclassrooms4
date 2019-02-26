@@ -6,11 +6,6 @@ ob_start();
 ?>
 <h2>Modification de votre profil</h2>
 <?php
-if(RETRY != '') { // Si il y a eu une erreur, on gère son affichage
-?>
-<p>Le <?= RETRY ?> que vous avez choisi est déjà utilisé ou invalide.</p>
-<?php
-}
 /**
  * Le formulaire renvoie en post à / les valeurs suivantes :
  * @var string action : modifyUser (hidden)

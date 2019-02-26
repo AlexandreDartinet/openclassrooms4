@@ -7,11 +7,6 @@ ob_start();
 <h2>Vous avez oublié votre mot de passe <?= $user->name ?></h2>
 <p>Entrez votre nouveau mot de passe ci dessous</p>
 <?php
-if(RETRY != '') { // Si il y a une erreur, on l'affiche
-?>
-<p>Erreur : <?= RETRY ?></p>
-<?php
-}
 /**
  * Le formulaire renvoie en post à / les valeurs suivantes :
  * @var string action : useRecover (hidden)

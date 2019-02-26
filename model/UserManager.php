@@ -24,7 +24,13 @@ class UserManager extends Manager {
     public function login(string $name, string $password) {
         $req = $this->getBy('name', $name);
         if(!is_bool($req)) {
-            $user = new User($req->fetch());
+            $line = $req->fetch();
+            if(!is_bool($line)) {
+                $user = new User($line);
+            }
+            else {
+                return false;
+            }
             $req->closeCursor();
             if(password_verify($password, $user->password)) {
                 $user->last_seen = User::now();

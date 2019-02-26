@@ -6,11 +6,6 @@ ob_start();
 ?>
 <h2>Formulaire d'inscription :</h2>
 <?php
-if(RETRY != '') { // Si il y a une erreur, on l'affiche
-?>
-<p>Le <?= RETRY ?> que vous avez choisi est déjà utilisé.</p>
-<?php
-}
 /**
  * Le formulaire envoie à / en post les valeurs suivantes :
  * @var string action : registerUser (hidden)

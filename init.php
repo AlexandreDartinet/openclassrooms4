@@ -173,4 +173,25 @@ if (preg_match('/\/retry\/\w+\//', $_GET['path'])) { // Si il y a une erreur, on
 else { // Sinon la variable est vide
     define('RETRY','');
 }
+define('RETRY_TABLE', [
+    "default" => "Erreur inconnue.",
+    "recoverPassword_date_sent" => "Le lien de récupération a expiré.",
+    "recoverPassword_key" => "La clé de récupération est invalide.",
+    "modifyComment_nothing_changed" => "Le commentaire n'a pas été modifié.",
+    "modifyComment_invalid_user" => "Vous n'avez pas le droit de modifier ce commentaire.",
+    "modifyComment_id_comment" => "Le commentaire que vous essayez de modifier n'existe pas.",
+    "deleteComment_invalid_user" => "Vous n'avez pas le droit de supprimer ce commentaire.",
+    "deleteComment_id_comment" => "Le commentaire que vous essayez de supprimer n'existe pas.",
+    "login_fail" => "Nom d'utilisateur ou mot de passe incorrect.",
+    "email_confirm" => "Email et confirmation ne correspondent pas.",
+    "user_name" => "Le nom que vous avez choisi existe déjà.",
+    "user_name_display" => "Le nom d'affichage que vous avez choisi existe déjà.",
+    "password_confirm" => "Le mot de passe ne correspond pas à la confirmation.",
+    "old_password" => "Votre ancien mot de passe est incorrect.",
+    "no_match_email" => "Aucun utilisateur correspondant à cet email.",
+    "no_match_name" => "Aucun utilisateur correspondant à ce nom.",
+    "nothing_sent" => "Aucun email de récupération n'a été envoyé.",
+    "recover_id_user" => "Erreur dans le formulaire, les identifiants d'utilisateurs ne correspondent pas.",
+    "report_id_comment" => "Le commentaire que vous essayez de signaler n'existe pas."
+]);
 define('PATH', preg_replace('/retry\/\w+\//', '', $_GET['path'])); // On définit le path actuel, moins l'erreur s'il y en a une

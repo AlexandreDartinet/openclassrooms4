@@ -161,11 +161,11 @@ function viewRecoverPasswordLink($key) {
         }
         else {
             $recover->delete();
-            header('Location: /recover/retry/date_sent/');
+            header('Location: /recover/retry/recoverPassword_date_sent/');
         }
     }
     else {
-        header('Location: /recover/retry/recover_key/');
+        header('Location: /recover/retry/recoverPassword_key/');
         return;
     }
 }
@@ -297,15 +297,15 @@ function modifyComment(int $id, string $name, string $content) {
                 header('Location: '.PATH);
             }
             else {
-                header('Location: '.PATH."edit/$id/retry/modify_nothing_changed/");
+                header('Location: '.PATH."edit/$id/retry/modifyComment_nothing_changed/");
             }
         }
         else {
-            header('Location: '.PATH.'retry/modify_invalid_user/');
+            header('Location: '.PATH.'retry/modifyComment_invalid_user/');
         }
     }
     else {
-        header('Location: '.PATH.'retry/modify_id_comment/');
+        header('Location: '.PATH.'retry/modifyComment_id_comment/');
     }
 }
 
@@ -326,11 +326,11 @@ function deleteComment(int $id) {
             header('Location: /post/'.$comment->id_post.'/');
         }
         else {
-            header('Location: /post/'.$comment->id_post.'/retry/delete_invalid_user/');
+            header('Location: /post/'.$comment->id_post.'/retry/deleteComment_invalid_user/');
         }
     }
     else {
-        header('Location: /post/'.$comment->id_post.'/retry/delete_id_comment/');
+        header('Location: /post/'.$comment->id_post.'/retry/deleteComment_id_comment/');
     }
 }
 
@@ -423,11 +423,11 @@ function registerUser(string $name, string $password, string $password_confirm, 
     }
     $userManager = new UserManager();
     if($userManager->exists('name', $name)) {
-        header('Location: /register/retry/name/');
+        header('Location: /register/retry/user_name/');
         return;
     }
     if($userManager->exists('name_display', $name_display)) {
-        header('Location: /register/retry/name_display/');
+        header('Location: /register/retry/user_name_display/');
         return;
     }
     if($password != $password_confirm) {
@@ -475,7 +475,7 @@ function modifyUser(int $id, string $name, string $name_display, string $email, 
     }
     if($name != $user->name) {
         if($userManager->exists('name', $name, $id)) {
-            header('Location: /profile/edit/retry/name/');
+            header('Location: /profile/edit/retry/user_name/');
             return;
         }
         else {
@@ -484,7 +484,7 @@ function modifyUser(int $id, string $name, string $name_display, string $email, 
     }
     if($name_display != $user->name_display) {
         if($userManager->exists('name_display', $name, $id)) {
-            header('Location: /profile/edit/retry/name_display/');
+            header('Location: /profile/edit/retry/user_name_display/');
             return;
         }
         else {
@@ -511,7 +511,7 @@ function modifyUser(int $id, string $name, string $name_display, string $email, 
             }
         }
         else {
-            header('Location: /profile/edit/retry/password/');
+            header('Location: /profile/edit/retry/old_password/');
             return;
         }
     }
@@ -609,12 +609,12 @@ function useRecover(string $key, int $id_user, string $password, string $passwor
     $recoverManager = new RecoverManager();
     $recover = $recoverManager->getRecoverByKey($key);
     if($recover->id_user != $id_user) {
-        header("Location: /recover/$key/retry/id_user/");
+        header("Location: /recover/$key/retry/recover_id_user/");
         return;
     }
     if(!$recover->isValid()) {
         $recover->delete();
-        header("Location: /recover/retry/expired/");
+        header("Location: /recover/retry/recoverPassword_date_sent/");
         return;
     }
     $user = $recover->user;
