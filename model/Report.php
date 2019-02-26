@@ -174,4 +174,24 @@ class Report extends DbObject {
         ]);
         return $report;
     }
+
+    /**
+     * Transforme un type en chaine lisible
+     * 
+     * @param int $type : Type que l'on souhaite afficher
+     * 
+     * @return string : Type lisible
+     */
+    public static function typeToText(int $type) {
+        return (isset(self::TYPES[$type])?self::TYPES[$type]:"Inconnu");
+    }
+
+    /**
+     * Retourne le type du signalement sous forme lisible
+     * 
+     * @return string : Type lisible de l'utilisateur
+     */
+    public function displayType() {
+        return self::typeToText($this->type);
+    }
 }

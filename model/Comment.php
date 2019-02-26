@@ -324,19 +324,23 @@ class Comment extends DbObject {
      * @param boolean $display_buttons : Doit-on afficher les boutons (par défaut false)
      * @param boolean $highlight : Doit-on mettre le commentaire en avant (par défaut false)
      * @param boolean $append_id : Doit-on ajouter l'id à la div du commentaire
+     * @param boolean $noReply : Doit-on cacher le bouton répondre
      * 
      * @return string : Commentaire prêt à être affiché
      */
-    public function display($display_buttons = true, $highlight = false, $append_id = true) {
+    public function display($display_buttons = true, $highlight = false, $append_id = true, $noReply = false) {
         $class = 'comment'.((($this->reply_to != 0) && $append_id)?' comment-reply':'').(($highlight)?' comment-highlight':'');
-        $id = ($append_id)?" id='comment-$this->id'":"";
+        $id = ($append_id || $noReply)?" id='comment-$this->id'":"";
         $display = "<div class='$class'$id>";
         $author = $this->displayName();
         $date = $this->rDate('date_publication');
         $display .= "<p>";
         $display .= "<strong>$author</strong> le $date ";
+        if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
+            $display .= " IP(".$this->user->ip.") ";
+        }
         if($display_buttons) {
-            if($this->reply_to == 0) {
+            if($this->reply_to == 0 && !$noReply) {
                 $display .= " <a title='Répondre' class='fas fa-reply comment-reply-link' id='comment-reply-link-$this->id' href='".PATH."reply_to/$this->id/'></a> ";
             }
             if($this->canEdit($_SESSION['user'])) {

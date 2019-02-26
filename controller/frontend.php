@@ -272,7 +272,7 @@ function commentPost(int $id_post, string $name, string $content, int $reply_to)
     $comment->content = $content;
     $comment->reply_to = $reply_to;
     $comment->save();
-    header("Location: /post/$id_post/");
+    header("Location: /post/$id_post/success/added_comment/");
 }
 
 /**
@@ -294,7 +294,7 @@ function modifyComment(int $id, string $name, string $content) {
                 $comment->name = $name;
                 $comment->content = $content."\nModifié le ".Comment::rNow();
                 $comment->save();
-                header('Location: '.PATH);
+                header('Location: '.PATH.'success/modified_comment/');
             }
             else {
                 header('Location: '.PATH."edit/$id/retry/modifyComment_nothing_changed/");
@@ -323,7 +323,7 @@ function deleteComment(int $id) {
         $comment = $commentManager->getCommentById($id);
         if($comment->canEdit($user)) {
             $comment->delete();
-            header('Location: /post/'.$comment->id_post.'/');
+            header('Location: /post/'.$comment->id_post.'/success/deleted_comment/');
         }
         else {
             header('Location: /post/'.$comment->id_post.'/retry/deleteComment_invalid_user/');
@@ -346,7 +346,7 @@ function deleteComment(int $id) {
 function login(string $name, string $password, string $path) {
     $userManager = new UserManager();
     if($userManager->login($name, $password)) {
-        header("Location: $path");
+        header("Location: ".$path."success/login/");
     }
     else {
         header("Location: ".$path."retry/login_fail/");
@@ -360,7 +360,7 @@ function login(string $name, string $password, string $path) {
  */
 function logout() {
     $_SESSION['user'] = User::default();
-    header("Location: /");
+    header("Location: /success/logout/");
 }
 
 /**
@@ -394,7 +394,7 @@ Une réponse vous sera donnée sous peu.
 Ceci est un mail automatique, merci de ne pas y répondre.";
         smtpMailer(CONTACT_MAIL, $from, $from_name, "Message de $from_name <$from> sur le site ".SITE_URL, $body);
         smtpMailer($from, "noreply@".SITE_URL, "noreply", "Confirmation de l'envoi de votre message a ".SITE_URL, $bodyConfirm);
-        header('Location: /');
+        header('Location: /success/contact_form/');
         return;
     }
     else {
@@ -448,7 +448,7 @@ function registerUser(string $name, string $password, string $password_confirm, 
     $_SESSION['user']->save();
     $userManager->login($name, $password);
     smtpMailer($email, "noreply@".SITE_URL, "noreply", "Nouveau compte sur ".SITE_URL, "Le compte $name a été créé.\nCeci est un mail automatique, merci de ne pas y répondre.");
-    header('Location: /');
+    header('Location: /success/user_register/');
 
 }
 /**
@@ -519,7 +519,7 @@ function modifyUser(int $id, string $name, string $name_display, string $email, 
     $user->last_seen = User::now();
     $user->save();
     $_SESSION['user'] = $user;
-    header('Location: /profile/edit/');
+    header('Location: /profile/edit/success/profile_updated/');
 }
 
 /**
@@ -582,7 +582,7 @@ Ceci est un message automatique, merci de ne pas y répondre.";
         }
     }
     if($sent) {
-        header('Location: /');
+        header('Location: /success/recover_sent/');
     }
     else {
         header('Location: /recover/retry/nothing_sent/');
@@ -622,7 +622,7 @@ function useRecover(string $key, int $id_user, string $password, string $passwor
     $user->save();
     $recover->delete();
     $_SESSION['user'] = $user;
-    header('Location: /');
+    header('Location: /success/recover_used/');
 }
 
 /**
@@ -646,9 +646,9 @@ function sendReport(int $id, int $type, string $content) {
             $report->content = $content;
         }
         $report->save();
-        header('Location: '.PATH);
+        header('Location: '.PATH.'success/report_sent/');
     }
     else {
-        header('Location: '.PATH.'retry/report_id_comment/');
+        header('Location: '.PATH.'retry/unknown_id_comment/');
     }
 }

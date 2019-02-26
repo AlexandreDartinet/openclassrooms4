@@ -7,7 +7,7 @@ ob_start();
 <h2>Accueil de l'interface d'administration</h2>
 <p>Bienvenue <?= htmlspecialchars($_SESSION['user']->name_display) ?>, vous êtes <?= $_SESSION['user']->displayLevel() ?>.</p>
 <div>
-    <h3><a href="/admin/reports">Signalements</a></h3>
+    <h3><a href="/admin/reports/">Signalements</a></h3>
 <?php
 $reportManager = new ReportManager();
 $reports_nbr = $reportManager->count();

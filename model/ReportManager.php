@@ -16,7 +16,7 @@ class ReportManager extends Manager {
      * Retourne tous les repors liés à un commentaire, par page (par défaut page 1)
      * 
      * @param int $id_comment : L'identifiant du post dont on veut les commentaires
-     * @param mixed $page : Optionnel, numéro de page de commentaires (par défaut 1) ou "all" si on veut tous les commentaires
+     * @param mixed $page : Optionnel, numéro de page de signalements (par défaut 1) ou "all" si on veut tous les signalements
      * 
      * @return array : Tableau d'objets Comment représentant les reports du commentaire, triés par date d'envoi.
      */
@@ -47,6 +47,37 @@ class ReportManager extends Manager {
         }
     }
 
+    /**
+     * Retourne un tableau d'identifiants de commentaires signalés
+     * 
+     * @param mixed $page : Optionnel, numéro de page de signalements (par défaut 1) ou "all" si on veut tous les signalements
+     * 
+     * @return array : Tableau contenant tous les "id" => "reports_nbr" 
+     */
+    public function getCommentsId($page = 1) {
+        if(is_int($page)) {
+            $req = $this->_db->prepare('SELECT id_comment, COUNT(*) AS reports_nbr FROM reports GROUP BY id_comment ORDER BY id_comment ASC LIMIT '.(($page-1)*CommentManager::COMMENT_PAGE).','.$page*CommentManager::COMMENT_PAGE);
+        }
+        elseif($page == "all") {
+            $req = $this->_db->prepare('SELECT id_comment, COUNT(*) AS reports_nbr FROM reports GROUP BY id_comment ORDER BY id_comment ASC');
+        }
+        else {
+            throw new Exception("ReportManager: Paramètre \$page($page) invalide.");
+            return [];
+        }
+        if($req->execute()) {
+            $comments = [];
+            while($line = $req->fetch()) {
+                $comments[$line['id_comment']] = $line['reports_nbr'];
+            }
+            $req->closeCursor();
+            return $comments;
+        }
+        else {
+            throw new Exception("ReportManager: Aucun commentaire trouvé.");
+            return [];
+        }
+    }
     /**
      * Retourne les reports associés à un User
      * 
@@ -81,7 +112,7 @@ class ReportManager extends Manager {
     public function getReportById(int $id) {
         $req = $this->getBy('id', $id);
         if(!is_bool($req)) {
-            $report = new Recover($req->fetch());
+            $report = new Report($req->fetch());
             $req->closeCursor();
             return $report;
         }
@@ -158,5 +189,22 @@ class ReportManager extends Manager {
     public function removeUser(User $user) {
         $req = $this->_db->prepare('UPDATE reports SET id_user=0 WHERE id_user=?');
         return $req->execute([$user->id]);
+    }
+
+    /**
+     * Compte le nombre de commentaires signalés
+     * 
+     * @return int : Nombre de commentaires
+     */
+    public function countComments() {
+        $req = $this->_db->prepare('SELECT COUNT(*) as count FROM comments WHERE id IN (SELECT id_comment FROM reports GROUP BY id_comment)');
+        if($req->execute()) {
+            $res = $req->fetch();
+            $req->closeCursor();
+            return (int) $res['count'];
+        }
+        else {
+            return 0;
+        }
     }
 }

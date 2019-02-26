@@ -12,10 +12,24 @@ try { // Gestion des erreurs
     if(preg_match('/^\/admin\//', PATH)) {
         if($_SESSION['user']->level >= User::LEVEL_MODERATOR) {
             require('controller/backend.php');
-            if(preg_match('/^\/reports\//' PATH)) {
-                if(preg_match('/comment\/\d+\//'), PATH) {
-                    $id = (int) preg_replace('/^.*comment\/(\d+)\/.*$/', '$1', PATH);
-
+            if(preg_match('/\/reports\//', PATH)) {
+                $page = getPage(PATH);
+                if(preg_match('/\/comment\/\d+\//', PATH)) {
+                    if(preg_match('/\/delete_report\/\d+\//', PATH)) {
+                        $id = (int) preg_replace('/^.*\/delete_report\/(\d+)\/.*$/', '$1', PATH);
+                        deleteReport($id);
+                    }
+                    elseif(preg_match('/\/delete\/\d+\//', PATH)) {
+                        $id = (int) preg_replace('/^.*\/delete\/(\d+)\/.*$/', '$1', PATH);
+                        deleteComment($id);
+                    }
+                    else {
+                        $id = (int) preg_replace('/^.*\/comment\/(\d+)\/.*$/', '$1', PATH);
+                        viewCommentReports($id, $page);
+                    }
+                }
+                else {
+                    listReports($page);
                 }
             }
             else {
@@ -213,5 +227,9 @@ try { // Gestion des erreurs
     }
 }
 catch(Exception $e) { // Affichage des erreurs
-    echo 'Erreur : ' . $e->getMessage();
+    echo '<div>Erreur : ' . $e->getMessage() . 
+        '<br/>File : ' . $e->getFile() . 
+        '<br/>Line : ' . $e->getLine() . 
+        '<br/>Previous : '. $e->getPrevious() . 
+        '<br/>Trace : '. $e->getTraceAsString() . '</div>';
 }

@@ -200,7 +200,9 @@ define('RETRY_TABLE', [
     "unknown_id_comment" => "Le commentaire n'existe pas.",
     "missing_fields" => "Il manque des champs du formulaire.",
     "unknown_action" => "L'action demandée n'existe pas.",
-    "no_reports" => "Aucun signalement."
+    "no_reports" => "Aucun signalement.",
+    "no_comment_report" => "Aucun signalement pour ce commentaire.",
+    "invalid_id_report" => "Le signalement que vous essayez de supprimer n'existe pas."
 ]);
 if (preg_match('/\/success\/\w+\//', $_GET['path'])) { // Si il y a un message, on crée une variable globale le contenant
     define('SUCCESS', preg_replace('/^.*\/success\/(\w+)\/.*$/', '$1', $_GET['path']));
@@ -220,7 +222,8 @@ define('SUCCESS_TABLE', [
     "login" => "Bienvenue !",
     "deleted_comment" => "Commentaire supprimé.",
     "modified_comment" => "Commentaire modifié.",
-    "added_comment" => "Commentaire ajouté."
+    "added_comment" => "Commentaire ajouté.",
+    "report_delete" => "Signalement supprimé."
 ]);
 $path = preg_replace('/retry\/\w+\//', '', $_GET['path']);
 define('PATH', preg_replace('/success\/\w+\//', '', $path)); // On définit le path actuel, moins l'erreur ou succes s'il y en a
