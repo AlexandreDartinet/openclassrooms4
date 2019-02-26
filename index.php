@@ -33,8 +33,25 @@ try { // Gestion des erreurs
                 }
             }
             elseif(preg_match('/^\/admin\/posts\//', PATH) && $_SESSION['user']->level >= User::LEVEL_EDITOR) { // Section articles
-                $page = getPage(PATH);
-                listPosts($page);
+                if(preg_match('/\/unpublish\/\d+\//', PATH)) {
+                    $id = (int) preg_replace('/^.*\/unpublish\/(\d+)\/.*$/', '$1', PATH);
+                    publishPost($id, false);
+                }
+                elseif(preg_match('/\/publish\/\d+\//', PATH)) {
+                    $id = (int) preg_replace('/^.*\/publish\/(\d+)\/.*$/', '$1', PATH);
+                    publishPost($id, true);
+                }
+                elseif(preg_match('/\/new\//', PATH)) {
+                    viewPost(0);
+                }
+                elseif(preg_match('/\/edit\/\d+\//', PATH)) {
+                    $id = (int) preg_replace('/^.*\/edit\/(\d+)\/.*$/', '$1', PATH);
+                    viewPost($id);
+                }
+                else {
+                    $page = getPage(PATH);
+                    listPosts($page);
+                }
             }
             else { // Page d'accueil de l'interface d'administration
                 viewAdmin();

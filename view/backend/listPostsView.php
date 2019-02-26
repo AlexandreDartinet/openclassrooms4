@@ -35,7 +35,7 @@ foreach($posts as $post) {
     if($post->published) {
         if($post->canEdit($_SESSION['user'])) {
 ?>
-                <a title="Masquer l'article" class="fas fa-check post-unpublish-link post-unpublish-link-active" id="post-unpublish-link-<?= $post->id ?>" href="/posts/unpublish/<?= $post->id ?>/"></a>
+                <a title="Masquer l'article" class="fas fa-check post-unpublish-link post-unpublish-link-active" id="post-unpublish-link-<?= $post->id ?>" href="/admin/posts/unpublish/<?= $post->id ?>/"></a>
 <?php
         }
         else {
@@ -47,7 +47,7 @@ foreach($posts as $post) {
     else {
         if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
 ?>
-                <a title="Publier l'article" class="fas fa-times post-publish-link post-publish-link-active" id="post-publish-link-<?= $post->id ?>" href="/posts/publish/<?= $post->id ?>/"></a>
+                <a title="Publier l'article" class="fas fa-times post-publish-link post-publish-link-active" id="post-publish-link-<?= $post->id ?>" href="/admin/posts/publish/<?= $post->id ?>/"></a>
 <?php
         }
         else {
@@ -59,7 +59,7 @@ foreach($posts as $post) {
 ?>
             </td>
             <td>
-                <?= ($post->canEdit($_SESSION['user']))?"<a class='fas fa-edit post-edit-link' id='post-edit-link-$post->id' href='/posts/edit/$post->id/'></a>":"" ?>
+                <?= ($post->canEdit($_SESSION['user']))?"<a class='fas fa-edit post-edit-link' id='post-edit-link-$post->id' href='/admin/posts/edit/$post->id/'></a>":"" ?>
             </td>
         </tr>
 <?php

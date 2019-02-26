@@ -22,7 +22,7 @@ require('footer.php');
 <?php
 if(RETRY != '') {
 ?>
-        <section id="error">
+        <section id="retry">
 <?php
     if(isset(RETRY_TABLE[RETRY])) {
         echo RETRY_TABLE[RETRY];

@@ -225,7 +225,9 @@ define('SUCCESS_TABLE', [
     "deleted_comment" => "Commentaire supprimé.",
     "modified_comment" => "Commentaire modifié.",
     "added_comment" => "Commentaire ajouté.",
-    "report_delete" => "Signalement supprimé."
+    "report_delete" => "Signalement supprimé.",
+    "post_published" => "Article publié.",
+    "post_unpublished" => "Article masqué."
 ]);
 $path = preg_replace('/retry\/\w+\//', '', $_GET['path']);
 define('PATH', preg_replace('/success\/\w+\//', '', $path)); // On définit le path actuel, moins l'erreur ou succes s'il y en a

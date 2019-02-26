@@ -153,4 +153,22 @@ abstract class DbObject {
     public static function rNow() {
         return preg_replace('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', '$3/$2/$1 à $4h$5', self::now());
     }
+
+    /**
+     * Fonction statique pour retourner une date datetime html à partir d'une date DateTime
+     * 
+     * @return string
+     */
+    public static function dateToHtml(string $date) {
+        return preg_replace('/^(\d{4}-\d{2}-\d{2}) (\d{2}:\d{2}):\d{2}$/', '$1T$2', $date);
+    }
+
+    /**
+     * Fonction statique pour retourner une date DateTime à partir d'une date html
+     * 
+     * @return string
+     */
+    public static function htmlToDate(string $date) {
+        return preg_replace('/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})$/', '$1 $2:00', $date);
+    }
 }

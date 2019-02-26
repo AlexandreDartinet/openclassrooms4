@@ -85,8 +85,42 @@ function listPosts(int $page) {
     $posts = $postManager->getPosts($page, false);
     $title = 'Articles';
     $pageSelector = pageSelector(ceil($postManager->countPosts(false)/PostManager::POST_PAGE), $page, PATH);
-    
+
     require('view/backend/listPostsView.php');
+}
+
+/**
+ * Affiche le formulaire d'édition d'un article
+ * 
+ * @param int $id : Id de l'article à modifier, 0 pour un nouvel article
+ * 
+ * @return void
+ */
+function viewPost(int $id) {
+    if($id == 0) {
+        $new = true;
+        $title = "Nouvel article";
+    }
+    else {
+        $new = false;
+        $postManager = new PostManager();
+        if($postManager->exists('id', $id)) {
+            $post = $postManager->getPostById($id);
+            if($post->canEdit($_SESSION['user'])) {
+                $title = 'Article "'.htmlspecialchars($post->title).'"';
+            }
+            else {
+                header('Location: /admin/posts/retry/no_access/');
+                return;
+            }
+        }
+        else {
+            header('Location: /admin/posts/retry/id_post/');
+            return;
+        }
+    }
+
+    require('view/backend/postView.php');
 }
 
 /**
@@ -132,5 +166,35 @@ function deleteComment(int $id) {
     }
     else {
         header('Location: /admin/reports/retry/unknown_id_comment/');
+    }
+}
+
+/**
+ * Change l'attribut published d'un post
+ * 
+ * @param int $id : Identifiant du post
+ * @param boolean $published : attribut published
+ * 
+ * @return void
+ */
+function publishPost(int $id, $published) {
+    if($published && $_SESSION['user']->level < User::LEVEL_ADMIN) {
+        header("Location: /admin/posts/retry/no_access/1");
+        return;
+    }
+    $postManager = new PostManager();
+    if($postManager->exists('id', $id)) {
+        $post = $postManager->getPostById($id);
+        if($post->canEdit($_SESSION['user'])) {
+            $post->published = $published;
+            $post->save();
+            header("Location: /admin/posts/success/post_".(($published)?"":"un")."published/");
+        }
+        else {
+            header("Location: /admin/posts/retry/no_access/2");
+        }
+    }
+    else {
+        header("Location: /admin/posts/retry/id_post/");
     }
 }
