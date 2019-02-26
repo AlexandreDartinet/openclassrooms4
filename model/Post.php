@@ -207,7 +207,7 @@ class Post extends DbObject {
             $display .= "</div>";
         }
         else {
-            $content = nl2br(htmlspecialchars($this->content));
+            $content = $this->content;
             $display = "<article class='post'>";
             $display .= "<h3 class='post-title'>";
             $display .= $title;
