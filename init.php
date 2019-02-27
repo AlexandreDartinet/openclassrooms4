@@ -174,60 +174,61 @@ if(!isset($_SESSION["user"])) { // Si aucun utilisateur enregistré en session, 
 }
 if (preg_match('/\/retry\/\w+\//', $_GET['path'])) { // Si il y a une erreur, on crée une variable globale la contenant
     define('RETRY', preg_replace('/^.*\/retry\/(\w+)\/.*$/', '$1', $_GET['path']));
+    define('RETRY_TABLE', [
+        "default" => "Erreur inconnue.",
+        "recoverPassword_date_sent" => "Le lien de récupération a expiré.",
+        "recoverPassword_key" => "La clé de récupération est invalide.",
+        "modifyComment_nothing_changed" => "Le commentaire n'a pas été modifié.",
+        "modifyComment_invalid_user" => "Vous n'avez pas le droit de modifier ce commentaire.",
+        "modifyComment_id_comment" => "Le commentaire que vous essayez de modifier n'existe pas.",
+        "deleteComment_invalid_user" => "Vous n'avez pas le droit de supprimer ce commentaire.",
+        "deleteComment_id_comment" => "Le commentaire que vous essayez de supprimer n'existe pas.",
+        "login_fail" => "Nom d'utilisateur ou mot de passe incorrect.",
+        "email_confirm" => "Email et confirmation ne correspondent pas.",
+        "user_name" => "Le nom que vous avez choisi existe déjà.",
+        "user_name_display" => "Le nom d'affichage que vous avez choisi existe déjà.",
+        "password_confirm" => "Le mot de passe ne correspond pas à la confirmation.",
+        "old_password" => "Votre ancien mot de passe est incorrect.",
+        "no_match_email" => "Aucun utilisateur correspondant à cet email.",
+        "no_match_name" => "Aucun utilisateur correspondant à ce nom.",
+        "nothing_sent" => "Aucun email de récupération n'a été envoyé.",
+        "recover_id_user" => "Erreur dans le formulaire, les identifiants d'utilisateurs ne correspondent pas.",
+        "unknown_id_comment" => "Le commentaire n'existe pas.",
+        "missing_fields" => "Il manque des champs du formulaire.",
+        "unknown_action" => "L'action demandée n'existe pas.",
+        "no_reports" => "Aucun signalement.",
+        "no_comment_report" => "Aucun signalement pour ce commentaire.",
+        "invalid_id_report" => "Le signalement que vous essayez de supprimer n'existe pas.",
+        "no_access" => "Vous n'avez pas accès à cette page.",
+        "id_post" => "L'article n'existe pas."
+    ]);
 }
 else { // Sinon la variable est vide
     define('RETRY','');
 }
-define('RETRY_TABLE', [
-    "default" => "Erreur inconnue.",
-    "recoverPassword_date_sent" => "Le lien de récupération a expiré.",
-    "recoverPassword_key" => "La clé de récupération est invalide.",
-    "modifyComment_nothing_changed" => "Le commentaire n'a pas été modifié.",
-    "modifyComment_invalid_user" => "Vous n'avez pas le droit de modifier ce commentaire.",
-    "modifyComment_id_comment" => "Le commentaire que vous essayez de modifier n'existe pas.",
-    "deleteComment_invalid_user" => "Vous n'avez pas le droit de supprimer ce commentaire.",
-    "deleteComment_id_comment" => "Le commentaire que vous essayez de supprimer n'existe pas.",
-    "login_fail" => "Nom d'utilisateur ou mot de passe incorrect.",
-    "email_confirm" => "Email et confirmation ne correspondent pas.",
-    "user_name" => "Le nom que vous avez choisi existe déjà.",
-    "user_name_display" => "Le nom d'affichage que vous avez choisi existe déjà.",
-    "password_confirm" => "Le mot de passe ne correspond pas à la confirmation.",
-    "old_password" => "Votre ancien mot de passe est incorrect.",
-    "no_match_email" => "Aucun utilisateur correspondant à cet email.",
-    "no_match_name" => "Aucun utilisateur correspondant à ce nom.",
-    "nothing_sent" => "Aucun email de récupération n'a été envoyé.",
-    "recover_id_user" => "Erreur dans le formulaire, les identifiants d'utilisateurs ne correspondent pas.",
-    "unknown_id_comment" => "Le commentaire n'existe pas.",
-    "missing_fields" => "Il manque des champs du formulaire.",
-    "unknown_action" => "L'action demandée n'existe pas.",
-    "no_reports" => "Aucun signalement.",
-    "no_comment_report" => "Aucun signalement pour ce commentaire.",
-    "invalid_id_report" => "Le signalement que vous essayez de supprimer n'existe pas.",
-    "no_access" => "Vous n'avez pas accès à cette page.",
-    "id_post" => "L'article n'existe pas."
-]);
 if (preg_match('/\/success\/\w+\//', $_GET['path'])) { // Si il y a un message, on crée une variable globale le contenant
     define('SUCCESS', preg_replace('/^.*\/success\/(\w+)\/.*$/', '$1', $_GET['path']));
+    define('SUCCESS_TABLE', [
+        "default" => "Succes inconnu",
+        "report_sent" => "Signalement envoyé.",
+        "recover_used" => "Votre nouveau mot de passe a été enregistré.",
+        "recover_sent" => "Un email de récupération a été envoyé.",
+        "profile_updated" => "Votre profil a été mis à jour.",
+        "user_register" => "Vous vous êtes inscrit avec succès.",
+        "contact_form" => "Votre message a bien été envoyé.",
+        "logout" => "Au revoir ;)",
+        "login" => "Bienvenue !",
+        "deleted_comment" => "Commentaire supprimé.",
+        "modified_comment" => "Commentaire modifié.",
+        "added_comment" => "Commentaire ajouté.",
+        "report_delete" => "Signalement supprimé.",
+        "post_published" => "Article publié.",
+        "post_unpublished" => "Article masqué."
+    ]);
 }
 else { // Sinon la variable est vide
     define('SUCCESS','');
 }
-define('SUCCESS_TABLE', [
-    "default" => "Succes inconnu",
-    "report_sent" => "Signalement envoyé.",
-    "recover_used" => "Votre nouveau mot de passe a été enregistré.",
-    "recover_sent" => "Un email de récupération a été envoyé.",
-    "profile_updated" => "Votre profil a été mis à jour.",
-    "user_register" => "Vous vous êtes inscrit avec succès.",
-    "contact_form" => "Votre message a bien été envoyé.",
-    "logout" => "Au revoir ;)",
-    "login" => "Bienvenue !",
-    "deleted_comment" => "Commentaire supprimé.",
-    "modified_comment" => "Commentaire modifié.",
-    "added_comment" => "Commentaire ajouté.",
-    "report_delete" => "Signalement supprimé.",
-    "post_published" => "Article publié.",
-    "post_unpublished" => "Article masqué."
-]);
+
 $path = preg_replace('/retry\/\w+\//', '', $_GET['path']);
 define('PATH', preg_replace('/success\/\w+\//', '', $path)); // On définit le path actuel, moins l'erreur ou succes s'il y en a
