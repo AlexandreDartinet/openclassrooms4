@@ -43,8 +43,7 @@ class CommentManager extends Manager {
             return $comments;
         }
         else {
-            throw new Exception("CommentManager: Aucun commentaire trouvé \$id_post($id_post), \$page($page), \$replies($replies).");
-            return [];
+            throw new Exception("CommentManager: Erreur de requête \$id_post($id_post), \$page($page), \$replies($replies).");
         }
     } 
 
@@ -53,18 +52,23 @@ class CommentManager extends Manager {
      * 
      * @param int $id : identifiant du commentaire à récupérer
      * 
-     * @return Comment : L'objet Comment correspondant au commentaire demandé
+     * @return Comment : L'objet Comment correspondant au commentaire demandé, false si aucun résultat
      */
     public function getCommentById(int $id) {
         $req = $this->_db->prepare('SELECT a.*, COUNT(b.id) AS replies_nbr FROM comments a LEFT JOIN comments b ON a.id = b.reply_to WHERE a.id=:id');
         $req->bindParam(":id", $id);
         if($req->execute()) {
-            $comment = new Comment($req->fetch());
+            if($res = $req->fetch()) {
+                $comment = new Comment($res);
+            }
+            else {
+                $comment = false;
+            }
             $req->closeCursor();
             return $comment;
         }
         else {
-            throw new Exception("CommentManager: Commentaire $id non existant.");
+            throw new Exception("CommentManager: Erreur de requête getCommentById($id).");
         }
     }
 
@@ -86,8 +90,7 @@ class CommentManager extends Manager {
             return $comments;
         }
         else {
-            throw new Exception("CommentManager: Utilisateur $user->id n'a aucun commentaire.");
-            return [];
+            throw new Exception("CommentManager: Erreur de requête getCommentsByUser($user->id).");
         }
     }
 
@@ -147,8 +150,7 @@ class CommentManager extends Manager {
             return $comments;
         }
         else {
-            throw new Exception("CommentManager: Commentaire $comment->id n'a aucune réponse.");
-            return [];
+            throw new Exception("CommentManager: Erreur de requête getReplies($comment->id).");
         }
     }
 
@@ -188,13 +190,17 @@ class CommentManager extends Manager {
         $req = $this->_db->prepare('SELECT COUNT(*) as count FROM comments WHERE id_post=:id_post'.(($replies)?'':' AND reply_to=0'));
         $req->bindParam(':id_post', $id_post);
         if($req->execute()) {
-            $res = $req->fetch();
+            if($res = $req->fetch()) {
+                $count = (int) $res['count'];
+            }
+            else {
+                $count = 0;
+            }
             $req->closeCursor();
-            return (int) $res['count'];
+            return $count;
         }
         else {
-            throw new Exception("CommentManager: Post $id_post n'a aucun commentaire.");
-            return 0;
+            throw new Exception("CommentManager: Erreur de requête countByPostId($id_post, $replies).");
         }
     }
 

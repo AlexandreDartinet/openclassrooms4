@@ -15,18 +15,21 @@ class RecoverManager extends Manager {
      * 
      * @param int $id : Identifiant du recover à retourner
      * 
-     * @return Recover : Recover demandé
+     * @return Recover : Recover demandé false si aucun
      */
     public function getRecoverById(int $id) {
-        $req = $this->getBy('id', $id);
-        if(!is_bool($req)) {
-            $recover = new Recover($req->fetch());
+        if($req = $this->getBy('id', $id)) {
+            if($res = $req->fetch()) {
+                $recover = new Recover($res);
+            }
+            else {
+                $recover = false;
+            }
             $req->closeCursor();
             return $recover;
         }
         else {
-            throw new Exception("RecoverManager: Aucun recover correspondant à l'id $id.");
-            return false;
+            throw new Exception("RecoverManager: Erreur de requête getRecoverById($id).");
         }
     }
 
@@ -35,18 +38,21 @@ class RecoverManager extends Manager {
      * 
      * @param string $key : Clé du recover à retourner
      * 
-     * @return Recover : Recover demandé
+     * @return Recover : Recover demandé, false si aucun résultat
      */
     public function getRecoverByKey(string $key) {
-        $req = $this->getBy('recover_key', $key);
-        if(!is_bool($req)) {
-            $recover = new Recover($req->fetch());
+        if($req = $this->getBy('recover_key', $key)) {
+            if($res = $req->fetch()) {
+                $recover = new Recover($res);
+            }
+            else {
+                $recover = false;
+            }
             $req->closeCursor();
             return $recover;
         }
         else {
-            throw new Exception("RecoverManager: Aucun recover correspondant à la clé $key.");
-            return false;
+            throw new Exception("RecoverManager: Erreur de requête getRecoverByKey($key).");
         }
     }
 
@@ -58,15 +64,18 @@ class RecoverManager extends Manager {
      * @return Recover : Recover demandé
      */
     public function getRecoverByUser(User $user) {
-        $req = $this->getBy('id_user', $user->id);
-        if(!is_bool($req)) {
-            $recover = new Recover($req->fetch());
+        if($req = $this->getBy('id_user', $user->id)) {
+            if($res = $req->fetch()) {
+                $recover = new Recover($res);
+            }
+            else {
+                $recover = false;
+            }
             $req->closeCursor();
             return $recover;
         }
         else {
-            throw new Exception("RecoverManager: Aucun recover correspondant à l'utilisateur $user->name.");
-            return false;
+            throw new Exception("RecoverManager: Erreur de requête getRecoverByUser($user->id).");
         }
     }
 

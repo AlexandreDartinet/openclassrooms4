@@ -42,6 +42,7 @@ abstract class DbObject {
         }
         else {
             throw new Exception("DbObject: L'attribut $name n'existe pas pour l'objet.");
+            return false;
         };
     }
 

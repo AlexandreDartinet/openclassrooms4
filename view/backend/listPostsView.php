@@ -14,6 +14,7 @@ ob_start();
             <th>Date de publication</th>
             <th>Publié</th>
             <th>Éditer</th>
+            <th>Supprimer</th>
         </tr>
     </thead>
     <tbody>
@@ -60,6 +61,9 @@ foreach($posts as $post) {
             </td>
             <td>
                 <?= ($post->canEdit($_SESSION['user']))?"<a class='fas fa-edit post-edit-link' id='post-edit-link-$post->id' href='/admin/posts/edit/$post->id/'></a>":"" ?>
+            </td>
+            <td>
+                <?= ($post->canEdit($_SESSION['user']))?"<a class='fas fa-trash post-delete-link' id='post-delete-link-$post->id' href='/admin/posts/delete/$post->id/'></a>":"" ?>
             </td>
         </tr>
 <?php

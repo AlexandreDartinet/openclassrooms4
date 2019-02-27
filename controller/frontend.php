@@ -19,7 +19,7 @@
  */
 function listPosts($page = 1, $year = 0, $month = 0, $day = 0) {
     $postManager = new PostManager();
-    $posts = $postManager->getPosts($page);
+    $posts = $postManager->getPosts($page, true, $year, $month, $day);
     $pageSelector = pageSelector(ceil($postManager->countPosts(true, $year, $month, $day)/PostManager::POST_PAGE), $page, PATH);
     if($year != 0) {
         if($month != 0) {
@@ -53,8 +53,7 @@ function listPosts($page = 1, $year = 0, $month = 0, $day = 0) {
  */
 function viewPost(int $id, $page = 1) {
     $postManager = new PostManager();
-    if($postManager->exists('id', $id)) {
-        $post = $postManager->getPostById($id);
+    if($post = $postManager->getPostById($id)) {
         if($post->isPublished() || $_SESSION['user']->level >= User::LEVEL_EDITOR) {
             $reply_to = 0;
             $isComments = false;
@@ -65,12 +64,13 @@ function viewPost(int $id, $page = 1) {
                 $comments = $commentManager->getComments($id, $page);
                 if(preg_match('/\/reply_to\/\d+\//', PATH)) {
                     $reply_to = (int) preg_replace('/^.*reply_to\/(\d+)\/.*$/', '$1', PATH);
-                    $reply_to_comment = $commentManager->getCommentById($reply_to);
+                    if(!($reply_to_comment = $commentManager->getCommentById($reply_to))) {
+                        $reply_to = 0;
+                    }
                 }
                 if(preg_match('/\/edit\/\d+\//', PATH)) {
                     $edit_id = (int) preg_replace('/^.*edit\/(\d+)\/.*$/', '$1', PATH);
-                    if($commentManager->exists('id',$edit_id)) {
-                        $editedComment = $commentManager->getCommentById($edit_id);
+                    if($editedComment = $commentManager->getCommentById($edit_id)) {
                         if($editedComment->canEdit($_SESSION['user'])) {
                             $edit = true;
                         }
@@ -161,8 +161,7 @@ function viewRecoverPassword() {
  */
 function viewRecoverPasswordLink($key) {
     $recoverManager = new RecoverManager();
-    if($recoverManager->exists('recover_key', $key)) {
-        $recover = $recoverManager->getRecoverByKey($key);
+    if($recover = $recoverManager->getRecoverByKey($key)) {
         if($recover->isValid()) {
             $user = $recover->user;
             $title = "Changement de mot de passe pour $user->name";
@@ -228,8 +227,7 @@ function viewDirectory(int $page) {
  */
 function viewProfile(int $id) {
     $userManager = new UserManager();
-    if($userManager->exists('id', $id)) {
-        $user = $userManager->getUserById($id);
+    if($user = $userManager->getUserById($id)) {
         $title = "Profil de $user->name_display";
         
         require('view/frontend/profileView.php');
@@ -249,8 +247,7 @@ function viewProfile(int $id) {
  */
 function viewReportForm(int $id, string $path) {
     $commentManager = new CommentManager();
-    if($commentManager->exists('id', $id)) {
-        $comment = $commentManager->getCommentById($id);
+    if($comment = $commentManager->getCommentById($id)) {
         $title = "Signaler le commentaire de \"".htmlspecialchars($comment->getName()).'"';
 
         require('view/frontend/reportFormView.php');
@@ -315,8 +312,7 @@ function commentPost(int $id_post, string $name, string $content, int $reply_to)
 function modifyComment(int $id, string $name, string $content) {
     $user = $_SESSION['user'];
     $commentManager = new CommentManager();
-    if($commentManager->exists('id',$id)) {
-        $comment = $commentManager->getCommentById($id);
+    if($comment = $commentManager->getCommentById($id)) {
         if($comment->canEdit($user)) {
             if(($content != $comment->content) || ($name != $comment->getName())) {
                 $comment->name = $name;
@@ -347,8 +343,7 @@ function modifyComment(int $id, string $name, string $content) {
 function deleteComment(int $id) {
     $user = $_SESSION['user'];
     $commentManager = new CommentManager();
-    if($commentManager->exists('id', $id)) {
-        $comment = $commentManager->getCommentById($id);
+    if($comment = $commentManager->getCommentById($id)) {
         if($comment->canEdit($user)) {
             $comment->delete();
             header('Location: /post/'.$comment->id_post.'/success/deleted_comment/');
@@ -528,7 +523,7 @@ function modifyUser(int $id, string $name, string $name_display, string $email, 
             return;
         }
     }
-    if($old_password != '' && $password != '') {
+    if($password != '') {
         if(password_verify($old_password, $user->password)) {
             if($password == $password_confirm) {
                 $user->password = password_hash($password, PASSWORD_DEFAULT);
@@ -581,8 +576,7 @@ function sendRecover(string $value) {
     $sent = false;
     foreach($users as &$user) {
         $recoverManager = new RecoverManager();
-        if($recoverManager->exists('id_user', $user->id)) {
-            $recover = $recoverManager->getRecoverByUser($user);
+        if($recover = $recoverManager->getRecoverByUser($user)) {
             if($recover->isValid()) {
                 $send = false;
             }
@@ -635,22 +629,26 @@ function useRecover(string $key, int $id_user, string $password, string $passwor
         return;
     }
     $recoverManager = new RecoverManager();
-    $recover = $recoverManager->getRecoverByKey($key);
-    if($recover->id_user != $id_user) {
-        header("Location: /recover/$key/retry/recover_id_user/");
-        return;
-    }
-    if(!$recover->isValid()) {
+    if($recover = $recoverManager->getRecoverByKey($key)){
+        if($recover->id_user != $id_user) {
+            header("Location: /recover/$key/retry/recover_id_user/");
+            return;
+        }
+        if(!$recover->isValid()) {
+            $recover->delete();
+            header("Location: /recover/retry/recoverPassword_date_sent/");
+            return;
+        }
+        $user = $recover->user;
+        $user->password = password_hash($password, PASSWORD_DEFAULT);
+        $user->save();
         $recover->delete();
-        header("Location: /recover/retry/recoverPassword_date_sent/");
-        return;
+        $_SESSION['user'] = $user;
+        header('Location: /success/recover_used/');
     }
-    $user = $recover->user;
-    $user->password = password_hash($password, PASSWORD_DEFAULT);
-    $user->save();
-    $recover->delete();
-    $_SESSION['user'] = $user;
-    header('Location: /success/recover_used/');
+    else {
+        header("Location: /recover/retry/recoverPassword_key/");
+    }
 }
 
 /**

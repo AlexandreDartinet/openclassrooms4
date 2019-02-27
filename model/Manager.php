@@ -50,20 +50,12 @@ abstract class Manager
      * @return boolean : true si une ou plusieurs lignes existent
      */
     public function exists(string $name, $value) {
-        $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM ".'`'.static::TABLE_NAME.'`'." WHERE `$name`=?");
-        if($req->execute([$value])) {
-            $res = $req->fetch();
-            $req->closeCursor();
-            $count = (int) $res['count'];
-            if($count == 0) {
-                return false;
-            }
-            else {
-                return true;
-            }
+        $count = $this->count($name, $value);
+        if($count == 0) {
+            return false;
         }
         else {
-            return false;
+            return true;
         }
     }
 
@@ -91,25 +83,23 @@ abstract class Manager
     public function count($name = 'noQuery', $value = 'noQuery') {
         if($name == 'noQuery') {
             $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM ".'`'.static::TABLE_NAME.'`'."");
-            if($req->execute()) {
-                $res = $req->fetch();
-                $req->closeCursor();
-                return (int) $res['count'];
-            }
-            else {
-                return 0;
-            }
         }
         else {
-            $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM ".'`'.static::TABLE_NAME.'`'." WHERE `$name`=?");
-            if($req->execute([$value])) {
-                $res = $req->fetch();
-                $req->closeCursor();
-                return (int) $res['count'];
+            $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM ".'`'.static::TABLE_NAME.'`'." WHERE `$name`=:value");
+            $req->bindParam(':value', $value);
+        }
+        if($req->execute()) {
+            if($res = $req->fetch()) {
+                $count = (int) $res['count'];
             }
             else {
-                return 0;
+                $count = 0;
             }
+            $req->closeCursor();
+            return $count;
+        }
+        else {
+            throw new Exception("DbObject: Erreur de requête count($name, $value).");
         }
     }
     
@@ -127,7 +117,7 @@ abstract class Manager
             return $req;
         }
         else {
-            throw new Exception("DbObject: getBy erreur dans la requête \$name($name) \$value($value).");
+            // throw new Exception("DbObject: getBy erreur dans la requête \$name($name) \$value($value).");
             return false;
         }
     }

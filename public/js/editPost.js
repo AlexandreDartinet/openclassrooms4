@@ -1,3 +1,4 @@
+$('#submitbtn').remove();
 let defaultToolbar = 'fullscreen preview save | undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | indent outdent | ';
 tinymce.init({
     selector: '#content',

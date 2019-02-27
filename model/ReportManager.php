@@ -28,8 +28,7 @@ class ReportManager extends Manager {
             $req = $this->_db->prepare('SELECT * FROM reports WHERE id_comment=:id_comment ORDER BY date_report ASC');
         }
         else {
-            throw new Exception("ReportManager: Paramètre \$page($page) invalide.");
-            return [];
+            throw new Exception("ReportManager: getReports($id_comment, $page): Paramètre \$page($page) invalide.");
         }
         $req->bindParam(":id_comment", $id_comment);
         if($req->execute()) {
@@ -42,8 +41,7 @@ class ReportManager extends Manager {
             return $reports;
         }
         else {
-            throw new Exception("ReportManager: Aucun signalement trouvé \$id_comment($id_comment), \$page($page).");
-            return [];
+            throw new Exception("ReportManager: Erreur de requête getReports($id_comment, $page).");
         }
     }
 
@@ -62,8 +60,7 @@ class ReportManager extends Manager {
             $req = $this->_db->prepare('SELECT id_comment, COUNT(*) AS reports_nbr FROM reports GROUP BY id_comment ORDER BY id_comment ASC');
         }
         else {
-            throw new Exception("ReportManager: Paramètre \$page($page) invalide.");
-            return [];
+            throw new Exception("ReportManager: getCommentsId($page): Paramètre \$page($page) invalide.");
         }
         if($req->execute()) {
             $comments = [];
@@ -74,8 +71,7 @@ class ReportManager extends Manager {
             return $comments;
         }
         else {
-            throw new Exception("ReportManager: Aucun commentaire trouvé.");
-            return [];
+            throw new Exception("ReportManager: getCommentsId($page): Erreur de requête.");
         }
     }
     /**
@@ -86,8 +82,7 @@ class ReportManager extends Manager {
      * @return array : Tableau de Report
      */
     public function getReportsByUser(User $user) {
-        $req = $this->getBy('id_user', $user->id);
-        if(!is_bool($req)) {
+        if($req = $this->getBy('id_user', $user->id)) {
             $reports = [];
             while($line = $req->fetch()) {
                 $report = new Report($line);
@@ -97,8 +92,7 @@ class ReportManager extends Manager {
             return $reports;
         }
         else {
-            throw new Exception("ReportManager: L'utilisateur $user->id n'a aucun signalement.");
-            return [];
+            throw new Exception("ReportManager: getReportsByUser($user->id): Erreur de requête.");
         }
     }
 
@@ -110,15 +104,18 @@ class ReportManager extends Manager {
      * @return Report : Recover demandé
      */
     public function getReportById(int $id) {
-        $req = $this->getBy('id', $id);
-        if(!is_bool($req)) {
-            $report = new Report($req->fetch());
+        if($req = $this->getBy('id', $id)) {
+            if($res = $req->fetch()) {
+                $report = new Report($res);
+            }
+            else {
+                $report = false;
+            }
             $req->closeCursor();
             return $report;
         }
         else {
-            throw new Exception("ReportManager: Aucun report correspondant à l'id $id.");
-            return false;
+            throw new Exception("ReportManager: getReportById($id): Erreur de requête.");
         }
     }
 
@@ -199,12 +196,17 @@ class ReportManager extends Manager {
     public function countComments() {
         $req = $this->_db->prepare('SELECT COUNT(*) as count FROM comments WHERE id IN (SELECT id_comment FROM reports GROUP BY id_comment)');
         if($req->execute()) {
-            $res = $req->fetch();
+            if($res = $req->fetch()) {
+                $count = (int) $res['count'];
+            }
+            else {
+                $count = 0;
+            }
             $req->closeCursor();
-            return (int) $res['count'];
+            return $count;
         }
         else {
-            return 0;
+            throw new Exception("ReportManager: countComments(): Erreur de requête.");
         }
     }
 }

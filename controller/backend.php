@@ -54,8 +54,7 @@ function listReports(int $page) {
  */
 function viewCommentReports(int $id, int $page) {
     $commentManager = new CommentManager();
-    if($commentManager->exists('id', $id)) {
-        $comment = $commentManager->getCommentById($id);
+    if($comment = $commentManager->getCommentById($id)) {
         $reportManager = new ReportManager();
         if($reportManager->exists('id_comment', $id)) {
             $reports = $reportManager->getReports($id,$page);
@@ -104,8 +103,7 @@ function viewPost(int $id) {
     else {
         $new = false;
         $postManager = new PostManager();
-        if($postManager->exists('id', $id)) {
-            $post = $postManager->getPostById($id);
+        if($post = $postManager->getPostById($id)) {
             if($post->canEdit($_SESSION['user'])) {
                 $title = 'Article "'.htmlspecialchars($post->title).'"';
             }
@@ -138,8 +136,7 @@ function viewPost(int $id) {
 function deleteReport(int $id) {
     $reportManager = new ReportManager();
     $path = preg_replace('/delete_report\/\d+\//', '', PATH);
-    if($reportManager->exists('id', $id)) {
-        $report = $reportManager->getReportById($id);
+    if($report = $reportManager->getReportById($id)) {
         $report->delete();
         header('Location: '.$path.'success/report_delete/');
     }
@@ -159,8 +156,7 @@ function deleteReport(int $id) {
 function deleteComment(int $id) {
     $commentManager = new CommentManager();
     $path = preg_replace('/delete\/\d+\//', '', PATH);
-    if($commentManager->exists('id', $id)) {
-        $comment = $commentManager->getCommentById($id);
+    if($comment = $commentManager->getCommentById($id)) {
         $comment->delete();
         header('Location: /admin/reports/success/deleted_comment/');
     }
@@ -183,8 +179,7 @@ function publishPost(int $id, $published) {
         return;
     }
     $postManager = new PostManager();
-    if($postManager->exists('id', $id)) {
-        $post = $postManager->getPostById($id);
+    if($post = $postManager->getPostById($id)) {
         if($post->canEdit($_SESSION['user'])) {
             $post->published = $published;
             $post->save();
@@ -197,4 +192,15 @@ function publishPost(int $id, $published) {
     else {
         header("Location: /admin/posts/retry/id_post/");
     }
+}
+
+/**
+ * Supprime un article
+ * 
+ * @param int $id : Identifiant de l'article
+ * 
+ * @return void
+ */
+function deletePost(int $id) {
+
 }

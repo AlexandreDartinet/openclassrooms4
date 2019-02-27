@@ -187,7 +187,7 @@ class Comment extends DbObject {
                         $parent = $this->manager->getCommentById($this->reply_to);
                     }
                     else {
-                        $parent = Comment::default();
+                        $parent = false;
                     }
                     $this->$name = $parent;
                     break;

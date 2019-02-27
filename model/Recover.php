@@ -139,6 +139,4 @@ class Recover extends DbObject {
         ]);
         return $recover;
     }
-
-
 }

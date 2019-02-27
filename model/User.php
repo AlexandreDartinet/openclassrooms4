@@ -273,12 +273,12 @@ class User extends DbObject {
      */
     public function delete() {
         $postManager = new PostManager();
-        $postManager->removeUser($this);
+        $pmResult = $postManager->removeUser($this);
         $commentManager = new CommentManager();
-        $commentManager->removeUser($this);
+        $cmResult = $commentManager->removeUser($this);
         $reportManager = new ReportManager();
-        $reportManager->removeUser($this);
-        return $this->manager->removeBy('id',$this->id);
+        $rmResult = $reportManager->removeUser($this);
+        return $this->manager->removeBy('id',$this->id) && $pmResult && $cmResult && $rmResult;
     }
 
     /**

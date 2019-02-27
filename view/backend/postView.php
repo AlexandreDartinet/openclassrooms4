@@ -9,6 +9,7 @@ ob_start();
 <?php
 if($new) {
     $action = "newPost";
+    $id_post = 0;
     $id_user = $_SESSION['user']->id;
     $date = Post::dateToHtml(Post::now());
     $published = false;
@@ -17,6 +18,7 @@ if($new) {
 }
 else {
     $action = "modifyPost";
+    $id_post = $post->id;
     $id_user = $post->id_user;
     $date = Post::dateToHtml($post->date_publication);
     $published = $post->published;
@@ -27,6 +29,7 @@ else {
 ?>
 <form method="post" action="/admin/posts/">
     <input type="hidden" name="action" value="<?= $action ?>"/>
+    <input type="hidden" name="id_post" value="<?= $id_post ?>"/>
     <input type="hidden" name="id_user" value="<?= $id_user ?>"/>
 <?php
 if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
@@ -52,7 +55,7 @@ else {
     <div>
         <textarea name="content" id="content" required><?= $content ?></textarea>
     </div>
-    <!--<input type="submitbtn"/>-->
+    <input type="submit" id="submitbtn"/>
 </form>
 <?php
 $scripts = [

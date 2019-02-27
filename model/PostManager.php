@@ -34,7 +34,6 @@ class PostManager extends Manager {
         }
         else {
             throw new Exception("PostManager: \$page($page) invalide.");
-            return [];
         }
         if($year != 0) {// Si $year est renseigné
             if($month != 0) {// Si $month est renseigné
@@ -68,8 +67,7 @@ class PostManager extends Manager {
             return $posts;
         }
         else {
-            throw new Exception("PostManager: Aucun post trouvé.");
-            return [];
+            throw new Exception("PostManager: Erreur de requête getPosts($page, $published, $year, $month, $day).");
         }
     }
 
@@ -78,18 +76,22 @@ class PostManager extends Manager {
      * 
      * @param int $id : Identifiant du post qu'on veut récupérer
      * 
-     * @return Post : Le post à retourner
+     * @return Post : Le post à retourner false si aucun résultat
      */
     public function getPostById(int $id) {
         $req = $this->_db->prepare('SELECT posts.*, COUNT(comments.id) AS comments_nbr FROM posts LEFT JOIN comments ON posts.id = comments.id_post WHERE posts.id=?');
         if($req->execute([$id])) {
-            $post = new Post($req->fetch());
+            if($res = $req->fetch()) {
+                $post = new Post($res);
+            }
+            else {
+                $post = false;
+            }
             $req->closeCursor();
             return $post;
         }
         else {
-            throw new Exception("PostManager: Aucun post correspondant à l'id $id.");
-            return Post::default();
+            throw new Exception("PostManager: Erreur de requête getPostById($id).");
         }
     }
 
@@ -112,8 +114,7 @@ class PostManager extends Manager {
             return $posts;
         }
         else {
-            throw new Exception("PostManager: Aucun post correspondant à l'utilisateur $user->id.");
-            return [];
+            throw new Exception("PostManager: Erreur de requête getPostsByUser($user->id).");
         }
     }
 
@@ -154,8 +155,7 @@ class PostManager extends Manager {
             return $table;
         }
         else {
-            throw new Exception("Postmanager: Aucune date à retourner.");
-            return [];
+            throw new Exception("Postmanager: Erreur de requête getDateTable($published).");
         }
     }
 
@@ -229,13 +229,17 @@ class PostManager extends Manager {
             $req = $this->_db->prepare($query_start.($published?'WHERE published = 1 AND date_publication<=NOW()':''));
         }
         if($req->execute()) {
-            $res = $req->fetch();
+            if($res = $req->fetch()) {
+                $count = (int) $res['count'];
+            }
+            else {
+                $count = 0;
+            }
             $req->closeCursor();
-            return (int) $res['count'];
+            return $count;
         }
         else {
-            throw new Exception("PostManager: Aucun post trouvé.");
-            return 0;
+            throw new Exception("PostManager: Erreur de requête countPosts($published, $year, $month, $day).");
         }
     }
 
@@ -252,12 +256,17 @@ class PostManager extends Manager {
         $id = $user->id;
         $req->bindParam(':id_user', $id);
         if($req->execute()) {
-            $res = $req->fetch();
+            if($res = $req->fetch()) {
+                $count = (int) $res['count'];
+            }
+            else {
+                $count = 0;
+            }
             $req->closeCursor();
-            return (int) $res['count'];
+            return $count;
         }
         else {
-            return 0;
+            throw new Exception("PostManager: Erreur de requête countPostsByUser($user->id, $published).");
         }
     }
 

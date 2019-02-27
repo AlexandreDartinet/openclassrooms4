@@ -22,13 +22,12 @@ class UserManager extends Manager {
      * @return boolean : true en cas de succès
      */
     public function login(string $name, string $password) {
-        $req = $this->getBy('name', $name);
-        if(!is_bool($req)) {
-            $line = $req->fetch();
-            if(!is_bool($line)) {
+        if($req = $this->getBy('name', $name)) {
+            if($line = $req->fetch()) {
                 $user = new User($line);
             }
             else {
+                $req->closeCursor();
                 return false;
             }
             $req->closeCursor();
@@ -42,7 +41,9 @@ class UserManager extends Manager {
                 return true;
             }
         }
-        //throw new Exception("UserManager: Nom d'utilisateur ou mot de passe incorrect.");
+        else {
+            throw new Exception("UserManager: login($name, $password): Erreur de requête.");
+        }
         return false;
     }
 
@@ -61,8 +62,7 @@ class UserManager extends Manager {
             $req = $this->_db->prepare('SELECT * FROM users');
         }
         else {
-            throw new Exception("UserManager: Paramètre \$page($page) invalide.");
-            return [];
+            throw new Exception("UserManager: getUsers($page): Paramètre \$page($page) invalide.");
         }
         if($req->execute()) {
             $users = [];
@@ -74,8 +74,7 @@ class UserManager extends Manager {
             return $users;
         }
         else {
-            throw new Exception("UserManager: Aucun utilisateur trouvé.");
-            return [];
+            throw new Exception("UserManager: getUsers($page): Erreur de requête.");
         }
     }
 
@@ -87,15 +86,18 @@ class UserManager extends Manager {
      * @return User : Utilisateur demandé
      */
     public function getUserById(int $id) {
-        $req = $this->getBy('id', $id);
-        if(!is_bool($req)) {
-            $user = new User($req->fetch());
+        if($req = $this->getBy('id', $id)) {
+            if($res = $req->fetch()) {
+                $user = new User($res);
+            }
+            else {
+                $user = false;
+            }
             $req->closeCursor();
             return $user;
         }
         else {
-            throw new Exception("UserManager: Aucun utilisateur correspondant à l'id $id.");
-            return false;
+            throw new Exception("UserManager: getUserById($id): Erreur de requête.");
         }
     }
 
@@ -108,8 +110,7 @@ class UserManager extends Manager {
      * @return array : Tableau d'User dont les critères correspondent à la demande
      */
     public function getUsersBy(string $name, $value) {
-        $req = $this->getBy($name, $value);
-        if(!is_bool($req)) {
+        if($req = $this->getBy($name, $value)) {
             $users = [];
             while($line = $req->fetch()) {
                 $user = new User($line);
@@ -119,8 +120,7 @@ class UserManager extends Manager {
             return $users;
         }
         else {
-            throw new Exception("UserManager: Aucun utilisateur correspondant au $name $value.");
-            return [];
+            throw new Exception("UserManager: getUsersBy($name, $value): Erreur de requête.");
         }
     }
 
@@ -174,9 +174,13 @@ class UserManager extends Manager {
         $id = (int) $id;
         $req = $this->_db->prepare("SELECT COUNT(*) AS count FROM users WHERE `$name`=? AND id!=?");
         if($req->execute([$value, $id])) {
-            $res = $req->fetch();
+            if($res = $req->fetch()) {
+                $count = (int) $res['count'];
+            }
+            else {
+                $count = 0;
+            }
             $req->closeCursor();
-            $count = (int) $res['count'];
             if($count == 0) {
                 return false;
             }
@@ -185,7 +189,7 @@ class UserManager extends Manager {
             }
         }
         else {
-            return false;
+            throw new Exception("UserManager: exists($name, $value, $id): Erreur de requête.");
         }
     }
 }

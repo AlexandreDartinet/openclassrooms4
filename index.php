@@ -12,7 +12,35 @@ try { // Gestion des erreurs
     if(preg_match('/^\/admin\//', PATH)) {
         if($_SESSION['user']->level >= User::LEVEL_MODERATOR) { // L'utilisateur doit au moins être modérateur pour accéder à cette section
             require('controller/backend.php');
-            if(preg_match('/^\/admin\/reports\//', PATH)) { // Section signalement
+            if(isset($_POST['action'])) {
+                switch($_POST['action']) {
+                    case "newPost":
+                        if(isset($_POST['id_user']) && isset($_POST['published']) && isset($_POST['title']) && isset($_POST['date_publication']) && isset($_POST['content'])) {
+                            $published = ($_POST['published'] == "on");
+                            newPost((int) $_POST['id_user'], $published, $_POST['title'], Post::htmlToDate($_POST['date_publication']), $_POST['content']);
+                        }
+                        else {
+                            throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                            header('Location: '.PATH.'retry/missing_fields/');
+                        }
+                        break;
+                    case "modifyPost":
+                        if(isset($_POST['id_post']) && isset($_POST['id_user']) && isset($_POST['published']) && isset($_POST['title']) && isset($_POST['date_publication']) && isset($_POST['content'])) {
+                            $published = ($_POST['published'] == "on");
+                            modifyPost((int) $_POST['id_post'], (int) $_POST['id_user'], $published, $_POST['title'], Post::htmlToDate($_POST['date_publication']), $_POST['content']);
+                        }
+                        else {
+                            throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                            header('Location: '.PATH.'retry/missing_fields/');
+                        }
+                        break;
+                    default:
+                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: l\'action n\'existe pas.');
+                        header('Location: '.PATH.'retry/unknown_action/');
+                        break;
+                }
+            }
+            elseif(preg_match('/^\/admin\/reports\//', PATH)) { // Section signalement
                 $page = getPage(PATH);
                 if(preg_match('/\/delete\/\d+\//', PATH)) { // Si one essaye de supprimer un commentaire
                     $id = (int) preg_replace('/^.*\/delete\/(\d+)\/.*$/', '$1', PATH);
@@ -47,6 +75,10 @@ try { // Gestion des erreurs
                 elseif(preg_match('/\/edit\/\d+\//', PATH)) {
                     $id = (int) preg_replace('/^.*\/edit\/(\d+)\/.*$/', '$1', PATH);
                     viewPost($id);
+                }
+                elseif(preg_match('/\/delete\/\d+\//', PATH)) {
+                    $id = (int) preg_replace('/^.*\/delete\/(\d+)\/.*$/', '$1', PATH);
+                    deletePost($id);
                 }
                 else {
                     $page = getPage(PATH);
