@@ -117,7 +117,6 @@ abstract class Manager
             return $req;
         }
         else {
-            // throw new Exception("DbObject: getBy erreur dans la requête \$name($name) \$value($value).");
             return false;
         }
     }
