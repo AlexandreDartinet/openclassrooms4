@@ -44,14 +44,30 @@ if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
 $userManager = new UserManager();
 foreach(User::LEVELS as $level => $display) {
     $count = $userManager->count('level', (int) $level);
+    if($level == User::LEVEL_USER_NO_COMMENT) {
 ?>
-    <p>Il y a <?= $count ?> <?= $display ?><?= ($count == 1)?' enregistré':'s enregistrés' ?>.</p>
+    <p>Il y a <?= $count ?> <?= (($count == 1)?'Utilisateur sans commentaires enregistré':'Utilisateurs sans commentaires enregistrés') ?>.</p>
 <?php
+    }
+    else {
+?>
+    <p>Il y a <?= $count ?> <?= $display ?><?= (($count == 1)?' enregistré':'s enregistrés') ?>.</p>
+<?php
+    }
 }
 ?>
 </div>
 <div>
     <h3><a href="/admin/bans/">Bannissements</a></h3>
+<?php
+$banManager = new BanManager();
+foreach(Ban::TYPES as $type => $display) {
+    $count = $banManager->count('type', (int) $type);
+?>
+    <p>Il y a <?= $count ?> bannissement<?= (($count == 1)?'':'s') ?> de type "<?= $display ?>".
+<?php
+}
+?>
 </div>
 <?php
 }

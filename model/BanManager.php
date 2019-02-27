@@ -21,10 +21,10 @@ class BanManager extends Manager {
      */
     public function getBans($page = 1) {
         if(is_int($page)) {
-            $req = $this->_db->prepare('SELECT * FROM bans LIMIT '.(($page-1)*self::BAN_PAGE).','.$page*self::BAN_PAGE);
+            $req = $this->_db->prepare('SELECT * FROM bans ORDER BY date_ban DESC LIMIT '.(($page-1)*self::BAN_PAGE).','.$page*self::BAN_PAGE);
         }
         elseif($page = "all") {
-            $req = $this->_db->prepare('SELECT * FROM bans');
+            $req = $this->_db->prepare('SELECT * FROM bans ORDER BY date_ban DESC');
         }
         else {
             throw new Exception("BanManager: getBans($page): Paramètre \$page($page) invalide.");

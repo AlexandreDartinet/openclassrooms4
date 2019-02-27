@@ -307,6 +307,12 @@ class User extends DbObject {
      * @return boolean : True si l'utilisateur peut commenter
      */
     public function canComment() {
+        $banManager = new BanManager();
+        if($ban = $banManager->getBanByIp($this->ip)) {
+            if($ban->type == Ban::TYPE_COMMENT) {
+                return false;
+            }
+        }
         if($this->id == 0) {
             return true;
         }

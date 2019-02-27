@@ -221,7 +221,10 @@ if (preg_match('/\/retry\/\w+\//', $_GET['path'])) { // Si il y a une erreur, on
         "no_access" => "Vous n'avez pas accès à cette page.",
         "id_post" => "L'article n'existe pas.",
         "no_auth" => "Vous n'avez pas le droit d'effectuer cette action.",
-        "unknown_id_user" => "L'utilisateur n'existe pas."
+        "unknown_id_user" => "L'utilisateur n'existe pas.",
+        "invalid_ip" => "L'ip est invalide.",
+        "exists_ip" => "L'ip est déjà bannie.",
+        "unknown_id_ban" => "Le ban n'existe pas."
     ]);
 }
 else { // Sinon la variable est vide
@@ -249,7 +252,10 @@ if (preg_match('/\/success\/\w+\//', $_GET['path'])) { // Si il y a un message, 
         "post_unpublished" => "Article masqué.",
         "post_deleted" => "Article supprimé.",
         "post_modified" => "Article modifié.",
-        "post_added" => "Article ajouté."
+        "post_added" => "Article ajouté.",
+        "ban_added" => "Ban ajouté.",
+        "ban_modified" => "Ban modifié.",
+        "ban_deleted" => "Ban supprimé."
     ]);
 }
 else { // Sinon la variable est vide

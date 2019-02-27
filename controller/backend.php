@@ -138,6 +138,22 @@ function listUsers(int $page) {
 }
 
 /**
+ * Affiche la liste des bannissements
+ * 
+ * @param int $page : Page à afficher
+ * 
+ * @return void
+ */
+function listBans(int $page) {
+    $banManager = new BanManager();
+    $bans = $banManager->getBans($page);
+    $title = "Liste des bannissements";
+    $pageSelector = pageSelector(ceil($banManager->count()/BanManager::BAN_PAGE), $page, PATH);
+
+    require('view/backend/listBansView.php');
+}
+
+/**
  * Fonctions relatives au traitement des données
  */
 
@@ -356,6 +372,107 @@ function modifyUserLevel(int $id, int $level) {
         }
         else {
             header('Location: /admin/users/retry/unknown_id_user/');
+        }
+    }
+    else {
+        header('Location: /admin/retry/no_auth/');
+    }
+}
+
+/**
+ * Ajoute un bannissement
+ * 
+ * @param string $ip : IP à bannir
+ * @param int $type : Type du bannissement
+ * @param string $content : Commentaire du bannissement
+ * 
+ * @return void
+ */
+function addBan(string $ip, int $type, string $content) {
+    if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
+        if(Ban::isIp($ip)) {
+            $banManager = new BanManager();
+            if(!$banManager->exists('ip', $ip)) {
+                $ban = Ban::default();
+                if($content != '') {
+                    $ban->content = $content;
+                }
+                $ban->ip = $ip;
+                $ban->type = $type;
+                $ban->save();
+                header('Location: /admin/bans/success/ban_added/');
+            }
+            else {
+                header('Location: /admin/bans/retry/exists_ip/');
+            }
+        }
+        else {
+            header('Location: /admin/bans/retry/invalid_ip/');
+        }
+    }
+    else {
+        header('Location: /admin/retry/no_auth/');
+    }
+}
+
+/**
+ * Modifie un bannissement
+ * 
+ * @param int $id : Identifiant du ban
+ * @param string $ip : IP à bannir
+ * @param int $type : Type du bannissement
+ * @param string $content : Commentaire du bannissement
+ * 
+ * @return void
+ */
+function modifyBan(int $id, string $ip, int $type, string $content) {
+    if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
+        $banManager = new BanManager();
+        if($ban = $banManager->getBanById($id)) {
+            if(Ban::isIp($ip)) {
+                if(($ip == $ban->ip) || !$banManager->exists('ip', $ip)) {
+                    if($content == '') {
+                        $content = Ban::default()->content;
+                    }
+                    $ban->ip = $ip;
+                    $ban->type = $type;
+                    $ban->content = $content;
+                    $ban->save();
+                    header('Location: /admin/bans/success/ban_modified/');
+                }
+                else {
+                    header('Location: /admin/bans/retry/exists_ip/');
+                }
+            }
+            else {
+                header('Location: /admin/bans/retry/invalid_ip/');
+            }
+        }
+        else {
+            header('Location: /admin/bans/retry/unknown_id_ban/');
+        }
+    }
+    else {
+        header('Location: /admin/retry/no_auth/');
+    }
+}
+
+/**
+ * Fonction pour supprimer un bannissement
+ * 
+ * @param int $id : Id du ban à supprimer
+ * 
+ * @return void
+ */
+function deleteBan(int $id) {
+    if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
+        $banManager = new BanManager();
+        if($ban = $banManager->getBanById($id)) {
+            $ban->delete();
+            header('Location: /admin/bans/success/ban_deleted/');
+        }
+        else {
+            header('Location: /admin/bans/retry/unknown_id_ban/');
         }
     }
     else {

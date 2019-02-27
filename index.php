@@ -43,6 +43,24 @@ try { // Gestion des erreurs
                             header('Location: '.PATH.'retry/missing_fields/');
                         }
                         break;
+                    case "addBan":
+                        if(isset($_POST['ip']) && isset($_POST['type']) && isset($_POST['content'])) {
+                            addBan($_POST['ip'], (int) $_POST['type'], $_POST['content']);
+                        }
+                        else {
+                            throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                            header('Location: '.PATH.'retry/missing_fields/');
+                        }
+                        break;
+                    case "modifyBan":
+                        if(isset($_POST['id']) && isset($_POST['ip']) && isset($_POST['type']) && isset($_POST['content'])) {
+                            modifyBan((int) $_POST['id'], $_POST['ip'], (int) $_POST['type'], $_POST['content']);
+                        }
+                        else {
+                            throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                            header('Location: '.PATH.'retry/missing_fields/');
+                        }
+                        break;
                     default:
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: l\'action n\'existe pas.');
                         header('Location: '.PATH.'retry/unknown_action/');
@@ -102,6 +120,16 @@ try { // Gestion des erreurs
                 else {
                     $page = getPage(PATH);
                     listUsers($page);
+                }
+            }
+            elseif(preg_match('/^\/admin\/bans\//', PATH) && $_SESSION['user']->level >= User::LEVEL_ADMIN) { // Section bannissements
+                if(preg_match('/\/delete\/\d+\//', PATH)) {
+                    $id = (int) preg_replace('/^.*\/delete\/(\d+)\/.*$/', '$1', PATH);
+                    deleteBan($id);
+                }
+                else {
+                    $page = getPage(PATH);
+                    listBans($page);
                 }
             }
             else { // Page d'accueil de l'interface d'administration
