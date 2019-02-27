@@ -34,6 +34,8 @@ $waiting = $total - $published;
 ?>
     <p><?= $all_published ?> articles publié<?= ($all_published == 1)?'':'s' ?>, <?= $planned ?> planifié<?= ($planned == 1)?'':'s' ?>, <?= $waiting ?> en attente de validation.</p>
 </div>
+<div>
+    <h3><a href="/admin/images/">Images</a></h3>
 <?php
 }
 if($_SESSION['user']->level >= User::LEVEL_ADMIN) {

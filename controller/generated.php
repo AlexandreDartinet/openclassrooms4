@@ -12,11 +12,11 @@
  */
 function displayImage(string $filename) {
     header("Content-type: image/png");
-    if(file_exists("private/images/$filename")) {
-        $image = imagecreatefrompng("private/images/$filename");
+    if(file_exists(Image::PATH.$filename)) {
+        $image = imagecreatefrompng(Image::PATH.$filename);
     }
     else {
-        $image = imagecreatefrompng("private/images/unknown.png");
+        $image = imagecreatefrompng(Image::PATH."unknown.png");
     }
     imagepng($image);
 }
