@@ -172,6 +172,15 @@ session_start();
 if(!isset($_SESSION["user"])) { // Si aucun utilisateur enregistré en session, on enregistre l'utilisateur par défaut.
     $_SESSION["user"] = User::default();
 }
+elseif($_SESSION['user']->id != 0) {
+    $userManager = new UserManager();
+    if($user = $userManager->getUserById($_SESSION['user']->id)) {
+        $_SESSION['user'] = $user;
+    }
+    else {
+        $_SESSION['user'] = User::default();
+    }
+}
 if (preg_match('/\/retry\/\w+\//', $_GET['path'])) { // Si il y a une erreur, on crée une variable globale la contenant
     define('RETRY', preg_replace('/^.*\/retry\/(\w+)\/.*$/', '$1', $_GET['path']));
     define('RETRY_TABLE', [
@@ -201,7 +210,8 @@ if (preg_match('/\/retry\/\w+\//', $_GET['path'])) { // Si il y a une erreur, on
         "invalid_id_report" => "Le signalement que vous essayez de supprimer n'existe pas.",
         "no_access" => "Vous n'avez pas accès à cette page.",
         "id_post" => "L'article n'existe pas.",
-        "no_auth" => "Vous n'avez pas le droit d'effectuer cette action."
+        "no_auth" => "Vous n'avez pas le droit d'effectuer cette action.",
+        "unknown_id_user" => "L'utilisateur n'existe pas."
     ]);
 }
 else { // Sinon la variable est vide
@@ -216,6 +226,8 @@ if (preg_match('/\/success\/\w+\//', $_GET['path'])) { // Si il y a un message, 
         "recover_sent" => "Un email de récupération a été envoyé.",
         "profile_updated" => "Votre profil a été mis à jour.",
         "user_register" => "Vous vous êtes inscrit avec succès.",
+        "user_level_modified" => "Le niveau de l'utilisateur a été changé.",
+        "user_deleted" => "L'utilisateur a été supprimé.",
         "contact_form" => "Votre message a bien été envoyé.",
         "logout" => "Au revoir ;)",
         "login" => "Bienvenue !",

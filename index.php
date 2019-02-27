@@ -34,6 +34,15 @@ try { // Gestion des erreurs
                             header('Location: '.PATH.'retry/missing_fields/');
                         }
                         break;
+                    case "modifyUserLevel":
+                        if(isset($_POST['id']) && isset($_POST['level'])) {
+                            modifyUserLevel((int) $_POST['id'], (int) $_POST['level']); 
+                        }
+                        else {
+                            throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                            header('Location: '.PATH.'retry/missing_fields/');
+                        }
+                        break;
                     default:
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: l\'action n\'existe pas.');
                         header('Location: '.PATH.'retry/unknown_action/');
@@ -83,6 +92,16 @@ try { // Gestion des erreurs
                 else {
                     $page = getPage(PATH);
                     listPosts($page);
+                }
+            }
+            elseif(preg_match('/^\/admin\/users\//', PATH) && $_SESSION['user']->level >= User::LEVEL_ADMIN) { // Section utilisateurs
+                if(preg_match('/\/delete\/\d+\//', PATH)) {
+                    $id = (int) preg_replace('/^.*\/delete\/(\d+)\/.*$/', '$1', PATH);
+                    deleteUser($id);
+                }
+                else {
+                    $page = getPage(PATH);
+                    listUsers($page);
                 }
             }
             else { // Page d'accueil de l'interface d'administration

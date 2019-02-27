@@ -122,6 +122,22 @@ function viewPost(int $id) {
 }
 
 /**
+ * Affiche la liste des utilisateurs
+ * 
+ * @param int $page : Page à afficher
+ * 
+ * @return void
+ */
+function listUsers(int $page) {
+    $userManager = new UserManager();
+    $users = $userManager->getUsers($page);
+    $title = "Liste des utilisateurs";
+    $pageSelector = pageSelector(ceil($userManager->count()/UserManager::USER_PAGE), $page, PATH);
+    
+    require('view/backend/listUsersView.php');
+}
+
+/**
  * Fonctions relatives au traitement des données
  */
 
@@ -292,6 +308,54 @@ function modifyPost(int $id_post, int $id_user, $published, string $title, strin
         }
         else {
             header('Location: /admin/posts/retry/id_post/');
+        }
+    }
+    else {
+        header('Location: /admin/retry/no_auth/');
+    }
+}
+
+/**
+ * Supprime un utilisateur
+ * 
+ * @param int $id : Identifiant de l'utilisateur à supprimer
+ * 
+ * @return void
+ */
+function deleteUser(int $id) {
+    if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
+        $userManager = new UserManager();
+        if($user = $userManager->getUserById($id)) {
+            $user->delete();
+            header('Location: /admin/users/success/user_deleted/');
+        }
+        else {
+            header('Location: /admin/users/retry/unknown_id_user/');
+        }
+    }
+    else {
+        header('Location: /admin/retry/no_auth/');
+    }
+}
+
+/**
+ * Modifie le niveau d'un utilisateur
+ * 
+ * @param int $id : Identifiant de l'utilisateur
+ * @param int $level : Niveau de l'utilisateur
+ * 
+ * @return void
+ */
+function modifyUserLevel(int $id, int $level) {
+    if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
+        $userManager = new UserManager();
+        if($user = $userManager->getUserById($id)) {
+            $user->level = $level;
+            $user->save();
+            header('Location: /admin/users/success/user_level_modified/');
+        }
+        else {
+            header('Location: /admin/users/retry/unknown_id_user/');
         }
     }
     else {
