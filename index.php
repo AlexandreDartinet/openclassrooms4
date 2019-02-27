@@ -141,6 +141,19 @@ try { // Gestion des erreurs
         }
     }
     /**
+     * Bloc pour le contenu généré dynamiquement
+     */
+    elseif(preg_match('/^\/generated\//', PATH)) {
+        require('controller/generated.php');
+        if(preg_match('/\/image\/\w+\.png/', PATH)) {
+            $filename = preg_replace('/^.*\/image\/(\w+\.png).*$/', '$1', PATH);
+            displayImage($filename);
+        }
+        else {
+            header('Location: /retry/no_access/');
+        }
+    }
+    /**
      * Bloc des requêtes ajax
      */
     elseif(preg_match('/^\/ajax\//', PATH)) {
