@@ -29,7 +29,7 @@ $postManager = new PostManager();
 $total = $postManager->count();
 $all_published = $postManager->countPosts();
 $published = $postManager->count('published', true);
-$planned = $all_published - $published;
+$planned = $published - $all_published;
 $waiting = $total - $published;
 ?>
     <p><?= $all_published ?> articles publié<?= ($all_published == 1)?'':'s' ?>, <?= $planned ?> planifié<?= ($planned == 1)?'':'s' ?>, <?= $waiting ?> en attente de validation.</p>

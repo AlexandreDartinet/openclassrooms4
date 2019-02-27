@@ -200,7 +200,8 @@ if (preg_match('/\/retry\/\w+\//', $_GET['path'])) { // Si il y a une erreur, on
         "no_comment_report" => "Aucun signalement pour ce commentaire.",
         "invalid_id_report" => "Le signalement que vous essayez de supprimer n'existe pas.",
         "no_access" => "Vous n'avez pas accès à cette page.",
-        "id_post" => "L'article n'existe pas."
+        "id_post" => "L'article n'existe pas.",
+        "no_auth" => "Vous n'avez pas le droit d'effectuer cette action."
     ]);
 }
 else { // Sinon la variable est vide
@@ -223,7 +224,10 @@ if (preg_match('/\/success\/\w+\//', $_GET['path'])) { // Si il y a un message, 
         "added_comment" => "Commentaire ajouté.",
         "report_delete" => "Signalement supprimé.",
         "post_published" => "Article publié.",
-        "post_unpublished" => "Article masqué."
+        "post_unpublished" => "Article masqué.",
+        "post_deleted" => "Article supprimé.",
+        "post_modified" => "Article modifié.",
+        "post_added" => "Article ajouté."
     ]);
 }
 else { // Sinon la variable est vide

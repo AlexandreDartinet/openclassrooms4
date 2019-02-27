@@ -202,5 +202,99 @@ function publishPost(int $id, $published) {
  * @return void
  */
 function deletePost(int $id) {
+    $postManager = new PostManager();
+    if($post = $postManager->getPostById($id)) {
+        if($post->canEdit($_SESSION['user'])) {
+            $post->delete();
+            header('Location: /admin/posts/success/post_deleted/');
+        }
+        else {
+            header('Location: /admin/posts/retry/no_auth/');
+        }
+    }
+    else {
+        header('Location: /admin/posts/retry/id_post/');
+    }
+}
 
+/**
+ * Ajoute un nouvel article
+ * 
+ * @param int $id_user : Utilisateur qui ajoute l'article
+ * @param boolean $published : Si l'article est à publier
+ * @param string $title : Titre de l'article
+ * @param string $date_publication : Date de publication au format DateTime
+ * @param string $content : Contenu de l'article
+ * 
+ * @return void
+ */
+function newPost($published, string $title, string $date_publication, string $content) {
+    if($_SESSION['user']->level >= User::LEVEL_EDITOR) {
+        if($title != '' && Post::isDate($date_publication) && $content != '') {
+            $post = Post::default();
+            $post->date_publication = $date_publication;
+            $post->id_user = $_SESSION['user']->id;
+            $post->title = $title;
+            $post->content = $content;
+            $post->published = ($_SESSION['user']->level >= User::LEVEL_ADMIN)?$published:false;
+            $post->save();
+
+            header('Location: /admin/posts/success/post_added/');
+        }
+        else {
+            header('Location: /admin/posts/new/retry/missing_fields/');
+        }        
+    }
+    else {
+        header('Location: /admin/retry/no_auth/');
+    }
+}
+
+/**
+ * Modifie un article existant
+ * 
+ * @param int $id_post : Identifiant de l'article
+ * @param int $id_user : Identifiant de l'utilisateur
+ * @param boolean $published : Article publié ?
+ * @param string $title : Titre de l'article
+ * @param string $date_publication : Date de publication au format DateTime
+ * @param string $content : Contenu
+ * 
+ * @return void
+ */
+function modifyPost(int $id_post, int $id_user, $published, string $title, string $date_publication, string $content) {
+    if($_SESSION['user']->level >= LEVEL_EDITOR) {
+        $postManager = new PostManager();
+        if($post = $postManager->getPostById($id_post)) {
+            if($post->canEdit($_SESSION['user'])) {
+                if($post->id_user == $id_user || $_SESSION['user']->level >= User::LEVEL_ADMIN) {
+                    if($title != '' && Post::isDate($date_publication) && $content != '') {
+                        $post->id_user = $id_user;
+                        $post->date_publication = $date_publication;
+                        $post->title = $title;
+                        $post->content = $content;
+                        $post->published = ($_SESSION['user']->level >= User::LEVEL_ADMIN)?$published:$post->published;
+                        $post->save();
+
+                        header("Location: /admin/posts/success/post_modified/");
+                    }
+                    else {
+                        header("Location: /admin/posts/edit/$id_post/retry/missing_fields/");
+                    }
+                }
+                else {
+                    header("Location: /admin/posts/edit/$id_post/retry/no_auth/");
+                }
+            }
+            else {
+                header("Location: /admin/posts/retry/no_auth/");
+            }
+        }
+        else {
+            header('Location: /admin/posts/retry/id_post/');
+        }
+    }
+    else {
+        header('Location: /admin/retry/no_auth/');
+    }
 }

@@ -38,9 +38,9 @@ if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
 
 <?php
 }
-else {
+elseif($published) {
 ?>
-    <input type="hidden" name="published" value="<?= (($published)?"on":"") ?>"/>
+    <input type="hidden" name="published" value="on"/>
 <?php
 }
 ?>

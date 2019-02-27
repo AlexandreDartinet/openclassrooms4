@@ -156,7 +156,7 @@ class Post extends DbObject {
         if($this->comments_nbr > 0) {
             $reportManager = new ReportManager();
             $commentManager = new CommentManager();
-            foreach($this->comments as &$comment) {
+            foreach($this->comments as $comment) {
                 $reportManager->removeReportsByComment($comment);
             }
             $commentManager->removeCommentsByPost($this);

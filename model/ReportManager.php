@@ -162,7 +162,7 @@ class ReportManager extends Manager {
      * @return boolean : true si la requête s'est exécutée avec succès
      */
     public function removeReportsByComment(Comment $comment) {
-        return $this->removeBy('id_comment', $comment->id_comment);
+        return $this->removeBy('id_comment', $comment->id);
     }
 
     /**

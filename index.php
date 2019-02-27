@@ -15,9 +15,9 @@ try { // Gestion des erreurs
             if(isset($_POST['action'])) {
                 switch($_POST['action']) {
                     case "newPost":
-                        if(isset($_POST['id_user']) && isset($_POST['published']) && isset($_POST['title']) && isset($_POST['date_publication']) && isset($_POST['content'])) {
-                            $published = ($_POST['published'] == "on");
-                            newPost((int) $_POST['id_user'], $published, $_POST['title'], Post::htmlToDate($_POST['date_publication']), $_POST['content']);
+                        if(isset($_POST['title']) && isset($_POST['date_publication']) && isset($_POST['content'])) {
+                            $published = isset($_POST['published']);
+                            newPost($published, $_POST['title'], Post::htmlToDate($_POST['date_publication']), $_POST['content']);
                         }
                         else {
                             throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
@@ -25,8 +25,8 @@ try { // Gestion des erreurs
                         }
                         break;
                     case "modifyPost":
-                        if(isset($_POST['id_post']) && isset($_POST['id_user']) && isset($_POST['published']) && isset($_POST['title']) && isset($_POST['date_publication']) && isset($_POST['content'])) {
-                            $published = ($_POST['published'] == "on");
+                        if(isset($_POST['id_post']) && isset($_POST['id_user']) && isset($_POST['title']) && isset($_POST['date_publication']) && isset($_POST['content'])) {
+                            $published = isset($_POST['published']);
                             modifyPost((int) $_POST['id_post'], (int) $_POST['id_user'], $published, $_POST['title'], Post::htmlToDate($_POST['date_publication']), $_POST['content']);
                         }
                         else {
