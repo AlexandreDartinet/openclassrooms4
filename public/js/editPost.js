@@ -33,7 +33,7 @@ tinymce.init({
     min_height: 200,
     image_caption: true,
     media_live_embeds: true,
-    save_enablewhendirty: false,
+    save_enablewhendirty: true,
     spellchecker_language: 'fr'
 });
 

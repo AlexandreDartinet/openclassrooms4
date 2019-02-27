@@ -9,7 +9,7 @@ ob_start();
 <?php
 if($new) {
     $action = "newPost";
-    $id_user = $_SESSION['user'];
+    $id_user = $_SESSION['user']->id;
     $date = Post::dateToHtml(Post::now());
     $published = false;
     $title = "";
