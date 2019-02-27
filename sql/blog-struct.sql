@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  localhost:3306
--- Généré le :  Dim 24 Février 2019 à 20:39
+-- Généré le :  Mer 27 Février 2019 à 11:21
 -- Version du serveur :  10.1.37-MariaDB-0+deb9u1
 -- Version de PHP :  7.0.33-0+deb9u1
 
@@ -16,6 +16,9 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
 
+--
+-- Base de données :  `blog`
+--
 
 -- --------------------------------------------------------
 
@@ -48,6 +51,23 @@ CREATE TABLE IF NOT EXISTS `comments` (
   `name` varchar(100) NOT NULL DEFAULT 'Anonyme',
   `content` text NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `images`
+--
+
+CREATE TABLE IF NOT EXISTS `images` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_user` int(11) NOT NULL,
+  `date_sent` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `file_name` varchar(100) NOT NULL,
+  `type` int(11) NOT NULL DEFAULT '1',
+  `title` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `file_name` (`file_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
@@ -95,7 +115,7 @@ CREATE TABLE IF NOT EXISTS `reports` (
   `ip` varchar(255) NOT NULL,
   `date_report` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `type` int(11) NOT NULL DEFAULT '0',
-  `comment` varchar(255) NOT NULL DEFAULT 'Aucun commentaire',
+  `content` varchar(255) NOT NULL DEFAULT 'Aucun commentaire',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
