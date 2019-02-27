@@ -134,10 +134,13 @@ class Post extends DbObject {
      * @return string : Extrait du post
      */
     public function getExtract() {
-        $extract = strip_tags($this->content);
+        $extract = $this->content;
+
         if(strlen($extract) > self::EXTRACT_LENGTH) {
-            $last_space = strrpos(substr($extract, 0, self::EXTRACT_LENGTH), ' ');
-            $extract = substr($extract, 0, $last_space).'...';
+            $offset = strlen(substr($this->content, 0, self::EXTRACT_LENGTH)) - strlen(strip_tags(substr($this->content, 0, self::EXTRACT_LENGTH)));
+            $length = self::EXTRACT_LENGTH + $offset;
+            $last_space = strrpos(substr($this->content, $length, $length*2), '/(<\/.*>)|(<.*\/>)|( )/');
+            $extract = substr($this->content, 0, $last_space+$length+1).'...';
         }
         return $extract;
     }
@@ -194,7 +197,7 @@ class Post extends DbObject {
         $author = $this->user->displayName();
         $date = $this->rDate('date_publication');
         if($in_list) {
-            $content = nl2br(htmlspecialchars($this->getExtract()));
+            $content = $this->getExtract();
             $display = "<div class='post' id='post-$this->id'>";
             $display .= "<h3 class='post-title'>";
             $display .= "<a href='/post/$this->id/'>$title</a>";
