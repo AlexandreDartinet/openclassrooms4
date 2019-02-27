@@ -54,7 +54,7 @@ class Recover extends DbObject {
                     throw new Exception("Recover: $name(".var_export($value).") n'est pas un User.");
                 }
                 break;
-            case "user":
+            case "manager":
                 if(is_a($value, 'RecoverManager')) {
                     $this->_attributes[$name] = $value;
                 }
