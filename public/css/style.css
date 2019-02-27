@@ -31,3 +31,11 @@ figure.image figcaption {
 	margin: 6px 8px 6px 8px;
 	text-align: center;
 }
+
+#retry {
+	background-color:red;
+}
+
+#success {
+	background-color:green;
+}
