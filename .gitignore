@@ -1,2 +1,3 @@
 model/PHPMailer/
 config.php
+private/images/*.png
