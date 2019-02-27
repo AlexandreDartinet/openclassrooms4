@@ -67,6 +67,16 @@ function loadClass($name) {
 spl_autoload_register("loadClass");
 
 /**
+ * Interdire l'accès si l'utilisateur est banni
+ */
+$banManager = new BanManager();
+if($ban = $banManager->getBanByIp($_SERVER['REMOTE_ADDR'])) {
+    if($ban->type == Ban::TYPE_ALL) {
+        die("Vous n'avez pas le droit d'accéder à ce site.");
+    }
+}
+
+/**
  * Initialisation de la base de données si nécessaire.
  */
 $userManager = new UserManager();
