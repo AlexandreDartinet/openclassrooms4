@@ -37,6 +37,13 @@ $waiting = $total - $published;
 <div>
     <h3><a href="/admin/images/">Images</a></h3>
 <?php
+$imageManager = new ImageManager();
+    foreach(Image::TYPES as $type => $display) {
+    $count = $imageManager->count('type', $type);
+?>
+    <p><?= $count ?> <?= $display ?></p>
+<?php
+    }
 }
 if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
 ?>

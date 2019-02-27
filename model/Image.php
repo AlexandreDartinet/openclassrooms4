@@ -33,7 +33,7 @@ class Image extends DbObject {
     const TYPES = [
         self::TYPE_POST => "Image pour les posts du blog",
         self::TYPE_AVATAR => "Avatar d'un utilisateur"
-    ]
+    ];
 
     /**
      * Fonction d'encapsulation

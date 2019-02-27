@@ -61,6 +61,15 @@ try { // Gestion des erreurs
                             header('Location: '.PATH.'retry/missing_fields/');
                         }
                         break;
+                    case "addImage":
+                        if(isset($_POST['title']) && isset($_FILES['file'])) {
+                            addImage($_POST['title'], $_FILES['file']);
+                        }
+                        else {
+                            throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                            header('Location: '.PATH.'retry/missing_fields/');
+                        }
+                        break;
                     default:
                         throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: l\'action n\'existe pas.');
                         header('Location: '.PATH.'retry/unknown_action/');
@@ -132,6 +141,16 @@ try { // Gestion des erreurs
                     listBans($page);
                 }
             }
+            elseif(preg_match('/^\/admin\/images\//', PATH) && $_SESSION['user']->level >= User::LEVEL_EDITOR) {
+                if(preg_match('/\/delete\/\d+\//', PATH)) {
+                    $id = (int) preg_replace('/^.*\/delete\/(\d+)\/.*$/', '$1', PATH);
+                    deleteImage($id);
+                }
+                else {
+                    $page = getPage(PATH);
+                    listImages($page);
+                }
+            }
             else { // Page d'accueil de l'interface d'administration
                 viewAdmin();
             }
@@ -145,9 +164,17 @@ try { // Gestion des erreurs
      */
     elseif(preg_match('/^\/generated\//', PATH)) {
         require('controller/generated.php');
-        if(preg_match('/\/image\/\w+\.png/', PATH)) {
+        if(preg_match('/\/image\/\w+\.png/', PATH)) { // Images générées
             $filename = preg_replace('/^.*\/image\/(\w+\.png).*$/', '$1', PATH);
             displayImage($filename);
+        }
+        elseif(preg_match('/\/json\//', PATH)) {
+            if(preg_match('/images\.json/', PATH)) {
+                displayImagesJson();
+            }
+            else {
+                displayErrorJson();
+            }
         }
         else {
             header('Location: /retry/no_access/');

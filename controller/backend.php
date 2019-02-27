@@ -154,6 +154,23 @@ function listBans(int $page) {
 }
 
 /**
+ * Affiche la liste des images
+ * 
+ * @param int $page : Page à afficher
+ * @param int $type : Type d'images à afficher
+ * 
+ * @return void
+ */
+function listImages(int $page, $type = Image::TYPE_POST) {
+    $imageManager = new ImageManager();
+    $images = $imageManager->getImages($page, $type);
+    $title = "Liste des images";
+    $pageSelector = pageSelector(ceil($imageManager->count('type', $type)/ImageManager::IMAGE_PAGE), $page, PATH);
+
+    require('view/backend/listImagesView.php');
+}
+
+/**
  * Fonctions relatives au traitement des données
  */
 
@@ -473,6 +490,53 @@ function deleteBan(int $id) {
         }
         else {
             header('Location: /admin/bans/retry/unknown_id_ban/');
+        }
+    }
+    else {
+        header('Location: /admin/retry/no_auth/');
+    }
+}
+
+/**
+ * Fonction pour ajouter une image
+ * 
+ * @param string $title : Titre de l'image
+ * @param ? $file : Image
+ * 
+ * @return void
+ */
+function addImage(string $title, $file) {
+    if($_SESSION['user']->level >= User::LEVEL_EDITOR) {
+        $image = Image::default();
+        $image->file_name = (string) time();
+        $image->id_user = $_SESSION['user']->id;
+        $image->title = ($title == "")?"nothing":$title;
+        $image->type = Image::TYPE_POST;
+        $image->image = imagecreatefromstring(file_get_contents($file["tmp_name"]));
+        $image->save();
+        header('Location: /admin/images/success/image_added/');
+    }
+    else {
+        header('Location: /admin/retry/no_auth/');
+    }
+}
+
+/**
+ * Fonction pour supprimer une image
+ * 
+ * @param int $id : Identifiant de l'image
+ * 
+ * @return void
+ */
+function deleteImage(int $id) {
+    if($_SESSION['user']->level >= User::LEVEL_EDITOR) {
+        $imageManager = new ImageManager();
+        if($image = $imageManager->getImageById($id)) {
+            $image->delete();
+            header('Location: /admin/images/success/image_deleted/');
+        }
+        else {
+            header('Location: /admin/images/retry/invalid_image_id/');
         }
     }
     else {

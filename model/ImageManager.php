@@ -12,6 +12,47 @@ class ImageManager extends Manager {
     const TABLE_NAME = 'images';
     
     /**
+     * Retourne la liste de toutes les images
+     * 
+     * @param mixed $page : page à retourner (défaut 1) "all" si on veut récupérer toutes les images
+     * @param mixed $type : Type d'image à rechercher (par défaut POST) "all" si on veut récupérer tous les types
+     * 
+     * @return array : Tableau d'objets Image représentant les images
+     */
+    public function getImages($page = 1, $type = Image::TYPE_POST) {
+        if(is_int($type)) {
+            $queryStart = 'SELECT * FROM images WHERE `type`='.$type;
+        }
+        elseif($type = "all") {
+            $queryStart = 'SELECT * FROM images';
+        }
+        else {
+            throw new Exception("ImageManager: getImages($page, $type): Paramètre \$type($type) invalide.");
+        }
+        if(is_int($page)) {
+            $req = $this->_db->prepare($queryStart.' LIMIT '.(($page-1)*self::IMAGE_PAGE).','.$page*self::IMAGE_PAGE);
+        }
+        elseif($page = "all") {
+            $req = $this->_db->prepare($queryStart);
+        }
+        else {
+            throw new Exception("ImageManager: getImages($page, $type): Paramètre \$page($page) invalide.");
+        }
+        if($req->execute()) {
+            $images = [];
+            while($line = $req->fetch()) {
+                $image = new Image($line);
+                $images[] = $image;
+            }
+            $req->closeCursor();
+            return $images;
+        }
+        else {
+            throw new Exception("ImageManager: getImages($page, $type): Erreur de requête.");
+        }
+    }
+
+    /**
      * Retourne le image associé à un identifiant
      * 
      * @param int $id : Identifiant du image à retourner

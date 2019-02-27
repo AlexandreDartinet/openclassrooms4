@@ -35,7 +35,8 @@ tinymce.init({
     image_caption: true,
     media_live_embeds: true,
     save_enablewhendirty: false,
-    spellchecker_language: 'fr'
+    spellchecker_language: 'fr',
+    image_list: "/generated/json/images.json"
 });
 
 // image_list: [
