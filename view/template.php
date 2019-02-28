@@ -57,12 +57,18 @@ if(SUCCESS != '') {
         <?= $content ?>
         </main>
         <?= $footer ?>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
         <script>
             const siteUrl = 'https://<?= SITE_URL ?>/';
             const path = '<?= preg_replace('/page-\d+\//', '', PATH) ?>';
             let curPage = <?= getPage(PATH) ?>;
+            setTimeout(() => {
+                $('#retry').remove();
+            }, 5000);
+            setTimeout(() => {
+                $('#success').remove();
+            }, 5000);
         </script>
-        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <?php
 if(isset($scripts)) {
     foreach($scripts as $script) {

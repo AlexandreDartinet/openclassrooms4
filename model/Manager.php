@@ -120,4 +120,34 @@ abstract class Manager
             return false;
         }
     }
+
+    /**
+     * Retourne le dernier id de la table
+     * 
+     * @param string $name : Nom du champ à filtrer
+     * @param mixed $value : Valeur du champ à tester
+     * 
+     * @return int : Dernier id
+     */
+    public function lastId($name = 'noQuery', $value = 'noQuery') {
+        if($name == 'noQuery') {
+            $req = $this->_db->prepare('SELECT MAX(id) as `max` FROM '.'`'.static::TABLE_NAME.'`');
+        }
+        else {
+            $req = $this->_db->prepare('SELECT MAX(id) as `max` FROM '.'`'.static::TABLE_NAME.'`'." WHERE `$name`=:value");
+            $req->bindParam(':value', $value);
+        }
+        if($req->execute()) {
+            if($res = $req->fetch()) {
+                $max = (int) $res['max'];
+                return $max;
+            }
+            else {
+                return 0;
+            }
+        }
+        else {
+            return false;
+        }
+    }
 }

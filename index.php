@@ -196,6 +196,35 @@ try { // Gestion des erreurs
                 $id = (int) preg_replace('/^.*\/get\/(\d+)\/.*$/', '$1', PATH);
                 displayCommentsJson($id);
             }
+            elseif(preg_match('/\/update\/\d+\/\d+\//', PATH)) {
+                $id_post = (int) preg_replace('/^.*\/update\/(\d+)\/\d+\/.*$/', '$1', PATH);
+                $last_id = (int) preg_replace('/^.*\/update\/\d+\/(\d+)\/.*$/', '$1', PATH);
+                updateCommentsJson($id_post, $last_id);
+            }
+            elseif(preg_match('/\/send\//', PATH)) {
+                if(isset($_POST['content']) && isset($_POST['id_post']) && isset($_POST['name']) && isset($_POST['reply_to'])) {
+                    sendComment((int) $_POST['id_post'], (int) $_POST['reply_to'], $_POST['name'], $_POST['content']);
+                }
+                else {
+                    displayErrorJson("missing_fields");
+                }
+            }
+            elseif(preg_match('/\/modify\//', PATH)) {
+                if(isset($_POST['content']) && isset($_POST['id']) && isset($_POST['name'])) {
+                    modifyComment((int) $_POST['id'], $_POST["name"], $_POST['content']);
+                }
+                else {
+                    displayErrorJson("missing_fields");
+                }
+            }
+            elseif(preg_match('/\/delete\//', PATH)) {
+                if(isset($_POST['id'])) {
+                    deleteComment((int) $_POST['id']);
+                }
+                else {
+                    displayErrorJson("missing_fields");
+                }
+            }
             else {
                 displayErrorJson("no_access");
             }

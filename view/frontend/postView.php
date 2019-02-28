@@ -7,10 +7,11 @@ echo $post->display();
 ?>
 <aside id="comments">
     <h2>Commentaires</h2>
+    <div id="comment-form-div">
 <?php
 if($edit){
 ?>
-    <p>Editer le commentaire <a id="comments-cancel-edit" href="<?= preg_replace('/edit\/\d+\//', '', PATH) ?>">Annuler</a></p>
+        <p>Editer le commentaire <a id="comments-cancel-edit" href="<?= preg_replace('/edit\/\d+\//', '', PATH) ?>">Annuler</a></p>
 <?php
     $action = "modifyComment";
     $reply_to = $editedComment->reply_to;
@@ -21,8 +22,8 @@ if($edit){
 else {
     if($reply_to > 0) { // Si on répond à un commentaire
 ?>
-    <p>Répondre au commentaire <a id="comments-cancel-reply" href="<?= preg_replace('/reply_to\/\d+\//', '', PATH) ?>">Annuler</a></p>
-    <?= $reply_to_comment->display(false, true, false) ?>
+        <p>Répondre au commentaire <a id="comments-cancel-reply" href="<?= preg_replace('/reply_to\/\d+\//', '', PATH) ?>">Annuler</a></p>
+        <?= $reply_to_comment->display(false, true, false) ?>
 <?php
     }
     $action = "commentPost";
@@ -42,28 +43,32 @@ if($_SESSION['user']->canComment()) {
  * @var string content : Corps du commentaire (required)
  */
 ?>
-    <form action="/post/<?= $post->id ?>/" method="post">
-        <input type="hidden" name="action" value="<?= $action ?>"/>
-        <input type="hidden" name="id_post" value="<?= $post->id ?>"/>
-        <input type="hidden" name="reply_to" value="<?= $reply_to ?>"/>
-        <input type="hidden" name="id" value="<?= $commentId ?>"/>
+        <form action="/post/<?= $post->id ?>/" method="post">
+            <input type="hidden" name="action" value="<?= $action ?>"/>
+            <input type="hidden" name="id_post" value="<?= $post->id ?>"/>
+            <input type="hidden" name="reply_to" value="<?= $reply_to ?>"/>
+            <input type="hidden" name="id" value="<?= $commentId ?>"/>
 
-        <div>
+            <div>
 
-            <label for="name">Auteur</label><br/>
-            <input type="text" id="name" name="name" value="<?= $commentName ?>" required<?= ($_SESSION['user']->id != 0)?' readonly':'' ?>/>
+                <label for="name">Auteur</label><br/>
+                <input type="text" id="name" name="name" value="<?= $commentName ?>" required<?= ($_SESSION['user']->id != 0)?' readonly':'' ?>/>
 
-        </div>
-        <div>
-            <label for="content">Commentaire</label><br/>
-            <textarea id="content" name="content" required><?= $commentContent ?></textarea>
-        </div>
-        <div>
-            <input type="submit"/>
-        </div>
-    </form>
+            </div>
+            <div>
+                <label for="content">Commentaire</label><br/>
+                <textarea id="content" name="content" required><?= $commentContent ?></textarea>
+            </div>
+            <div>
+                <input type="submit"/>
+            </div>
+        </form>
 <?php
 }
+?>
+</div>
+<div id="comments-div">
+<?php
 if($isComments) { // Si il y a des commentaires, on les affiche
     foreach($comments as &$comment) {
         if($comment->reply_to == 0) { // Si le commentaire n'est pas une réponse, on l'affiche
@@ -75,12 +80,26 @@ if($isComments) { // Si il y a des commentaires, on les affiche
             }
         }
     }
-echo $pageSelector;
 }
 ?>
-</aside>
+</div>
+<?= $pageSelector ?></aside>
 <?php
 
 $content = ob_get_clean();
+if(!isset($scripts)) {
+    $scripts = [];
+}
+ob_start();
+?>
+<script src="/public/js/htmlFunctions.js"></script>
+<script src="/public/js/pageSelector.js"></script>
+<script>
+    const postId = <?= $post->id ?>;
+</script>
+<script src="/public/js/frontend/postView.js"></script>
+<?php
+$scripts[] = ob_get_clean();
+
 
 require('template.php');

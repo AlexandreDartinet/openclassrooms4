@@ -79,6 +79,7 @@ function viewPost(int $id, $page = 1) {
                 }
                 $pageSelector = pageSelector(ceil($commentManager->countByPostId($post->id)/CommentManager::COMMENT_PAGE), $page, PATH);
             }
+            $pageSelector = (isset($pageSelector))?$pageSelector:"";
             $title = 'Article "'.htmlspecialchars($post->title).'"';
             
             require("view/frontend/postView.php");

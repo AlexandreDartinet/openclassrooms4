@@ -31,7 +31,12 @@ figure.image figcaption {
 	margin: 6px 8px 6px 8px;
 	text-align: center;
 }
-
+#retry, #success {
+	position: fixed;
+	top: 50px;
+	right: 50px;
+	padding: 20px;
+}
 #retry {
 	background-color:red;
 }

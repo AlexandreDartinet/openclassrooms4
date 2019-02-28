@@ -307,7 +307,7 @@ class Comment extends DbObject {
             return false;
         }
         if($user->id == 0) {
-            if($user->ip == $this->ip) {
+            if(($user->ip == $this->ip) && (0 == $this->id_user)) {
                 return true;
             }
         }
@@ -332,7 +332,7 @@ class Comment extends DbObject {
      * @return string : Commentaire prêt à être affiché
      */
     public function display($display_buttons = true, $highlight = false, $append_id = true, $noReply = false) {
-        $class = 'comment'.((($this->reply_to != 0) && $append_id)?' comment-reply':'').(($highlight)?' comment-highlight':'');
+        $class = 'comment'.((($this->reply_to != 0) && $append_id)?" comment-reply comment-reply-to-$this->reply_to":'').(($highlight)?' comment-highlight':'');
         $id = ($append_id || $noReply)?" id='comment-$this->id'":"";
         $display = "<div class='$class'$id>";
         $author = $this->displayName();

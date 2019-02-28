@@ -45,7 +45,33 @@ class CommentManager extends Manager {
         else {
             throw new Exception("CommentManager: Erreur de requête \$id_post($id_post), \$page($page), \$replies($replies).");
         }
-    } 
+    }
+    
+    /**
+     * Retourne tous les commentaires liés à un post, après un certain id
+     * 
+     * @param int $id_post : L'identifiant du post dont on veut les commentaires
+     * @param int $last_id : L'identifiant du commentaire après lequel on veut des mises à jour
+     * 
+     * @return array : Tableau d'objets Comment représentant les commentaires du post, triés par date d'envoi.
+     */
+    public function getCommentsAfter(int $id_post, int $last_id) {
+        $req = $this->_db->prepare('SELECT a.*, COUNT(b.id) AS replies_nbr FROM comments a LEFT JOIN comments b ON a.id = b.reply_to WHERE a.id_post=:id_post AND a.id>:last_id GROUP BY a.id ORDER BY a.date_publication ASC');
+        $req->bindParam(":id_post", $id_post);
+        $req->bindParam(':last_id', $last_id);
+        if($req->execute()) {
+            $comments = [];
+            while($line = $req->fetch()) {
+                $comment = new Comment($line);
+                $comments[] = $comment;
+            }
+            $req->closeCursor();
+            return $comments;
+        }
+        else {
+            throw new Exception("CommentManager: Erreur de requête \$id_post($id_post), \$page($page), \$replies($replies).");
+        }
+    }
 
     /**
      * Récupère un commentaire par son identifiant
@@ -163,7 +189,8 @@ class CommentManager extends Manager {
      */
     public function removeComment(Comment $comment) {
         $req = $this->_db->prepare('DELETE FROM comments WHERE id=:id OR reply_to=:id');
-        $req->bindParam(':id', $comment->id);
+        $id = $comment->id;
+        $req->bindParam(':id', $id);
         return $req->execute();
     }
     
