@@ -173,7 +173,7 @@ try { // Gestion des erreurs
                 displayImagesJson();
             }
             else {
-                displayErrorJson();
+                displayErrorJson("no_access");
             }
         }
         elseif(preg_match('/\/js\//', PATH)) {
@@ -191,6 +191,15 @@ try { // Gestion des erreurs
      */
     elseif(preg_match('/^\/ajax\//', PATH)) {
         require('controller/ajax.php');
+        if(preg_match('/^\/ajax\/comments\//', PATH)) {
+            if(preg_match('/\/get\/\d+\//', PATH)) {
+                $id = (int) preg_replace('/^.*\/get\/(\d+)\/.*$/', '$1', PATH);
+                displayCommentsJson($id);
+            }
+            else {
+                displayErrorJson("no_access");
+            }
+        }
     }
     /**
      * Bloc de la section frontend
