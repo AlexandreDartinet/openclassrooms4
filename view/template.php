@@ -57,6 +57,11 @@ if(SUCCESS != '') {
         <?= $content ?>
         </main>
         <?= $footer ?>
+        <script>
+            const siteUrl = 'https://<?= SITE_URL ?>/';
+            const path = '<?= preg_replace('/page-\d+\//', '', PATH) ?>';
+            let curPage = <?= getPage(PATH) ?>;
+        </script>
         <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 <?php
 if(isset($scripts)) {

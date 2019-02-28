@@ -176,6 +176,12 @@ try { // Gestion des erreurs
                 displayErrorJson();
             }
         }
+        elseif(preg_match('/\/js\//', PATH)) {
+            if(preg_match('/init\.js/', PATH)) {
+                $path = preg_replace('/^.*init\.js;(\/.*\/)$/', '$1', PATH);
+                displayInitJs($path);
+            }
+        }
         else {
             header('Location: /retry/no_access/');
         }

@@ -39,3 +39,20 @@ function displayImagesJson() {
     }
     echo json_encode($json);
 }
+
+/**
+ * Affiche le fichier js init.js
+ * 
+ * @return void
+ */
+function displayInitJs($path) {
+    header("Content-Type: application/javascript; charset=UTF-8");
+    $page = getPage($path);
+    $path = preg_replace('/page-\d+\//', '', $path);
+    $site_url = 'https://'.SITE_URL.'/';
+    $init = 
+"const siteUrl = '$site_url';
+const path = '$path';
+let curPage = $page;";
+    echo $init;
+}
