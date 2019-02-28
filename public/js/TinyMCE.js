@@ -38,10 +38,3 @@ tinymce.init({
     spellchecker_language: 'fr',
     image_list: "/generated/json/images.json"
 });
-
-// image_list: [
-//     {title: 'My image 1', value: 'https://www.tinymce.com/my1.gif'},
-//     {title: 'My image 2', value: 'http://www.moxiecode.com/my2.gif'}
-//   ]
-// image_list: "/ajax/images-list.json"
-// image_prepend_url: "https://"+SITE_URL+"/generated/images/"

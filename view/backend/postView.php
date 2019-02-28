@@ -60,7 +60,7 @@ elseif($published) {
 <?php
 $scripts = [
     "<script src='https://cloud.tinymce.com/5/tinymce.min.js?apiKey=".TINYMCE_KEY."'></script>",
-    '<script src="/public/js/editPost.js"></script>'
+    '<script src="/public/js/TinyMCE.js"></script>'
 ];
 $content = ob_get_clean();
 require('template.php');
