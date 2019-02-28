@@ -77,7 +77,7 @@ function viewPost(int $id, $page = 1) {
                     }
 
                 }
-                $pageSelector = pageSelector(ceil($post->comments_nbr/CommentManager::COMMENT_PAGE), $page, PATH);
+                $pageSelector = pageSelector(ceil($commentManager->countByPostId($post->id)/CommentManager::COMMENT_PAGE), $page, PATH);
             }
             $title = 'Article "'.htmlspecialchars($post->title).'"';
             
