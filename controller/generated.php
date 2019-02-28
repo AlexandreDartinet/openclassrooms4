@@ -27,7 +27,6 @@ function displayImage(string $filename) {
  * @return void
  */
 function displayImagesJson() {
-    header("Content-Type: application/json; charset=UTF-8");
     $imageManager = new ImageManager();
     $images = $imageManager->getImages("all", Image::TYPE_POST);
     $json = [];
@@ -37,7 +36,7 @@ function displayImagesJson() {
         $image_json->value = $image->url;
         $json[] = $image_json;
     }
-    echo json_encode($json);
+    displayJson($json);
 }
 
 /**
