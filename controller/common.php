@@ -49,3 +49,41 @@ function pageSelector(int $pages_nbr, int $page, string $path) {
     $selector .= "</div>";
     return $selector;
 }
+
+/**
+ * Affiche en json l'objet donné en argument
+ * 
+ * @param ? $object : Objet à afficher
+ * 
+ * @return void
+ */
+function displayJson($object) {
+    header("Content-Type: application/json; charset=UTF-8");
+    echo json_encode($object);
+}
+
+/**
+ * Affiche une erreur sous forme de json
+ * 
+ * @param string $error : Erreur à afficher
+ * 
+ * @return void
+ */
+function displayErrorJson(string $error) {
+    $json = new stdClass();
+    $json->error = $error;
+    displayJson($json);
+}
+
+/**
+ * Affiche un succès sous forme de json
+ * 
+ * @param string $success : Succès à afficher
+ * 
+ * @return void
+ */
+function displaySuccessJson(string $success) {
+    $json = new stdClass();
+    $json->success = $success;
+    displayJson($json);
+}
