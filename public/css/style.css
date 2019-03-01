@@ -1,16 +1,12 @@
-* {
-    padding:0;
-    margin:0;
-}
-
 #nav {
 	color:white;
 	background-color:#282828;
-	width:100vw;
+	width:100%;
 	position:fixed;
 	height:3.5em;
 	top:0;
 	left:0;
+	z-index: 1000;
 }
 #nav a {
 	color:white;
@@ -20,7 +16,7 @@ nav {
 	margin-left: 0.5em;
 }
 nav a, #logout a {
-	transition: background-color .2s ease-in-out;
+	transition: all .2s ease-in-out;
 	position: relative;
 	display:inline-block;
 	outline: 0;
@@ -28,7 +24,7 @@ nav a, #logout a {
 	border-radius: 8px;
 	height: 2.5em;
 	margin: 0.5em 0;
-	line-height: 2.5em;
+	line-height: 2.5em !important;
 	padding: 0 1.25em;
 
 }
@@ -47,7 +43,7 @@ nav a:hover, #logout a:hover {
 #login input {
 	border-radius: 2px;
 	height: 1em;
-	margin-top: 0.5em;
+	margin: 0.5em 0;
 }
 #login a {
 	transition: background-color .2s ease-in-out;

@@ -249,6 +249,7 @@ function sendReport(int $id_comment, int $type, string $content) {
         $commentManager = new CommentManager();
         if($commentManager->exists('id', $id_comment)) {
             $report = Report::default();
+            $report->id_comment = $id_comment;
             $report->id_user = $_SESSION['user']->id;
             $report->ip = $_SERVER['REMOTE_ADDR'];
             $report->type = $type;

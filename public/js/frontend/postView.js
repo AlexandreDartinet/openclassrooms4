@@ -5,6 +5,9 @@ let timeoutTimer;
 let timeout = true;
 let action = false;
 
+/**
+ * Remet à zéro le timeout qui arrête la mise à jour automatique des commentaires.
+ */
 function resetTimeout() {
     if(timeout) {
         $.getJSON(siteUrl+"ajax/comments/get/"+postId+"/",(response) => initComments(response));
@@ -19,6 +22,11 @@ function resetTimeout() {
     }, 600000);
 }
 
+/**
+ * Initialise la page des commentaires avec les commentaires récupérés en ajax.
+ * 
+ * @param {Object} response 
+ */
 function initComments(response) {
     data = response;
     loadPage(curPage, true);
@@ -26,10 +34,17 @@ function initComments(response) {
     updateTimer = setInterval(() => forceUpdate(), 10000);
 };
 
+/**
+ * Force une mise à jour des commentaires
+ */
 function forceUpdate() {
     $.getJSON(siteUrl+"ajax/comments/update/"+postId+"/"+data.lastId+"/", (response) => updateComments(response))
 };
 
+/**
+ * Met à jour data avec les derniers commentaires et met à jour les données affichées.
+ * @param {Object} response 
+ */
 function updateComments(response) {
     let updateData = response;
     if(updateData.lastId != data.lastId) {
@@ -59,6 +74,12 @@ function updateComments(response) {
     } 
 }
 
+/**
+ * Met à jour les données affichées pour la page (page), (auto) nous dit si le changement de page a été déclenché par l'utilisateur ou non.
+ * 
+ * @param {int} page 
+ * @param {boolean} auto 
+ */
 function loadPage(page, auto = false) {
     if(!action) {
         if(!auto) {
@@ -80,6 +101,9 @@ function loadPage(page, auto = false) {
     }
 }
 
+/**
+ * Intercepte les actions pour chaque bouton des commentaires.
+ */
 function updateButtons() {
     $('.comment-reply-link').on('click', (e) => {
         e.preventDefault();
@@ -107,6 +131,11 @@ function updateButtons() {
     });
 };
 
+/**
+ * Affiche le formulaire de réponse à un commentaire
+ * 
+ * @param {int} id 
+ */
 function showReplyComment(id) {
     action = true;
     hideButtons();
@@ -168,6 +197,10 @@ function showReplyComment(id) {
     $('#to-focus').focus();
 };
 
+/**
+ * Affiche le formulaire d'édition d'un commentaire
+ * @param {int} id 
+ */
 function showEditComment(id) {
     action = true;
     resetTimeout();
@@ -248,6 +281,74 @@ function showEditComment(id) {
     });
 }
 
+/**
+ * Affiche le formulaire de signalement d'un commentaire
+ * @param {int} id 
+ */
+function showReportComment(id) {
+    console.log("Comment report : "+id);
+    action = true;
+    hideButtons();
+    resetTimeout();
+    appendAfter = $('#comment-'+id);
+    formElt = $(document.createElement('div'));
+    form = $(document.createElement('form'))
+        .append($(document.createElement('div'))
+            .append($(document.createElement('select'))
+                .attr('required', true)
+                .attr('name', 'type')
+                .attr('id', 'type')
+            )
+        )
+        .append($(document.createElement('div'))
+            .append($(document.createElement('textarea'))
+                .attr('name', 'content')
+                .attr('placeholder', 'Aucun commentaire')
+                .attr('id', 'to-focus')
+            )
+        )
+        .append($(document.createElement('input'))
+            .attr('type', 'submit')
+        )
+        .append($(document.createElement('input'))
+            .attr('type', 'reset')
+            .attr('value', 'Annuler')
+            .on('click', (e) => {
+                action = false;
+                formElt.remove();
+                showButtons();
+            })
+        )
+    ;
+    formElt.append(form);
+    appendAfter.append(formElt);
+    for(let i=0; i<data.reportTypes.length; i++) {
+        $('#type').append($(document.createElement('option'))
+            .attr('value', i)
+            .text(data.reportTypes[i])
+        );
+    }
+    $('#to-focus').focus();
+    form.submit((e) => {
+        e.preventDefault();
+        action = false;
+        let formData = $(e.target).serializeArray();
+        let postData = {};
+        formData.forEach((d) => {
+            postData[d.name] = d.value;
+        });
+        postData['id_comment'] = ""+id;
+        sendReport(postData);
+        formElt.remove();
+        showButtons();
+        resetTimeout();
+    });
+};
+
+/**
+ * Envoie un commentaire en ajax et force une mise à jour si l'envoi est un succes
+ * @param {Object} postData 
+ */
 function sendComment(postData) {
     $.ajax({
         type: "POST",
@@ -284,6 +385,10 @@ function sendComment(postData) {
     });
 };
 
+/**
+ * Modifie le contenu d'un commentaire et raffraichit les données si la modification est un succès.
+ * @param {Object} postData 
+ */
 function modifyComment(postData) {
     $.ajax({
         type: "POST",
@@ -317,6 +422,10 @@ function modifyComment(postData) {
     });
 };
 
+/**
+ * Supprime un commentaire
+ * @param {int} id 
+ */
 function deleteComment(id) {
     postData = {"id": id};
     $.ajax({
@@ -376,8 +485,48 @@ function deleteComment(id) {
             console.error(response);
         }
     })
-}
+};
 
+/**
+ * Envoie un signalement et affiche une confirmation en cas de succès.
+ * @param {Object} postData 
+ */
+function sendReport(postData) {
+    console.log(postData);
+    $.ajax({
+        type: "POST",
+        url: siteUrl+'ajax/reports/send/',
+        data: postData,
+        success: (response) => {
+            if(typeof response.success !== 'undefined') {
+                $('body').append($(document.createElement('section'))
+                    .attr('id', 'success')
+                    .text(response.success)
+                );
+                setTimeout(() => {
+                    $('#success').remove();
+                }, 5000);
+            }
+            else {
+                $('body').append($(document.createElement('section'))
+                    .attr('id', 'retry')
+                    .text(response.error)
+                );
+                setTimeout(() => {
+                    $('#retry').remove();
+                }, 5000);
+            }
+        },
+        dataType: "json",
+        error: (response) => {
+            console.error(response);
+        }
+    });
+};
+
+/**
+ * Affiche les boutons d'interaction
+ */
 function showButtons() {
     $('.comment-reply-link').show();
     $('.comment-edit-link').show();
@@ -386,6 +535,9 @@ function showButtons() {
     $('#page-selector').show();
 };
 
+/**
+ * Masque les boutons d'interaction
+ */
 function hideButtons() {
     $('.comment-reply-link').hide();
     $('.comment-edit-link').hide();
@@ -394,6 +546,10 @@ function hideButtons() {
     $('#page-selector').hide();
 };
 
+/**
+ * Formate un commentaire passé en argument pour être affiché.
+ * @param {Object} commentData 
+ */
 function displayComment(commentData) {
     let comment = $(document.createElement('div'))
         .addClass('comment')
@@ -447,6 +603,10 @@ function displayComment(commentData) {
     return comment;
 };
 
+/**
+ * Trouve un commentaire par son identifiant dans data
+ * @param {int} id 
+ */
 function findComment(id) {
     found = data.comments.find((comment) => {
         return comment.id == id;
@@ -463,8 +623,14 @@ function findComment(id) {
     return found;
 }
 
-
+/**
+ * On initialise le script pour la page en lançant l'update automatique.
+ */
 resetTimeout();
+
+/**
+ * On intercepte le formulaire par défaut.
+ */
 $('#comment-form-div form').submit((e) => {
     e.preventDefault();
     let formData = $(e.target).serializeArray();
