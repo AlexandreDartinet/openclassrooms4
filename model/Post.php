@@ -212,10 +212,10 @@ class Post extends DbObject {
         else {
             $content = $this->content;
             $display = "<article class='post'>";
-            $display .= "<h3 class='post-title'>";
+            $display .= "<h2 class='post-title'>";
             $display .= $title;
             $display .= " <em>le $date par $author</em>";
-            $display .= "</h3>";
+            $display .= "</h2>";
             $display .= "<div class='post-content'>";
             $display .= $content;
             $display .= "</div>";

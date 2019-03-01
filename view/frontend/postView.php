@@ -92,6 +92,7 @@ if(!isset($scripts)) {
 }
 ob_start();
 ?>
+<script src="/public/js/message.js"></script>
 <script src="/public/js/htmlFunctions.js"></script>
 <script src="/public/js/pageSelector.js"></script>
 <script>

@@ -343,6 +343,7 @@ class Comment extends DbObject {
             $display .= " IP(".$this->user->ip.") ";
         }
         if($display_buttons && $_SESSION['user']->canComment()) {
+            $display .= "<div class='comment-buttons'>";
             if($this->reply_to == 0 && !$noReply) {
                 $display .= " <a title='Répondre' class='fas fa-reply comment-reply-link' id='comment-reply-link-$this->id' href='".PATH."reply_to/$this->id/'></a> ";
             }
@@ -354,6 +355,7 @@ class Comment extends DbObject {
             if($_SESSION['user']->level >= User::LEVEL_MODERATOR && $this->reports_nbr > 0) {
                 $display .= " <a title='Signalements($this->reports_nbr)' class='fas fa-exclamation-triangle comment-reports-link' id='comment-reports-link-$this->id' href='/admin/reports/comment/$this->id/'>($this->reports_nbr)</a> ";
             }
+            $display .= "</div>";
         }
         $display .= "</p><p>";
         $display .= nl2br(htmlspecialchars($this->content));

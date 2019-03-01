@@ -4,7 +4,7 @@
  */
 ob_start();
 ?>
-<p>Articles :</p>
+<h2>Articles</h2>
 <?php
 foreach($posts as $post) {
     echo $post->display(true);

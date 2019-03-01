@@ -1,3 +1,23 @@
+* {
+	padding:0;
+	margin:0;
+}
+body {
+	padding-top: 3.5em;
+	background-color:#e9edf0;
+}
+a, a:hover, a:visited, a:active {
+	text-decoration: none;
+	color:black;
+}
+main {
+	min-width:80vw;
+	margin: auto 10vw;
+	background-color:white;
+	padding: 20px;
+	border-radius: 5px;
+}
+
 #nav {
 	color:white;
 	background-color:#282828;
@@ -7,6 +27,7 @@
 	top:0;
 	left:0;
 	z-index: 1000;
+	opacity:0.9;
 }
 #nav a {
 	color:white;
@@ -38,37 +59,119 @@ nav a:hover, #logout a:hover {
 #login, #logout {
 	float:right;
 	margin-right: 0.5em;
+	height:3.5em;
+	text-align:center;
 }
 
 #login input {
 	border-radius: 2px;
 	height: 1em;
 	margin: 0.5em 0;
+	text-align:center;
 }
 #login a {
 	transition: background-color .2s ease-in-out;
 	border-radius: 8px;
 	height: 1em;
-	margin: 0.5em 0;
+	margin-bottom: 0.5em;
 	line-height: 1em;
 	padding: 0 1.25em;
 }
 #login a:hover {
 	background-color: #383838;
 }
-body {
-	padding-top:3.5em;
+
+#comments {
+	border-radius:8px;
+	margin-top: 10px;
+	padding: 10px;
+	border: solid lightgrey 1px;
 }
 
-a {
-	text-decoration: none;
+#comments h2 {
+	text-align:center;
 }
+
+#comments form {
+	background-color: #e9edf0;
+	padding: 10px;
+	margin: 5px 0;
+	border-radius: 5px;
+	border: solid lightgrey 1px;
+	box-shadow:5px 5px 5px 0 #c0c0c0;
+}
+#comments form textarea {
+	width:100%;
+	height:100px;
+	resize:none;
+	margin: 10px 0;
+}
+.comment {
+	background-color:#e9edf0;
+	padding:10px;
+	margin: 10px 0;
+	border-radius:5px;
+	border: solid lightgrey 1px;
+	transition: all .2s ease-in-out;
+	position:relative;
+	box-shadow:5px 5px 5px 0 #c0c0c0;
+}
+
 .comment-reply {
-    margin-left:20px;
+    margin-left:20px !important;
 }
 .comment-highlight {
-    background-color:red;
+    background-color:grey;
 }
+.comment-reply-link, .comment-edit-link, .comment-delete-link, .comment-report-link, .comment-reports-link {
+	padding:4px;
+	border-radius:5px;
+	transition: all .2s ease-in-out;
+}
+.comment-reply-link:hover, .comment-edit-link:hover, .comment-delete-link:hover, .comment-report-link:hover, .comment-reports-link:hover {
+	background-color:grey;
+}
+.comment-reply-link, .comment-reply-link:hover, .comment-reply-link:visited {
+	color:green;
+}
+.comment-edit-link, .comment-edit-link:hover, .comment-edit-link:visited {
+	color:yellow;
+}
+.comment-delete-link, .comment-delete-link:hover, .comment-delete-link:visited {
+	color:silver;
+}
+.comment-report-link, .comment-report-link:hover, .comment-report-link:visited, .comment-reports-link, .comment-reports-link:hover, .comment-reports-link:visited {
+	color:red;
+}
+.comment-buttons {
+	position: absolute;
+	top:10px;
+	right:10px;
+}
+
+#page-selector {
+	margin: 10px 0 0 0;
+	text-align:center;
+}
+
+
+.page-selector-item {
+	border-radius:5px;
+	padding: 2px 5px;
+	transition: all .2s ease-in-out;
+}
+
+.page-selector-item:hover {
+	background-color: gray;
+	color:white;
+}
+
+.page-selector-item.page-current, .page-selector-item.page-current#hover {
+	color:grey;
+	cursor:default;
+	background-color:white;
+}
+
 figure.image {
 	display: inline-block;
 	border: 1px solid gray;
@@ -99,6 +202,8 @@ figure.image figcaption {
 	padding: 20px;
 	border-radius: 8px;
 	border: solid #282828 2px;
+	transition: all .2s ease-in-out;
+	box-shadow:5px 5px 5px 0 #c0c0c0;
 }
 #retry {
 	background-color:red;
