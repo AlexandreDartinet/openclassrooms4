@@ -24,6 +24,7 @@ function displayCommentsJson(int $id) {
         $json->user->canComment = $_SESSION['user']->canComment();
         $json->commentsNbr = sizeof($comments);
         $json->commentPage = CommentManager::COMMENT_PAGE;
+        $json->reportTypes = Report::TYPES;
         $moderator = ($_SESSION['user']->level >= User::LEVEL_MODERATOR);
         $json->comments = [];
         foreach($comments as $comment) {
@@ -227,6 +228,36 @@ function deleteComment(int $id) {
         }
         else {
             displayErrorJson("Le commentaire que vous essayez de supprimer n'existe pas.");
+        }
+    }
+    else {
+        displayErrorJson("Vous n'avez pas le droit de commenter.");
+    }
+}
+
+/**
+ * Envoie un nouveau signalement
+ * 
+ * @param int $id_comment
+ * @param int $type
+ * @param string $content
+ * 
+ * @return void
+ */
+function sendReport(int $id_comment, int $type, string $content) {
+    if($_SESSION['user']->canComment()) {
+        $commentManager = new CommentManager();
+        if($commentManager->exists('id', $id_comment)) {
+            $report = Report::default();
+            $report->id_user = $_SESSION['user']->id;
+            $report->ip = $_SERVER['REMOTE_ADDR'];
+            $report->type = $type;
+            $report->content = (($content != '')?$content:"Aucun commentaire.");
+            $report->save();
+            displaySuccessJson("Votre signalement a été envoyé.");
+        }
+        else {
+            displayErrorJson("Le commentaire que vous essayez de signaler n'existe pas.");
         }
     }
     else {

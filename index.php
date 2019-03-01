@@ -191,7 +191,20 @@ try { // Gestion des erreurs
      */
     elseif(preg_match('/^\/ajax\//', PATH)) {
         require('controller/ajax.php');
-        if(preg_match('/^\/ajax\/comments\//', PATH)) {
+        if(preg_match('/^\/ajax\/reports\//', PATH)) {
+            if(preg_match('/\/send\//', PATH)) {
+                if(isset($_POST['id_comment']) && isset($_POST['type']) && isset($_POST['content'])) {
+                    sendReport((int) $_POST['id_comment'], (int) $_POST['type'], $_POST['content']);
+                }
+                else {
+                    displayErrorJson('missing_fields');
+                }
+            }
+            else {
+                displayErrorJson('no_access');
+            }
+        }
+        elseif(preg_match('/^\/ajax\/comments\//', PATH)) {
             if(preg_match('/\/get\/\d+\//', PATH)) {
                 $id = (int) preg_replace('/^.*\/get\/(\d+)\/.*$/', '$1', PATH);
                 displayCommentsJson($id);
