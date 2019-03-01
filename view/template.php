@@ -63,10 +63,14 @@ if(SUCCESS != '') {
             const path = '<?= preg_replace('/page-\d+\//', '', PATH) ?>';
             let curPage = <?= getPage(PATH) ?>;
             setTimeout(() => {
-                $('#retry').remove();
+                $('#retry').fadeOut(1000, () => {
+                    $('#retry').remove();
+                });
             }, 5000);
             setTimeout(() => {
-                $('#success').remove();
+                $('#success').fadeOut(1000, () => {
+                    $('#success').remove();
+                });
             }, 5000);
         </script>
 <?php

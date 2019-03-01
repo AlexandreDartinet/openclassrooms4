@@ -193,6 +193,7 @@ function showReplyComment(id) {
         showButtons();
         resetTimeout();
     });
+    if(comment.repliesNbr > 0) form.addClass('comment-reply');
     appendAfter.after(form);
     $('#to-focus').focus();
 };
@@ -241,14 +242,14 @@ function showEditComment(id) {
                     e.preventDefault();
                     action = false;
                     form.remove();
-                    formElt.replaceWith(oldCommentElt);
+                    loadPage(curPage, true);
                     showButtons();
                     updateButtons();
                 })
             )
         )
     ;
-    
+    if(comment.isReply) form.addClass('comment-reply');
     formElt.append(form);
     $('#to-focus').focus();
     form.submit((e) => {
@@ -261,13 +262,7 @@ function showEditComment(id) {
         postData["id"] = comment.id;
         postData["reply_to"] = comment.replyTo;
         if(postData.content == comment.content && postData.name == comment.author.name) {
-            $('body').append($(document.createElement('section'))
-                .attr('id', 'retry')
-                .text("Vous n'avez apporté aucune modification.")
-            );
-            setTimeout(() => {
-                $('#retry').remove();
-            }, 5000);
+            showError("Vous n'avez rien modifié.");
         }
         else {
             modifyComment(postData);
@@ -279,7 +274,7 @@ function showEditComment(id) {
         form.remove();
         formElt.replaceWith(oldCommentElt);
     });
-}
+};
 
 /**
  * Affiche le formulaire de signalement d'un commentaire
@@ -290,6 +285,7 @@ function showReportComment(id) {
     action = true;
     hideButtons();
     resetTimeout();
+    comment = findComment(id);
     appendAfter = $('#comment-'+id);
     formElt = $(document.createElement('div'));
     form = $(document.createElement('form'))
@@ -320,6 +316,7 @@ function showReportComment(id) {
             })
         )
     ;
+    if(comment.isReply) form.addClass('comment-reply');
     formElt.append(form);
     appendAfter.append(formElt);
     for(let i=0; i<data.reportTypes.length; i++) {
@@ -356,26 +353,14 @@ function sendComment(postData) {
         data: postData,
         success: (response) => {
             if(typeof response.success !== 'undefined') {
-                $('body').append($(document.createElement('section'))
-                    .attr('id', 'success')
-                    .text(response.success)
-                );
-                setTimeout(() => {
-                    $('#success').remove();
-                }, 5000);
+                showSuccess(response.success);
                 if(postData['reply_to'] == 0) {
                     curPage = Math.ceil((data.commentsNbr+1)/data.commentPage)
                 }
                 forceUpdate();
             }
             else {
-                $('body').append($(document.createElement('section'))
-                    .attr('id', 'retry')
-                    .text(response.error)
-                );
-                setTimeout(() => {
-                    $('#retry').remove();
-                }, 5000);
+                showError(response.error);
             }
         },
         dataType: "json",
@@ -396,23 +381,11 @@ function modifyComment(postData) {
         data: postData,
         success: (response) => {
             if(typeof response.success !== 'undefined') {
-                $('body').append($(document.createElement('section'))
-                    .attr('id', 'success')
-                    .text(response.success)
-                );
-                setTimeout(() => {
-                    $('#success').remove();
-                }, 5000);
+                showSuccess(response.success);
                 $.getJSON(siteUrl+"ajax/comments/get/"+postId+"/",(response) => initComments(response));
             }
             else {
-                $('body').append($(document.createElement('section'))
-                    .attr('id', 'retry')
-                    .text(response.error)
-                );
-                setTimeout(() => {
-                    $('#retry').remove();
-                }, 5000);
+                showError(response.error);
             }
         },
         dataType: "json",
@@ -434,19 +407,13 @@ function deleteComment(id) {
         data: postData,
         success: (response) => {
             if(typeof response.success !== 'undefined') {
-                $('body').append($(document.createElement('section'))
-                    .attr('id', 'success')
-                    .text(response.success)
-                );
-                setTimeout(() => {
-                    $('#success').remove();
-                }, 5000);
+                showSuccess(response.success);
                 comment = findComment(id);
                 if(comment.isReply) {
                     parentIndex = data.comments.findIndex((e) => {
                         return e.id == comment.replyTo;
                     });
-                    replyIndex = data.comments[parentIndex].findIndex((e) => {
+                    replyIndex = data.comments[parentIndex].replies.findIndex((e) => {
                         return e.id == comment.id;
                     });
                     data.comments[parentIndex].replies.splice(replyIndex,1);
@@ -471,13 +438,7 @@ function deleteComment(id) {
                 loadPage(curPage, true);
             }
             else {
-                $('body').append($(document.createElement('section'))
-                    .attr('id', 'retry')
-                    .text(response.error)
-                );
-                setTimeout(() => {
-                    $('#retry').remove();
-                }, 5000);
+                showError(response.error);
             }
         },
         dataType: "json",
@@ -499,22 +460,10 @@ function sendReport(postData) {
         data: postData,
         success: (response) => {
             if(typeof response.success !== 'undefined') {
-                $('body').append($(document.createElement('section'))
-                    .attr('id', 'success')
-                    .text(response.success)
-                );
-                setTimeout(() => {
-                    $('#success').remove();
-                }, 5000);
+                showSuccess(response.success);
             }
             else {
-                $('body').append($(document.createElement('section'))
-                    .attr('id', 'retry')
-                    .text(response.error)
-                );
-                setTimeout(() => {
-                    $('#retry').remove();
-                }, 5000);
+                showError(response.error);
             }
         },
         dataType: "json",
@@ -562,15 +511,16 @@ function displayComment(commentData) {
         .append(" le "+commentData.date+" ");
     if(typeof commentData.ip !== 'undefined') info.append("IP("+commentData.ip+") ");
     if(data.user.canComment)  {
+        buttons = $(document.createElement('div')).addClass('comment-buttons');
         if(!commentData.isReply) {
-            info.append($(document.createElement('a'))
+            buttons.append($(document.createElement('a'))
                 .attr('title', 'Répondre')
                 .addClass('fas fa-reply comment-reply-link')
                 .attr('id', 'comment-reply-link-'+commentData.id)
                 .attr('href', '/post/'+postId+'/page-'+curPage+'/reply_to/'+commentData.id+'/'));
         }
         if(commentData.canEdit) {
-            info
+            buttons
                 .append($(document.createElement('a'))
                     .attr('title', 'Éditer')
                     .addClass('fas fa-edit comment-edit-link')
@@ -582,20 +532,20 @@ function displayComment(commentData) {
                     .attr('id', 'comment-delete-link-'+commentData.id)
                     .attr('href', '/post/'+postId+'/page-'+curPage+'/delete/'+commentData.id+'/'));
         }
-        info.append($(document.createElement('a'))
+        buttons.append($(document.createElement('a'))
             .attr('title', 'Signaler')
             .addClass('fas fa-flag comment-report-link')
             .attr('id', 'comment-report-link-'+commentData.id)
             .attr('href', '/post/'+postId+'/report/'+commentData.id+'/'));
         if(typeof commentData.reportsNbr !== 'undefined') {
-            info.append($(document.createElement('a'))
+            buttons.append($(document.createElement('a'))
                 .attr('title', 'Signalements('+commentData.reportsNbr+')')
                 .addClass('fas fa-exclamation-triangle comment-reports-link')
                 .attr('id', 'comment-reports-link-'+commentData.id)
                 .attr('href', '/admin/reports/comment/'+commentData.id+'/')
                 .text('('+commentData.reportsNbr+')'));
         }
-        
+        info.append(buttons);
     }
     comment.append(info);
     let content = $(document.createElement('p')).append(nl2br(htmlspecialchars(commentData.content)));
