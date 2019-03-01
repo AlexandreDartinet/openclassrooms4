@@ -2,6 +2,71 @@
     padding:0;
     margin:0;
 }
+
+#nav {
+	color:white;
+	background-color:#282828;
+	width:100vw;
+	position:fixed;
+	height:3.5em;
+	top:0;
+	left:0;
+}
+#nav a {
+	color:white;
+}
+nav {
+	float:left;
+	margin-left: 0.5em;
+}
+nav a, #logout a {
+	transition: background-color .2s ease-in-out;
+	position: relative;
+	display:inline-block;
+	outline: 0;
+	font-weight: 600;
+	border-radius: 8px;
+	height: 2.5em;
+	margin: 0.5em 0;
+	line-height: 2.5em;
+	padding: 0 1.25em;
+
+}
+#logout a.fa-times:hover {
+	color:red;
+}
+nav a:hover, #logout a:hover {
+	background-color: #383838;
+	color: white;
+}
+#login, #logout {
+	float:right;
+	margin-right: 0.5em;
+}
+
+#login input {
+	border-radius: 2px;
+	height: 1em;
+	margin-top: 0.5em;
+}
+#login a {
+	transition: background-color .2s ease-in-out;
+	border-radius: 8px;
+	height: 1em;
+	margin: 0.5em 0;
+	line-height: 1em;
+	padding: 0 1.25em;
+}
+#login a:hover {
+	background-color: #383838;
+}
+body {
+	padding-top:3.5em;
+}
+
+a {
+	text-decoration: none;
+}
 .comment-reply {
     margin-left:20px;
 }
@@ -33,9 +98,11 @@ figure.image figcaption {
 }
 #retry, #success {
 	position: fixed;
-	top: 50px;
+	top: 4.5em;
 	right: 50px;
 	padding: 20px;
+	border-radius: 8px;
+	border: solid #282828 2px;
 }
 #retry {
 	background-color:red;
