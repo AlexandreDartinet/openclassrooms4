@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  localhost:3306
--- Généré le :  Mer 27 Février 2019 à 11:21
+-- Généré le :  Sam 02 Mars 2019 à 12:23
 -- Version du serveur :  10.1.37-MariaDB-0+deb9u1
 -- Version de PHP :  7.0.33-0+deb9u1
 
@@ -28,11 +28,12 @@ SET time_zone = "+00:00";
 
 CREATE TABLE IF NOT EXISTS `bans` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip` varchar(255) NOT NULL,
+  `ip` varchar(100) NOT NULL,
   `date_ban` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `type` int(11) NOT NULL DEFAULT '0',
-  `comment` varchar(255) NOT NULL DEFAULT 'Aucun commentaire',
-  PRIMARY KEY (`id`)
+  `content` varchar(255) NOT NULL DEFAULT 'Aucun commentaire',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `ip` (`ip`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
