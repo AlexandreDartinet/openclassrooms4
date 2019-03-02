@@ -165,7 +165,7 @@ div.post {
 	text-align:center;
 }
 
-#comments form {
+#comments form, #contact-form form {
 	background-color: #e9edf0;
 	padding: 10px;
 	margin: 5px 0;
@@ -174,10 +174,10 @@ div.post {
 	box-shadow:5px 5px 5px 0 #c0c0c0;
 }
 
-#comments form textarea {
+#comments form textarea, #contact-form form textarea {
 	width:100%;
-	height:100px;
-	resize:none;
+	min-height:200px;
+	resize:vertical;
 	margin: 10px 0;
 }
 

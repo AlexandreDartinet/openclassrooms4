@@ -13,7 +13,7 @@ ob_start();
 ?>
 <h2>Formulaire de contact</h2>
 
-<form method="post" action="/">
+<div id="contact-form"><form method="post" action="/">
     <input type="hidden" name="action" value="sendContactForm" required/>
     <div>
         <label for="name">Votre nom :</label><br/>
@@ -33,7 +33,7 @@ ob_start();
     </div>
     <input type="submit"/>
 
-</form>
+</form></div>
 
 
 <?php
