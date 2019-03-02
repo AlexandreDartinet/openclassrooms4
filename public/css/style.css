@@ -11,6 +11,8 @@ h2 {
 }
 img, iframe {
 	max-width: 100%;
+}
+img {
 	height: auto;
 }
 body {
