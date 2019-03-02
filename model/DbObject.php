@@ -134,7 +134,7 @@ abstract class DbObject {
      * @return boolean : true si $email est une adresse email, false sinon
      */
     public static function isEmail(string $email) {
-        return preg_match('/^.+@\w+\.\w+$/', $email);
+        return preg_match('/^.+@.+\.\w+$/', $email);
     }
 
     /**
