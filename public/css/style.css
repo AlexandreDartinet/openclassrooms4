@@ -2,7 +2,13 @@
 	padding:0;
 	margin:0;
 }
-
+li {
+	margin-left:10px;
+}
+h2 {
+	text-align:center;
+	margin-bottom: 20px;
+}
 body {
 	padding-top: 3.5em;
 	background-color:#e9edf0;
@@ -15,6 +21,8 @@ a, a:hover, a:visited, a:active {
 
 main {
 	min-width:80vw;
+	display:flex;
+	flex-direction:column;
 	margin: auto 10vw;
 	background-color:white;
 	padding: 20px;
@@ -109,6 +117,8 @@ div.post {
 	box-shadow:5px 5px 5px 0 #c0c0c0;
 	padding: 10px;
 	margin: 10px 0;
+	width:fit-content;
+	overflow:hidden;
 }
 
 .post-title {
@@ -117,6 +127,7 @@ div.post {
 
 .post-title a {
 	border-radius: 5px;
+	padding: 0 3px;
 	background: lightgrey;
 	transition: background-color .2s ease-in-out;
 }
@@ -152,7 +163,7 @@ div.post {
 	margin: 10px 0;
 }
 
-.comment {
+.comment, .report {
 	background-color:#e9edf0;
 	padding:10px;
 	margin: 10px 0;
@@ -161,6 +172,7 @@ div.post {
 	transition: all .2s ease-in-out;
 	position:relative;
 	box-shadow:5px 5px 5px 0 #c0c0c0;
+	width: fit-content;
 }
 
 .comment-reply {
@@ -198,9 +210,15 @@ div.post {
 }
 
 .comment-buttons {
-	position: absolute;
-	top:10px;
-	right:10px;
+	float: right;
+}
+
+div.directory-item {
+	border: solid lightgrey 1px;
+	box-shadow:5px 5px 5px 0 #c0c0c0;
+	padding: 10px;
+	margin: 10px 0;
+	width:fit-content;
 }
 
 #page-selector {
