@@ -31,7 +31,8 @@ tinymce.init({
         'wordcount'
     ],
     toolbar: defaultToolbar + 'bullist numlist | code visualblocks | forecolor backcolor | image link media | permanentpen | searchreplace',
-    min_height: 200,
+    min_height: 500,
+    max_height: 700,
     image_caption: true,
     media_live_embeds: true,
     save_enablewhendirty: false,
