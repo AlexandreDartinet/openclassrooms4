@@ -76,14 +76,6 @@ INSERT INTO `comments` (`id`, `id_post`, `id_user`, `reply_to`, `date_publicatio
 (78, 1, 1, 75, '2019-03-01 16:51:09', '1.2.3.4', 'Alexandre D', 'Même que jréponds HA');
 
 --
--- Contenu de la table `images`
---
-
-INSERT INTO `images` (`id`, `id_user`, `date_sent`, `file_name`, `type`, `title`) VALUES
-(10, 1, '2019-02-27 20:10:12', '1551294612', 1, 'VODKA'),
-(11, 1, '2019-02-27 20:10:30', '1551294630', 1, 'ROGNON');
-
---
 -- Contenu de la table `posts`
 --
 
@@ -108,7 +100,7 @@ INSERT INTO `users` (`id`, `name`, `password`, `email`, `date_inscription`, `las
 (1, 'Darko', '$2y$10$SDpB9HcNPQsP3cpON23gUOG1fZiNwiJnc6riUdvODc18LapNnywLi', 'noreply@oc4.darkvcious.fr', '2019-02-20 18:11:45', '2019-03-01 17:15:55', 10, '1.2.3.4', 'Alexandre D'),
 (5, 'David', '$2y$10$SDpB9HcNPQsP3cpON23gUOG1fZiNwiJnc6riUdvODc18LapNnywLi', 'noreply@oc4.darkvcious.fr', '2019-02-26 11:07:02', '2019-02-27 15:17:22', 10, '2.3.4.5', 'David'),
 (6, 'Tyler', '$2y$10$SDpB9HcNPQsP3cpON23gUOG1fZiNwiJnc6riUdvODc18LapNnywLi', 'noreply@oc4.darkvcious.fr', '2019-03-01 08:51:31', '2019-03-01 13:33:44', 10, '3.4.5.6', 'Tyler le BG '),
-(7, 'admin', '$2y$10$SDpB9HcNPQsP3cpON23gUOG1fZiNwiJnc6riUdvODc18LapNnywLi', 'noreply@oc4.darkvcious.fr', '2019-03-02 12:23:10', '2019-03-02 12:23:10', 3, '1.2.3.4', 'Jean-Michel');
+(7, 'admin', '$2y$10$SDpB9HcNPQsP3cpON23gUOG1fZiNwiJnc6riUdvODc18LapNnywLi', 'noreply@oc4.darkvcious.fr', '2019-03-02 12:23:10', '2019-03-02 12:23:10', 10, '1.2.3.4', 'Jean-Michel');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
