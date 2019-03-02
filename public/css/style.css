@@ -4,6 +4,7 @@ html {
 * {
 	padding:0;
 	margin:0;
+	word-wrap:break-word;
 }
 li {
 	margin-left:10px;
@@ -28,7 +29,7 @@ a, a:hover, a:visited, a:active {
 	color:black;
 }
 
-*:read-only {
+input:read-only {
 	border:none;
 	cursor:default;
 	background-color:transparent;
@@ -220,6 +221,7 @@ div.post {
 	position:relative;
 	box-shadow:5px 5px 5px 0 #c0c0c0;
 	width: fit-content;
+	max-width:95%;
 }
 
 .comment-reply {
