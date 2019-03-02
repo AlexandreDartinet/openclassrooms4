@@ -12,4 +12,9 @@ foreach($posts as $post) {
 echo $pageSelector;
 $content = ob_get_clean();
 
+if(!isset($scripts)) {
+    $scripts = [];
+}
+$scripts[] = "<script src='/public/js/frontend/listPostsView.js'></script>";
+
 require('template.php');
