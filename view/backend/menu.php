@@ -21,6 +21,7 @@ if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
 <?php
 }
 ?>
+    <a class="fa fa-bars icon" href="javascript:void(0);" onClick="responsiveMenu()"></a>
 </nav>
 <?php
 $menu = ob_get_clean();

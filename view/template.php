@@ -72,6 +72,16 @@ if(SUCCESS != '') {
                     $('#success').remove();
                 });
             }, 5000);
+
+            function responsiveMenu() {
+                let nav = $('#nav');
+                if(nav.hasClass("responsive")) {
+                    nav.removeClass("responsive");
+                }
+                else {
+                    nav.addClass("responsive");
+                }
+            }
         </script>
 <?php
 if(isset($scripts)) {

@@ -9,6 +9,10 @@ h2 {
 	text-align:center;
 	margin-bottom: 20px;
 }
+img, iframe {
+	max-width: 100%;
+	height: auto;
+}
 body {
 	padding-top: 3.5em;
 	background-color:#e9edf0;
@@ -40,10 +44,15 @@ main {
 	left:0;
 	z-index: 1000;
 	opacity:0.9;
+	overflow:hidden;
 }
 
 #nav a {
 	color:white;
+}
+
+#nav a.icon {
+	display: none;
 }
 
 nav {
@@ -80,12 +89,18 @@ nav a:hover, #logout a:hover {
 	text-align:center;
 }
 
-#login input {
+#login input:not(#login-submit) {
 	border-radius: 10px;
 	width:100px;
 	height: 1em;
 	margin: 0.5em 0;
 	text-align:center;
+}
+
+#login-submit {
+	position: absolute; 
+	left: -99999px; 
+	visibility: hidden;
 }
 
 #login a {
@@ -283,4 +298,42 @@ figure.image figcaption {
 
 #success {
 	background-color:green;
+}
+
+@media all and (max-width: 1024px) {
+	main {
+		margin:0;
+		border-radius:0;
+		box-shadow:none;
+	}
+
+	#comments {
+		margin: 10px -20px -20px -20px;
+	}
+
+	#nav *:not(:first-child) {
+		display:none;
+	}
+
+	#nav a.icon {
+		position: fixed;
+		display: block;
+		right: 0.5em;
+		top: 0;
+	}
+
+	#nav.responsive {
+		height:100vh;
+	}
+
+	#nav.responsive * {
+		float: none;
+		display:block;
+		text-align: left;
+	}
+	#nav.responsive #login-submit {
+		position: static; 
+		left: 0; 
+		visibility: visible;
+	}
 }

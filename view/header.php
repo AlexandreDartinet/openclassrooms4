@@ -29,7 +29,7 @@ else { // Si l'utilisateur est anonyme, on affiche le formulaire de connexion, u
             <input type="hidden" name="action" value="login" required/>
             <input type="text" name="name" placeholder="Pseudonyme" required/>
             <input type="password" name="password" placeholder="Mot de passe" required/>
-            <input type="submit" style="position: absolute; left: -99999px; visibility: hidden;"/>
+            <input type="submit" id="login-submit"/>
         </form>
         <a href="/register/">S'inscrire</a>
         <a href="/recover/">Mot de passe oublié</a>
