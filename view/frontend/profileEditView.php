@@ -19,7 +19,7 @@ ob_start();
  * @var string email_confirm : Confirmation de l'adresse email (required)
  */
 ?>
-<form method="post" action="/" autocomplete="off">
+<form method="post" action="/" autocomplete="off" id="register-form">
     <input type="hidden" name="action" value="modifyUser"/>
     <input type="hidden" name="id" value="<?= $user->id ?>"/>
     <div>

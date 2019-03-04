@@ -23,7 +23,14 @@ body {
 	padding-top: 3.5em;
 	background-color:#e9edf0;
 }
-
+table {
+	border: solid black 2px;
+	border-collapse: collapse;
+}
+td, tr, th {
+	border: solid grey 1px;
+	text-align: center;
+}
 a, a:hover, a:visited, a:active {
 	text-decoration: none;
 	color:black;
@@ -195,7 +202,7 @@ div.post {
 	text-align:center;
 }
 
-#comments form, #contact-form form {
+#comments form, #contact-form form, #register-form {
 	background-color: #e9edf0;
 	padding: 10px;
 	margin: 5px 0;
@@ -358,7 +365,7 @@ figure.image figcaption {
 	}
 
 	#nav.responsive {
-		height:100vh;
+		height:28em;
 	}
 
 	#nav.responsive * {
@@ -370,5 +377,19 @@ figure.image figcaption {
 		position: static; 
 		left: 0; 
 		visibility: visible;
+	}
+	table, tr, td, tbody {
+		width:100% !important;
+		display: block;
+		border: none;
+	}
+	thead {
+		display:none;
+	}
+	table {
+		border: solid black 1px;
+	}
+	tr {
+		border-bottom: solid black 1px;
 	}
 }

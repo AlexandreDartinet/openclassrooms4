@@ -4,7 +4,7 @@
  */
 ob_start();
 ?>
-<h2>Formulaire d'inscription :</h2>
+<h2>Formulaire d'inscription</h2>
 <?php
 /**
  * Le formulaire envoie à / en post les valeurs suivantes :
@@ -17,7 +17,7 @@ ob_start();
  * @var string email_confirm : Confirmation de l'email (required)
  */
 ?>
-<form method="post" action="/">
+<form method="post" action="/" id="register-form">
     <input type="hidden" name="action" value="registerUser" required/>
     <div>
         <label for="name">Pseudonyme :</label>
