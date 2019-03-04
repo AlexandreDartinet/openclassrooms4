@@ -14,13 +14,13 @@ foreach($dateTable as $year => $yearContent) {
     foreach($dateTable[$year] as $month => $monthContent) {
         if($month != "count") {
             $monthCount = $dateTable[$year][$month]["count"];
-            $sMonth = (string) (($month < 10)?'0':'').$month;
-            echo "<li><a href='/archive/$year/$sMonth/'>$sMonth/$year($monthCount)</a><ul>";
+            $sMonth = Post::rMonth((int) $month);
+            echo "<li><a href='/archive/$year/$sMonth/'>$sMonth $year ($monthCount)</a><ul>";
                 foreach($dateTable[$year][$month] as $day => $dayContent) {
                     if($day != "count") {
                         $sDay = (string) (($day < 10)?'0':'').$day;
                         $dayCount = $dateTable[$year][$month][$day]["count"];
-                        echo "<li><a href='/archive/$year/$sMonth/$sDay/'>$sDay/$sMonth/$year($dayCount)</a></li>";
+                        echo "<li><a href='/archive/$year/$sMonth/$sDay/'>$sDay $sMonth $year ($dayCount)</a></li>";
                     }
                 }
             echo "</ul></li>";

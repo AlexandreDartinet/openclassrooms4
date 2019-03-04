@@ -158,6 +158,8 @@ abstract class DbObject {
     /**
      * Fonction statique pour retourner une date datetime html à partir d'une date DateTime
      * 
+     * @param string $date : Date au format datetime
+     * 
      * @return string
      */
     public static function dateToHtml(string $date) {
@@ -167,9 +169,59 @@ abstract class DbObject {
     /**
      * Fonction statique pour retourner une date DateTime à partir d'une date html
      * 
+     * @param string $date : Date au format html
+     * 
      * @return string
      */
     public static function htmlToDate(string $date) {
         return preg_replace('/^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2})$/', '$1 $2:00', $date);
+    }
+
+    /**
+     * Fonction statique pour retourner le mois à partir d'une date
+     * 
+     * @param int $month : Numéro du mois
+     * 
+     * @return string
+     */
+    public static function rMonth(int $month) {
+        switch($month) {
+            case 1:
+                return "Janvier";
+                break;
+            case 2:
+                return "Février";
+                break;
+            case 3:
+                return "Mars";
+                break;
+            case 4:
+                return "Avril";
+                break;
+            case 5:
+                return "Mai";
+                break;
+            case 6:
+                return "Juin";
+                break;
+            case 7:
+                return "Juillet";
+                break;
+            case 8:
+                return "Août";
+                break;
+            case 9:
+                return "Septembre";
+                break;
+            case 10:
+                return "Octobre";
+                break;
+            case 11:
+                return "Novembre";
+                break;
+            default:
+                return "Décembre";
+                break;
+        }
     }
 }
