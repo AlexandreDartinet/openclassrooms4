@@ -246,7 +246,21 @@ class User extends DbObject {
             return "<a class='no-profile-link'>".htmlspecialchars($this->name_display)."</a>";
         }   
         else {
-            return "<a class='profile-link profile-link-$this->id' href='/profile/$this->id/'>".htmlspecialchars($this->name_display)."</a>";
+            switch($this->level) {
+                case self::LEVEL_EDITOR:
+                    $class = 'profile-editor';
+                    break;
+                case self::LEVEL_ADMIN:
+                    $class = 'profile-admin';
+                    break;
+                case self::LEVEL_MODERATOR:
+                    $class = 'profile-mod';
+                    break;
+                default:
+                    $class = 'profile-user';
+                    break;
+            }
+            return "<a class='profile-link profile-link-$this->id $class' href='/profile/$this->id/'>".htmlspecialchars($this->name_display)."</a>";
         }
     }
 

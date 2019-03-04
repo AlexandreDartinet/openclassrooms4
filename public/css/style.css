@@ -36,6 +36,10 @@ a, a:hover, a:visited, a:active {
 	color:black;
 }
 
+form input {
+	margin: 4px;
+}
+
 input:read-only {
 	border:none;
 	cursor:default;
@@ -164,6 +168,22 @@ a.profile-link {
 
 a.profile-link:hover {
 	background-color: lightgrey !important;
+}
+
+a.profile-user {
+	color: #8f753d;
+}
+
+a.profile-admin {
+	color: #b34141;
+}
+
+a.profile-editor {
+	color: green;
+}
+
+a.profile-mod {
+	color: blue;
 }
 
 div.post {
