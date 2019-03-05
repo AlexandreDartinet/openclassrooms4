@@ -65,7 +65,20 @@ input[type="submit"], input[type="reset"], input[type="submit"]:focus, input[typ
     font-weight: bold;
 }
 
+header {
+	background-image: url('/public/images/header-2.jpg');
+	background-position: center;
+	height: 200px;
+	display:flex;
+	align-items: center;
+  	justify-content: center;
+}
 
+header h1 {
+	background-color: #c0c0c09a;
+	border-radius:5px;
+	padding:10px;
+}
 main {
 	min-width:80vw;
 	display:flex;

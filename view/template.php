@@ -83,6 +83,16 @@ if(SUCCESS != '') {
                     nav.addClass("responsive");
                 }
             }
+            $(document).ready(() => {
+                let images = [
+                    '/public/images/header-1.jpg',
+                    '/public/images/header-2.jpg',
+                    '/public/images/header-3.jpg'
+                ];
+                let randIndex = Math.floor(Math.random() * images.length);
+                let background = "url('"+images[randIndex]+"')";
+                $('header').css({ 'background-image':background });
+            });
         </script>
 <?php
 if(isset($scripts)) {
