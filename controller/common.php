@@ -34,20 +34,21 @@ function pageSelector(int $pages_nbr, int $page, string $path) {
         return '';
     }
     $path = preg_replace('/page-\d+\//', '', $path);
-    $selector = '<div id="page-selector">';
+    $selector = '<nav id="page-selector" class="pagination is-centered" role="navigation" aria-label="pagination">';
     if($page > 1) {
         $prevPage = $path."page-".($page-1)."/";
-        $selector .= "<a class='page-selector-item' id='page-prev' href='$prevPage'>&lt;</a>";
-    }
-    for($i = 1; $i <= $pages_nbr; $i++) {
-        $pageLink = $path."page-".$i."/";
-        $selector .= "<a class='page-selector-item".(($i == $page)?' page-current':'')."' id='page-$i' href='$pageLink'>$i</a>";
+        $selector .= "<a class='page-selector-item pagination-previous' id='page-prev' href='$prevPage'>&lt;Précédente</a>";
     }
     if($page < $pages_nbr) {
         $nextPage = $path."page-".($page+1)."/";
-        $selector .= "<a class='page-selector-item' id='page-next' href='$nextPage'>&gt;</a>";
+        $selector .= "<a class='page-selector-item pagination-next' id='page-next' href='$nextPage'>Suivante&gt;</a>";
     }
-    $selector .= "</div>";
+    $selector .= "<ul class='pagination-list'>";
+    for($i = 1; $i <= $pages_nbr; $i++) {
+        $pageLink = $path."page-".$i."/";
+        $selector .= "<li><a class='page-selector-item pagination-link".(($i == $page)?' page-current is-current':'')."' id='page-$i' href='$pageLink'>$i</a></li>";
+    }
+    $selector .= "</ul></nav>";
     return $selector;
 }
 

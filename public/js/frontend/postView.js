@@ -66,9 +66,10 @@ function updateComments(response) {
         data.lastId = updateData.lastId;
         loadPage(curPage, true);
         highlight.forEach((id) => {
-            $('#comment-'+id).addClass('comment-highlight');
+            $('#comment-'+id).addClass('comment-highlight has-background-grey-light');
             setTimeout(() => {
                 $('#comment-'+id).removeClass('comment-highlight');
+                $('#comment-'+id).removeClass('has-background-grey-light');
             },2000);
         })
     } 
@@ -148,7 +149,9 @@ function showReplyComment(id) {
         appendAfter = $('.comment-reply-to-'+comment.id).last();
     }
     form = $(document.createElement('form'))
+        .addClass('box comment-reply')
         .append($(document.createElement('div'))
+            .addClass("field")
             .append($(document.createElement('input'))
                 .attr('type', 'text')
                 .attr('name', 'name')
@@ -156,28 +159,45 @@ function showReplyComment(id) {
                 .attr('placeholder', 'Votre nom')
                 .attr('value', data.user.name)
                 .attr('readonly', (data.user.id != 0))
+                .addClass('input'+((data.user.id != 0)?' is-static':''))
             )
         )
         .append($(document.createElement('div'))
+            .addClass('field')
             .append($(document.createElement('textarea'))
+                .addClass('textarea')
                 .attr('name', 'content')
                 .attr('required', true)
                 .attr('placeholder', 'Votre commentaire')
                 .attr('id', 'to-focus')
             )
         )
-        .append($(document.createElement('input'))
-            .attr('type', 'submit')
+        .append($(document.createElement('div'))
+            .addClass('field is-grouped is-grouped-centered')
+            .append($(document.createElement('p'))
+                .addClass('control')
+                .append($(document.createElement('input'))
+                    .attr('type', 'submit')
+                    .addClass('button is-primary')
+                    .attr('value', 'Envoyer')
+                )
+            )
+            .append($(document.createElement('p'))
+                .addClass('control')
+                .append($(document.createElement('input'))
+                    .attr('type', 'reset')
+                    .addClass('button is-light')
+                    .attr('value', 'Annuler')
+                    .on('click', (e) => {
+                        action = false;
+                        form.remove();
+                        showButtons();
+                    })
+                )
+            )
         )
-        .append($(document.createElement('input'))
-            .attr('type', 'reset')
-            .attr('value', 'Annuler')
-            .on('click', (e) => {
-                action = false;
-                form.remove();
-                showButtons();
-            })
-        );
+        
+    ;
     form.submit((e) => {
         e.preventDefault();
         action = false;
@@ -208,10 +228,11 @@ function showEditComment(id) {
     hideButtons();
     comment = findComment(id);
     commentElt = $('#comment-'+id);
-    formElt = $(document.createElement('div'));
+    formElt = $(document.createElement('div')).addClass('box');
     oldCommentElt = commentElt.replaceWith(formElt);
     form = $(document.createElement('form'))
         .append($(document.createElement('div'))
+            .addClass('field')
             .append($(document.createElement('input'))
                 .attr('type', 'text')
                 .attr('name', 'name')
@@ -219,33 +240,45 @@ function showEditComment(id) {
                 .attr('placeholder', 'Votre nom')
                 .attr('value', comment.author.name)
                 .attr('readonly', (data.user.id != 0))
-            )
-            .append(" le "+comment.date)     
+                .addClass('input'+((data.user.id != 0)?' is-static':''))
+            )   
         )
         .append($(document.createElement('div'))
+            .addClass('field')
             .append($(document.createElement('textarea'))
                 .attr('name', 'content')
                 .attr('required', true)
                 .attr('placeholder', 'Votre commentaire')
                 .attr('id', 'to-focus')
+                .addClass('textarea')
                 .val(comment.content)
             )
         )
         .append($(document.createElement('div'))
-            .append($(document.createElement('input'))
-                .attr('type', 'submit')
+            .addClass('field is-grouped is-grouped-centered')
+            .append($(document.createElement('p'))
+                .addClass('control')
+                .append($(document.createElement('input'))
+                    .attr('type', 'submit')
+                    .addClass('button is-primary')
+                    .attr('value', 'Envoyer')
+                )
             )
-            .append($(document.createElement('input'))
-                .attr('type', 'reset')
-                .attr('value', 'Annuler')
-                .on('click', (e) => {
-                    e.preventDefault();
-                    action = false;
-                    form.remove();
-                    loadPage(curPage, true);
-                    showButtons();
-                    updateButtons();
-                })
+            .append($(document.createElement('p'))
+                .addClass('control')
+                .append($(document.createElement('input'))
+                    .attr('type', 'reset')
+                    .attr('value', 'Annuler')
+                    .addClass('button is-light')
+                    .on('click', (e) => {
+                        e.preventDefault();
+                        action = false;
+                        form.remove();
+                        loadPage(curPage, true);
+                        showButtons();
+                        updateButtons();
+                    })
+                )
             )
         )
     ;
@@ -287,34 +320,49 @@ function showReportComment(id) {
     resetTimeout();
     comment = findComment(id);
     appendAfter = $('#comment-'+id);
-    formElt = $(document.createElement('div'));
+    formElt = $(document.createElement('div')).addClass('box');
     form = $(document.createElement('form'))
         .append($(document.createElement('div'))
+            .addClass('field')
             .append($(document.createElement('select'))
                 .attr('required', true)
                 .attr('name', 'type')
                 .attr('id', 'type')
+                .addClass('select')
             )
         )
         .append($(document.createElement('div'))
+            .addClass('field')
             .append($(document.createElement('textarea'))
                 .attr('name', 'content')
                 .attr('placeholder', 'Aucun commentaire')
                 .attr('id', 'to-focus')
+                .addClass('textarea')
             )
         )
-        .append($(document.createElement('input'))
-            .attr('type', 'submit')
-        )
-        .append($(document.createElement('input'))
-            .attr('type', 'reset')
-            .attr('value', 'Annuler')
-            .on('click', (e) => {
-                action = false;
-                formElt.remove();
-                showButtons();
-            })
-        )
+        .append($(document.createElement('div'))
+            .addClass('field is-grouped is-grouped-centered')
+            .append($(document.createElement('p'))
+                .addClass('control')
+                .append($(document.createElement('input'))
+                    .attr('type', 'submit')
+                    .addClass('button is-primary')
+                )
+            )
+            .append($(document.createElement('p'))
+                .addClass('control')
+                .append($(document.createElement('input'))
+                    .attr('type', 'reset')
+                    .attr('value', 'Annuler')
+                    .addClass('button is-light')
+                    .on('click', (e) => {
+                        action = false;
+                        formElt.remove();
+                        showButtons();
+                    })
+                )
+            )
+        )    
     ;
     if(comment.isReply) form.addClass('comment-reply');
     formElt.append(form);
@@ -501,7 +549,7 @@ function hideButtons() {
  */
 function displayComment(commentData) {
     let comment = $(document.createElement('div'))
-        .addClass('comment')
+        .addClass('comment box')
         .attr('id', 'comment-'+commentData.id);
     if(commentData.isReply) {
         comment.addClass('comment-reply comment-reply-to-'+commentData.replyTo);
@@ -511,41 +559,42 @@ function displayComment(commentData) {
         .append(" le "+commentData.date+" ");
     if(typeof commentData.ip !== 'undefined') info.append("IP("+commentData.ip+") ");
     if(data.user.canComment)  {
-        buttons = $(document.createElement('div')).addClass('comment-buttons');
+        buttons = $(document.createElement('div')).addClass('comment-buttons is-pulled-right');
         if(!commentData.isReply) {
             buttons.append($(document.createElement('a'))
                 .attr('title', 'Répondre')
-                .addClass('fas fa-reply comment-reply-link')
+                .addClass('fas fa-reply comment-reply-link has-text-success icon')
                 .attr('id', 'comment-reply-link-'+commentData.id)
-                .attr('href', '/post/'+postId+'/page-'+curPage+'/reply_to/'+commentData.id+'/'));
+                .attr('href', '/post/'+postId+'/page-'+curPage+'/reply_to/'+commentData.id+'/')
+            );
         }
         if(commentData.canEdit) {
             buttons
                 .append($(document.createElement('a'))
                     .attr('title', 'Éditer')
-                    .addClass('fas fa-edit comment-edit-link')
+                    .addClass('fas fa-edit comment-edit-link icon has-text-warning')
                     .attr('id', 'comment-edit-link-'+commentData.id)
                     .attr('href', '/post/'+postId+'/page-'+curPage+'/edit/'+commentData.id+'/'))
                 .append($(document.createElement('a'))
                     .attr('title', 'Supprimer')
-                    .addClass('fas fa-trash comment-delete-link')
+                    .addClass('fas fa-trash comment-delete-link icon has-text-grey-light')
                     .attr('id', 'comment-delete-link-'+commentData.id)
                     .attr('href', '/post/'+postId+'/page-'+curPage+'/delete/'+commentData.id+'/'));
         }
         buttons.append($(document.createElement('a'))
             .attr('title', 'Signaler')
-            .addClass('fas fa-flag comment-report-link')
+            .addClass('fas fa-flag comment-report-link has-text-danger icon')
             .attr('id', 'comment-report-link-'+commentData.id)
             .attr('href', '/post/'+postId+'/report/'+commentData.id+'/'));
         if(typeof commentData.reportsNbr !== 'undefined') {
             buttons.append($(document.createElement('a'))
                 .attr('title', 'Signalements('+commentData.reportsNbr+')')
-                .addClass('fas fa-exclamation-triangle comment-reports-link')
+                .addClass('fas fa-exclamation-triangle comment-reports-link has-text-danger')
                 .attr('id', 'comment-reports-link-'+commentData.id)
                 .attr('href', '/admin/reports/comment/'+commentData.id+'/')
                 .text('('+commentData.reportsNbr+')'));
         }
-        info.append(buttons);
+        comment.append(buttons);
     }
     comment.append(info);
     let content = $(document.createElement('p')).append(nl2br(htmlspecialchars(commentData.content)));
@@ -558,19 +607,23 @@ function displayComment(commentData) {
  * @param {int} id 
  */
 function findComment(id) {
-    found = data.comments.find((comment) => {
-        return comment.id == id;
+    let toReturn;
+    data.comments.forEach((comment) => {
+        if(comment.id == id) {
+            toReturn = comment;
+            return true;
+        } 
+        else {
+            result = comment.replies.forEach((reply) => {
+                if(reply.id == id) {
+                    toReturn = reply;
+                    return true;
+                }
+            });
+            if(result === true) return true;
+        }
     });
-    if(typeof found === 'undefined') {
-        found = data.comments.find((comment) => {
-            return comment.replies.find((reply) => {
-                return reply.id == id;
-            }).id == id;
-        }).replies.find((comment) => {
-            return comment.id == id;
-        });
-    }
-    return found;
+    return toReturn;
 }
 
 /**

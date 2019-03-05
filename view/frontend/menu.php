@@ -5,16 +5,14 @@ namespace DartAlex;
  */
 ob_start();
 ?>
-<nav>
-    <a class="fas fa-home" href="/"> Accueil</a>
-    <a class="fas fa-archive" href="/archive/"> Archives</a>
-    <a class= "fas fa-address-book" href="/directory/"> Annuaire</a>
-    <a class="fas fa-envelope" href="/contact/"> Contactez-nous</a>
-    <a class="fa fa-bars icon" href="javascript:void(0);" onClick="responsiveMenu()"></a>
+<nav class="navbar-start">
+    <a class="navbar-item" href="/archive/"><span class="icon"><i class="fas fa-archive"></i></span>&nbsp;Archives</a>
+    <a class= "navbar-item" href="/directory/"><span class="icon"><i class="fas fa-address-book"></i></span>&nbsp;Annuaire</a>
+    <a class="navbar-item" href="/contact/"><span class="icon"><i class="fas fa-envelope"></i></span>&nbsp;Contactez-nous</a>
 <?php
 if($_SESSION['user']->level >= User::LEVEL_MODERATOR) { // Si l'utilisateur a un niveau suffisant, on affiche le lien vers la partie backend
 ?>
-    <a href="/admin/">Administration</a>
+    <a class="navbar-item" href="/admin/">Administration</a>
 <?php
 }
 ?>

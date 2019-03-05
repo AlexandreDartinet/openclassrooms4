@@ -5,11 +5,11 @@ namespace DartAlex;
  */
 ob_start();
 ?>
-<h2>Utilisateurs inscrits sur le site</h2>
+<h2 class="title is-3">Utilisateurs inscrits sur le site</h2>
 <?php
 foreach($users as &$user) {
 ?>
-<div class="directory-item" id="directory-item-<?= $user->id ?>">
+<div class="directory-item box" id="directory-item-<?= $user->id ?>">
     <p><?= $user->displayName() ?> : <?= $user->displayLevel() ?></p>
     <p>Enregistrement : <?= $user->rDate('date_inscription') ?></p>
     <p>Dernière connexion : <?= $user->rDate('last_seen') ?></p>

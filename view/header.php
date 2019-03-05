@@ -6,15 +6,27 @@ namespace DartAlex;
 ob_start();
 ?>
         
-<div id="nav">
-        <?= $menu ?>
+<div id="nav" class="navbar is-fixed-top is-dark" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+                <a class="navbar-item" href="/"><span class="icon"><i class="fas fa-home"></i></span>&nbsp;Accueil</a>
+                <a role="button" aria-label="menu" aria-expanded="false" data-target="navbarMenu" class="navbar-burger burger">
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true"></span>
+                </a>
+        </div>
+        <div class="navbar-menu is-dark" id="navbarMenu">
+                <div class="navbar-start is-dark">
+                        <?= $menu ?>
+                </div>
+                <div class="navbar-end">
+        
         
 <?php
 if($_SESSION['user']->id != 0) { // Si l'utilisateur est authentifié, on affiche un lien vers l'édition de son profil, et pour se déconnecter
 ?>
-<div id="logout">
-        <a class="fas fa-user" href="/profile/edit/"> <?= htmlspecialchars($_SESSION['user']->name) ?></a>
-        <a title="Déconnexion" class="fas fa-times" href="/logout/"></a>
+                        <a class="navbar-item" href="/profile/edit/"><span class="icon"><i class="fas fa-user"></i></span>&nbsp;<?= htmlspecialchars($_SESSION['user']->name) ?></a>
+                        <a title="Déconnexion" class="navbar-item" href="/logout/"><span class="icon has-text-danger"><i class="fas fa-times"></span></i>&nbsp;Déconnexion</a>
 <?php
 }
 else { // Si l'utilisateur est anonyme, on affiche le formulaire de connexion, un lien pour s'inscrire et un lien en cas d'oubli du mot de passe
@@ -25,23 +37,46 @@ else { // Si l'utilisateur est anonyme, on affiche le formulaire de connexion, u
  * @var string password : Le mot de passe de l'utilisateur (required)
  */
 ?>
-<div id="login">
-        <form method="post" action="<?= PATH ?>">
-            <input type="hidden" name="action" value="login" required/>
-            <input type="text" name="name" placeholder="Pseudonyme" required/>
-            <input type="password" name="password" placeholder="Mot de passe" required/>
-            <input type="submit" id="login-submit"/>
-        </form>
-        <a href="/register/">S'inscrire</a>
-        <a href="/recover/">Mot de passe oublié</a>
+                        <div class="navbar-item has-dropdown">
+                                <a class="navbar-link">Connexion</a>
+                                <div class="navbar-dropdown is-boxed is-right">
+                                        <div class="navbar-item">
+                                                <form method="post" action="<?= PATH ?>">
+                                                        <input type="hidden" name="action" value="login" required/>
+                                                        <div class="field">
+                                                                <div class="control">
+                                                                        <input class="input" type="text" name="name" placeholder="Pseudonyme" required/>
+                                                                </div>
+                                                        </div>
+                                                        <div class="field">
+                                                                <div class="control">
+                                                                        <input class="input" type="password" name="password" placeholder="Mot de passe" required/>
+                                                                </div>
+                                                        </div>
+                                                        
+                                                        <input class="button" type="submit" id="login-submit"/>
+                                                </form>
+                                        </div>
+                                        <hr class="navbar-divider">
+                                        <a class="navbar-item" href="/recover/">Mot de passe oublié</a>
+                                </div>
+                        </div>
+                        
+                        <a class="navbar-item" href="/register/">S'inscrire</a>
+                        
 <?php
 }
 ?>
+                </div>
+        </div>
 </div>
-</div>
-<header>
-<h1> Le blog </h1>
-</header>
+<!-- <header class="hero">
+        <div class="hero-body">
+                <div class="container">
+                        <h1 class="title is-1"></h1>
+                </div>
+        </div>
+</header> -->
 
 <?php
 

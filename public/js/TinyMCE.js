@@ -1,5 +1,4 @@
-$('#submitbtn').remove();
-let defaultToolbar = 'fullscreen preview save | undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | indent outdent | ';
+let defaultToolbar = 'fullscreen preview | undo redo | styleselect | bold italic underline | alignleft aligncenter alignright alignjustify | indent outdent | ';
 tinymce.init({
     selector: '#content',
     plugins: [
@@ -22,7 +21,6 @@ tinymce.init({
         'preview',
         'print',
         'quickbars',
-        'save',
         'searchreplace',
         'tinymcespellchecker',
         'table',
@@ -35,7 +33,6 @@ tinymce.init({
     max_height: 700,
     image_caption: true,
     media_live_embeds: true,
-    save_enablewhendirty: false,
     spellchecker_language: 'fr',
     image_list: "/generated/json/images.json"
 });

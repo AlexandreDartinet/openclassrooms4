@@ -12,27 +12,50 @@ namespace DartAlex;
  */
 ob_start();
 ?>
-<h2>Formulaire de contact</h2>
+<h2 class="title is-3">Formulaire de contact</h2>
 
-<div id="contact-form"><form method="post" action="/">
+<div id="contact-form" class="box"><form method="post" action="/">
     <input type="hidden" name="action" value="sendContactForm" required/>
-    <div>
-        <label for="name">Votre nom :</label><br/>
-        <input type="text" name="name" id="name" value="<?= $name ?>" placeholder="Entrez votre nom." required/>
+    <div class="field">
+        <label for="name" class="label">Votre nom</label>
+        <div class="control">
+            <input class="input" type="text" name="name" id="name" value="<?= $name ?>" placeholder="Entrez votre nom." required/>
+        </div>
     </div>
-    <div>
-        <label for="email">Votre email :</label><br/>
-        <input type="email" name="email" id="email" value="<?= $email ?>" placeholder="Entrez votre email." required/>
-        <input type="email" name="email_confirm" id="email_confirm" value="<?= $email ?>" placeholder="Confirmez votre email" required/>
+    <div class="field">
+        <label for="email" class="label">Votre email</label>
+        <div class="field-body">
+            <div class="field">
+                <div class="control is-expanded">
+                    <input class="input" type="email" name="email" id="email" value="<?= $email ?>" placeholder="Entrez votre email." required/>
+                </div>
+            </div>
+            <div class="field">
+                <div class="control is-expanded">
+                    <input class="input" type="email" name="email_confirm" id="email_confirm" value="<?= $email ?>" placeholder="Confirmez votre email" required/>
+                </div>
+            </div>
+        </div>
     </div>
-    <div>
-        <label for="message">Votre message :</label><br/>
-        <textarea name="message" id="message" required></textarea>
+    <div class="field">
+        <label for="message" class="label">Votre message</label>
+        <div class="control">
+            <textarea class="textarea" name="message" id="message" required></textarea>
+        </div>
     </div>
-    <div>
-    <input type="checkbox" required/> J'accepte bla bla
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox" required/>
+                J'accepte bla bla
+            </label>
+        </div>
     </div>
-    <input type="submit"/>
+    <div class="field is-grouped is-grouped-centered">
+        <div class="control">
+            <input class="button is-primary" type="submit" name="Envoyer"/>
+        </div>
+    </div>
 
 </form></div>
 

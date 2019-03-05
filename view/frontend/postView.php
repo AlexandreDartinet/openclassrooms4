@@ -6,9 +6,9 @@ namespace DartAlex;
 ob_start();
 echo $post->display();
 ?>
-<aside id="comments">
-    <h2>Commentaires</h2>
-    <div id="comment-form-div">
+<aside id="comments" class="box">
+    <h2 class="title is-3">Commentaires</h2>
+    <div id="comment-form-div" class="box">
 <?php
 if($edit){
 ?>
@@ -50,18 +50,21 @@ if($_SESSION['user']->canComment()) {
             <input type="hidden" name="reply_to" value="<?= $reply_to ?>"/>
             <input type="hidden" name="id" value="<?= $commentId ?>"/>
 
-            <div>
+            <div class="field">
 
-                <label for="name">Auteur</label><br/>
-                <input type="text" id="name" name="name" value="<?= $commentName ?>" required<?= ($_SESSION['user']->id != 0)?' readonly':'' ?>/>
-
+                <label for="name" class="label">Auteur</label>
+                <div class="control">
+                    <input class="input<?= ($_SESSION['user']->id != 0)?' is-static':'' ?>" type="text" id="name" name="name" value="<?= $commentName ?>" required<?= ($_SESSION['user']->id != 0)?' readonly':'' ?>/>
+                </div>
             </div>
-            <div>
-                <label for="content">Commentaire</label><br/>
-                <textarea id="content" name="content" required><?= $commentContent ?></textarea>
+            <div class="field">
+                <label for="content" class="label">Commentaire</label>
+                <div class="control">
+                    <textarea class="textarea" id="content" name="content" required><?= $commentContent ?></textarea>
+                </div>
             </div>
-            <div>
-                <input type="submit"/>
+            <div class="field is-grouped is-grouped-centered">
+                <input class="button is-primary" type="submit" value="Envoyer"/>
             </div>
         </form>
 <?php

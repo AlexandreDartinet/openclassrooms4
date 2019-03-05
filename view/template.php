@@ -20,12 +20,12 @@ require('footer.php');
 		<meta name="mobile-web-app-capable" content="yes">
         <title>Mon site - <?= $title ?></title>
     </head>
-    <body>
+    <body class="has-navbar-fixed-top">
         <?= $header ?>
 <?php
 if(RETRY != '') {
 ?>
-        <section id="retry">
+        <section id="retry" class="notification is-danger">
 <?php
     if(isset(RETRY_TABLE[RETRY])) {
         echo RETRY_TABLE[RETRY];
@@ -41,7 +41,7 @@ if(RETRY != '') {
 }
 if(SUCCESS != '') {
 ?>
-        <section id="success">
+        <section id="success" class="notification is-success">
 <?php
     if(isset(SUCCESS_TABLE[SUCCESS])) {
         echo SUCCESS_TABLE[SUCCESS];
@@ -56,7 +56,7 @@ if(SUCCESS != '') {
 <?php
 }
 ?>
-        <main>
+        <main class="container">
         <?= $content ?>
         </main>
         <?= $footer ?>
@@ -76,15 +76,6 @@ if(SUCCESS != '') {
                 });
             }, 5000);
 
-            function responsiveMenu() {
-                let nav = $('#nav');
-                if(nav.hasClass("responsive")) {
-                    nav.removeClass("responsive");
-                }
-                else {
-                    nav.addClass("responsive");
-                }
-            }
             $(document).ready(() => {
                 let images = [
                     '/public/images/header-1.jpg',
@@ -94,6 +85,16 @@ if(SUCCESS != '') {
                 let randIndex = Math.floor(Math.random() * images.length);
                 let background = "url('"+images[randIndex]+"')";
                 $('header').css({ 'background-image':background });
+                // Check for click events on the navbar burger icon
+                $(".navbar-burger").click(() => {
+                    // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                    $(".navbar-burger").toggleClass("is-active");
+                    $(".navbar-menu").toggleClass("is-active");
+                });
+                $(".has-dropdown").click((e) => {
+                    // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+                    $(e.target).parent().toggleClass("is-active");
+                });
             });
         </script>
 <?php

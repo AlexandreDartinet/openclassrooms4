@@ -1,6 +1,8 @@
-$('div.post').on('click', (e) => {
-    tryRedirect($(e.target));
-});
+$('div.post')
+    .on('click', (e) => {
+        tryRedirect($(e.target));
+    })
+    .css('cursor', 'pointer');
 
 function tryRedirect(elt) {
     targetId = elt.attr('id');

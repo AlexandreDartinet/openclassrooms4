@@ -5,7 +5,7 @@ namespace DartAlex;
  */
 ob_start();
 ?>
-<h2><?= ($new)?"Nouvel article":"Edition de l'article $post->id" ?></h2>
+<h2 class="title is-3"><?= ($new)?"Nouvel article":"Edition de l'article $post->id" ?></h2>
 
 <?php
 if($new) {
@@ -28,36 +28,65 @@ else {
 }
 
 ?>
-<form method="post" action="/admin/posts/">
-    <input type="hidden" name="action" value="<?= $action ?>"/>
-    <input type="hidden" name="id_post" value="<?= $id_post ?>"/>
-    <input type="hidden" name="id_user" value="<?= $id_user ?>"/>
+<div class="box">
+    <form method="post" action="/admin/posts/">
+        <input type="hidden" name="action" value="<?= $action ?>"/>
+        <input type="hidden" name="id_post" value="<?= $id_post ?>"/>
+        <input type="hidden" name="id_user" value="<?= $id_user ?>"/>
+        <div class="field is-horizontal">
+            <div class="field-label is-normal">
+                <label class="label" for="title">Titre</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <input class="input" type="text" name="title" id="title" value="<?= $title ?>" required/>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <div class="field is-horizontal">
+            <div class="field-label is-normal">
+                <label for="date_publication" class="label">Date de publication</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <input class="input" type="datetime-local" name="date_publication" id="date_publication" value="<?= $date ?>" required/>
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <div class="field">
+            <div class="control">
+                <textarea class="textarea" name="content" id="content" required><?= $content ?></textarea>
+            </div>
+        </div>
 <?php
 if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
 ?>
-    <div><input type="checkbox" name="published"<?= (($published)?" checked":"") ?>/>Publié</div>
+        <div class="field">
+            <div class="control">
+                <label class="checkbox">
+                <input type="checkbox" name="published"<?= (($published)?" checked":"") ?>/>
+                    Publié
+                </label>
+            </div>
+        </div>
 
 <?php
 }
 elseif($published) {
 ?>
-    <input type="hidden" name="published" value="on"/>
+        <input type="hidden" name="published" value="on"/>
 <?php
 }
 ?>
-    <div>
-        <label for="title">Titre : </label>
-        <input type="text" name="title" id="title" value="<?= $title ?>" required/>
-    </div>
-    <div>
-        <label for="date_publication">Date de publication : </label>
-        <input type="datetime-local" name="date_publication" id="date_publication" value="<?= $date ?>" required/>
-    </div>
-    <div>
-        <textarea name="content" id="content" required><?= $content ?></textarea>
-    </div>
-    <input type="submit" id="submitbtn"/>
-</form>
+        <div class="field is-grouped is-grouped-centered">
+            <input class="button is-primary" type="submit" value="Enregistrer"/>
+        </div>
+    </form>
+</div>
 <?php
 $scripts = [
     "<script src='https://cloud.tinymce.com/5/tinymce.min.js?apiKey=".TINYMCE_KEY."'></script>",

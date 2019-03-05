@@ -199,12 +199,12 @@ class Post extends DbObject {
         $date = $this->rDate('date_publication');
         if($in_list) {
             $content = $this->getExtract();
-            $display = "<div class='post' id='post-$this->id'>";
-            $display .= "<h3 class='post-title'>";
+            $display = "<div class='post box' id='post-$this->id'>";
+            $display .= "<h3 class='post-title title is-4'>";
             $display .= "<a href='/post/$this->id/'>$title</a>";
             $display .= "<em> le $date par $author</em>";
             $display .= "</h3>";
-            $display .= "<p>$content</p>";
+            $display .= "<p class='content'>$content</p>";
             $display .= "<p><a href='/post/$this->id/'>";
             $display .= ($this->comments_nbr > 0)?"$this->comments_nbr commentaires.":"Aucun commentaire.";
             $display .= "</a></p>";
@@ -212,12 +212,12 @@ class Post extends DbObject {
         }
         else {
             $content = $this->content;
-            $display = "<article class='post'>";
-            $display .= "<h2 class='post-title'>";
+            $display = "<article class='post box'>";
+            $display .= "<h2 class='post-title title is-3'>";
             $display .= $title;
             $display .= " <em>le $date par $author</em>";
             $display .= "</h2>";
-            $display .= "<div class='post-content'>";
+            $display .= "<div class='post-content content'>";
             $display .= $content;
             $display .= "</div>";
             $display .= "</article>";

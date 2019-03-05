@@ -5,6 +5,7 @@
 function showSuccess(message) {
     $('body').append($(document.createElement('section'))
         .attr('id', 'success')
+        .addClass('notification is-success')
         .text(message)
     );
     setTimeout(() => {
@@ -23,6 +24,7 @@ function showSuccess(message) {
 function showError(message) {
     $('body').append($(document.createElement('section'))
         .attr('id', 'retry')
+        .addClass('notification is-danger')
         .text(message)
     );
     setTimeout(() => {

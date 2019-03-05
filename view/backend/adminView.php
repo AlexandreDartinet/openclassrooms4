@@ -5,10 +5,10 @@ namespace DartAlex;
  */
 ob_start();
 ?>
-<h2>Accueil de l'interface d'administration</h2>
+<h2 class="title is-3">Accueil de l'interface d'administration</h2>
 <p>Bienvenue <?= htmlspecialchars($_SESSION['user']->name_display) ?>, vous êtes <?= $_SESSION['user']->displayLevel() ?>.</p>
-<div>
-    <h3><a href="/admin/reports/">Signalements</a></h3>
+<div class="box content">
+    <h3 class="title is-4"><a href="/admin/reports/">Signalements</a></h3>
 <?php
 $reportManager = new ReportManager();
 $reports_nbr = $reportManager->count();
@@ -23,8 +23,8 @@ $anon_comments_nbr = $commentManager->count('id_user', 0);
 <?php
 if($_SESSION['user']->level >= User::LEVEL_EDITOR) {
 ?>
-<div>
-    <h3><a href="/admin/posts/">Articles</a></h3>
+<div class="box content">
+    <h3 class="title is-4"><a href="/admin/posts/">Articles</a></h3>
 <?php
 $postManager = new PostManager();
 $total = $postManager->count();
@@ -35,8 +35,8 @@ $waiting = $total - $published;
 ?>
     <p><?= $all_published ?> articles publié<?= ($all_published == 1)?'':'s' ?>, <?= $planned ?> planifié<?= ($planned == 1)?'':'s' ?>, <?= $waiting ?> en attente de validation.</p>
 </div>
-<div>
-    <h3><a href="/admin/images/">Images</a></h3>
+<div class="box content">
+    <h3 class="title is-4"><a href="/admin/images/">Images</a></h3>
 <?php
 $imageManager = new ImageManager();
     foreach(Image::TYPES as $type => $display) {
@@ -48,8 +48,9 @@ $imageManager = new ImageManager();
 }
 if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
 ?>
-<div>
-    <h3><a href="/admin/users/">Utilisateurs</a></h3>
+</div>
+<div class="box content">
+    <h3 class="title is-4"><a href="/admin/users/">Utilisateurs</a></h3>
 <?php
 $userManager = new UserManager();
 foreach(User::LEVELS as $level => $display) {
@@ -67,8 +68,8 @@ foreach(User::LEVELS as $level => $display) {
 }
 ?>
 </div>
-<div>
-    <h3><a href="/admin/bans/">Bannissements</a></h3>
+<div class="box content">
+    <h3 class="title is-4"><a href="/admin/bans/">Bannissements</a></h3>
 <?php
 $banManager = new BanManager();
 foreach(Ban::TYPES as $type => $display) {

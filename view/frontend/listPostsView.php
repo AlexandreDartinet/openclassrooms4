@@ -5,7 +5,7 @@ namespace DartAlex;
  */
 ob_start();
 ?>
-<h2>Articles</h2>
+<h2 class="title is-2">Articles</h2>
 <?php
 foreach($posts as $post) {
     echo $post->display(true);

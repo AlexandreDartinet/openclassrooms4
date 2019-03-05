@@ -335,28 +335,28 @@ class Comment extends DbObject {
     public function display($display_buttons = true, $highlight = false, $append_id = true, $noReply = false) {
         $class = 'comment'.((($this->reply_to != 0) && $append_id)?" comment-reply comment-reply-to-$this->reply_to":'').(($highlight)?' comment-highlight':'');
         $id = ($append_id || $noReply)?" id='comment-$this->id'":"";
-        $display = "<div class='$class'$id>";
+        $display = "<div class='$class box'$id>";
+        if($display_buttons && $_SESSION['user']->canComment()) {
+            $display .= "<div class='comment-buttons is-pulled-right'>";
+            if($this->reply_to == 0 && !$noReply) {
+                $display .= " <a title='Répondre' class='fas fa-reply comment-reply-link has-text-success' id='comment-reply-link-$this->id' href='".PATH."reply_to/$this->id/'></a> ";
+            }
+            if($this->canEdit($_SESSION['user'])) {
+                $display .= " <a title='Éditer' class='fas fa-edit comment-edit-link has-text-warning' id='comment-edit-link-$this->id' href='".PATH."edit/$this->id/'></a> ";
+                $display .= " <a title='Supprimer' class='fas fa-trash comment-delete-link has-text-grey-light' id='comment-delete-link-$this->id' href='".PATH."delete/$this->id/'></a> ";
+            }
+            $display .= " <a title='Signaler' class='fas fa-flag comment-report-link has-text-danger' id='comment-report-link-$this->id' href='".PATH."report/$this->id/'></a> ";
+            if($_SESSION['user']->level >= User::LEVEL_MODERATOR && $this->reports_nbr > 0) {
+                $display .= " <a title='Signalements($this->reports_nbr)' class='fas fa-exclamation-triangle comment-reports-link has-text-danger' id='comment-reports-link-$this->id' href='/admin/reports/comment/$this->id/'>($this->reports_nbr)</a> ";
+            }
+            $display .= "</div>";
+        }
         $author = $this->displayName();
         $date = $this->rDate('date_publication');
         $display .= "<p>";
         $display .= "<strong>$author</strong> le $date ";
         if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
             $display .= " IP(".$this->user->ip.") ";
-        }
-        if($display_buttons && $_SESSION['user']->canComment()) {
-            $display .= "<div class='comment-buttons'>";
-            if($this->reply_to == 0 && !$noReply) {
-                $display .= " <a title='Répondre' class='fas fa-reply comment-reply-link' id='comment-reply-link-$this->id' href='".PATH."reply_to/$this->id/'></a> ";
-            }
-            if($this->canEdit($_SESSION['user'])) {
-                $display .= " <a title='Éditer' class='fas fa-edit comment-edit-link' id='comment-edit-link-$this->id' href='".PATH."edit/$this->id/'></a> ";
-                $display .= " <a title='Supprimer' class='fas fa-trash comment-delete-link' id='comment-delete-link-$this->id' href='".PATH."delete/$this->id/'></a> ";
-            }
-            $display .= " <a title='Signaler' class='fas fa-flag comment-report-link' id='comment-report-link-$this->id' href='".PATH."report/$this->id/'></a> ";
-            if($_SESSION['user']->level >= User::LEVEL_MODERATOR && $this->reports_nbr > 0) {
-                $display .= " <a title='Signalements($this->reports_nbr)' class='fas fa-exclamation-triangle comment-reports-link' id='comment-reports-link-$this->id' href='/admin/reports/comment/$this->id/'>($this->reports_nbr)</a> ";
-            }
-            $display .= "</div>";
         }
         $display .= "</p><p>";
         $display .= nl2br(htmlspecialchars($this->content));

@@ -5,8 +5,10 @@ namespace DartAlex;
  */
 ob_start();
 ?>
-<h2>Index des archives</h2>
-<div>
+<h2 class="title is-3">Index des archives</h2>
+<div class="box content">
+    
+
     <ul>
 <?php
 foreach($dateTable as $year => $yearContent) {
