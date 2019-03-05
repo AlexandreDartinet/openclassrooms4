@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Routeur de toutes les requêtes sur le site qui ne vont pas vers /public
  */
@@ -20,7 +21,7 @@ try { // Gestion des erreurs
                             newPost($published, $_POST['title'], Post::htmlToDate($_POST['date_publication']), $_POST['content']);
                         }
                         else {
-                            throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                            throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                             header('Location: '.PATH.'retry/missing_fields/');
                         }
                         break;
@@ -30,7 +31,7 @@ try { // Gestion des erreurs
                             modifyPost((int) $_POST['id_post'], (int) $_POST['id_user'], $published, $_POST['title'], Post::htmlToDate($_POST['date_publication']), $_POST['content']);
                         }
                         else {
-                            throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                            throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                             header('Location: '.PATH.'retry/missing_fields/');
                         }
                         break;
@@ -39,7 +40,7 @@ try { // Gestion des erreurs
                             modifyUserLevel((int) $_POST['id'], (int) $_POST['level']); 
                         }
                         else {
-                            throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                            throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                             header('Location: '.PATH.'retry/missing_fields/');
                         }
                         break;
@@ -48,7 +49,7 @@ try { // Gestion des erreurs
                             addBan($_POST['ip'], (int) $_POST['type'], $_POST['content']);
                         }
                         else {
-                            throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                            throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                             header('Location: '.PATH.'retry/missing_fields/');
                         }
                         break;
@@ -57,7 +58,7 @@ try { // Gestion des erreurs
                             modifyBan((int) $_POST['id'], $_POST['ip'], (int) $_POST['type'], $_POST['content']);
                         }
                         else {
-                            throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                            throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                             header('Location: '.PATH.'retry/missing_fields/');
                         }
                         break;
@@ -66,12 +67,12 @@ try { // Gestion des erreurs
                             addImage($_POST['title'], $_FILES['file']);
                         }
                         else {
-                            throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                            throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                             header('Location: '.PATH.'retry/missing_fields/');
                         }
                         break;
                     default:
-                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: l\'action n\'existe pas.');
+                        throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: l\'action n\'existe pas.');
                         header('Location: '.PATH.'retry/unknown_action/');
                         break;
                 }
@@ -258,7 +259,7 @@ try { // Gestion des erreurs
                         commentPost((int) $_POST['id_post'], (string) $_POST['name'], (string) $_POST['content'], (int) $_POST['reply_to']);
                     }
                     else {
-                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                         header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
@@ -267,7 +268,7 @@ try { // Gestion des erreurs
                         modifyComment((int) $_POST['id'], $_POST['name'], $_POST['content']);
                     }
                     else {
-                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                         header('Location: '.PATH.'retry/missing_fields/');
                     }
                 case "login":
@@ -275,7 +276,7 @@ try { // Gestion des erreurs
                         login($_POST['name'], $_POST['password'], PATH);
                     }
                     else {
-                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                         header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
@@ -284,7 +285,7 @@ try { // Gestion des erreurs
                         registerUser($_POST['name'], $_POST['password'], $_POST['password_confirm'], $_POST['email'], $_POST['email_confirm'], $_POST['name_display']);
                     }
                     else {
-                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                         header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
@@ -302,7 +303,7 @@ try { // Gestion des erreurs
                         modifyUser((int) $_POST['id'], $_POST['name'], $_POST['name_display'], $_POST['email'], $_POST['email_confirm'], $password, $password_confirm, $old_password);
                     }
                     else {
-                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                         header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
@@ -311,7 +312,7 @@ try { // Gestion des erreurs
                         sendContactForm($_POST['email'], $_POST['email_confirm'], $_POST['name'], $_POST['message']);
                     }
                     else {
-                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                         header('Location: '.PATH.'retry/missing_fields/');
                     }
                 case "sendRecover":
@@ -319,7 +320,7 @@ try { // Gestion des erreurs
                         sendRecover($_POST['recover']);
                     }
                     else {
-                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                         header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
@@ -328,7 +329,7 @@ try { // Gestion des erreurs
                         useRecover($_POST['key'], (int) $_POST['id_user'], $_POST['password'], $_POST['password_confirm']);
                     }
                     else {
-                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                         header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
@@ -337,12 +338,12 @@ try { // Gestion des erreurs
                         sendReport((int) $_POST['id_comment'], (int) $_POST['type'], $_POST['content']);
                     }
                     else {
-                        throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
+                        throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: des champs sont manquants.');
                         header('Location: '.PATH.'retry/missing_fields/');
                     }
                     break;
                 default:
-                    throw new Exception('$_POST["action"]('.$_POST['action'].') erreur: l\'action n\'existe pas.');
+                    throw new \Exception('$_POST["action"]('.$_POST['action'].') erreur: l\'action n\'existe pas.');
                     header('Location: '.PATH.'retry/unknown_action/');
                     break;
             }
@@ -423,7 +424,7 @@ try { // Gestion des erreurs
         }
     }
 }
-catch(Exception $e) { // Affichage des erreurs
+catch(\Exception $e) { // Affichage des erreurs
     echo '<div>Erreur : ' . $e->getMessage() . 
         '<br/>File : ' . $e->getFile() . 
         '<br/>Line : ' . $e->getLine() . 

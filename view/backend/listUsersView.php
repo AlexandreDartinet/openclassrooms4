@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Gère l'affichage backend de la liste des utilisateurs
  */

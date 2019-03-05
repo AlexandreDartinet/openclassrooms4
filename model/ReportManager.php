@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe gérant les interactions avec la bdd en rapport avec la table reports
  * 
@@ -28,7 +29,7 @@ class ReportManager extends Manager {
             $req = $this->_db->prepare('SELECT * FROM reports WHERE id_comment=:id_comment ORDER BY date_report ASC');
         }
         else {
-            throw new Exception("ReportManager: getReports($id_comment, $page): Paramètre \$page($page) invalide.");
+            throw new \Exception("ReportManager: getReports($id_comment, $page): Paramètre \$page($page) invalide.");
         }
         $req->bindParam(":id_comment", $id_comment);
         if($req->execute()) {
@@ -41,7 +42,7 @@ class ReportManager extends Manager {
             return $reports;
         }
         else {
-            throw new Exception("ReportManager: Erreur de requête getReports($id_comment, $page).");
+            throw new \Exception("ReportManager: Erreur de requête getReports($id_comment, $page).");
         }
     }
 
@@ -60,7 +61,7 @@ class ReportManager extends Manager {
             $req = $this->_db->prepare('SELECT id_comment, COUNT(*) AS reports_nbr FROM reports GROUP BY id_comment ORDER BY id_comment ASC');
         }
         else {
-            throw new Exception("ReportManager: getCommentsId($page): Paramètre \$page($page) invalide.");
+            throw new \Exception("ReportManager: getCommentsId($page): Paramètre \$page($page) invalide.");
         }
         if($req->execute()) {
             $comments = [];
@@ -71,7 +72,7 @@ class ReportManager extends Manager {
             return $comments;
         }
         else {
-            throw new Exception("ReportManager: getCommentsId($page): Erreur de requête.");
+            throw new \Exception("ReportManager: getCommentsId($page): Erreur de requête.");
         }
     }
     /**
@@ -92,7 +93,7 @@ class ReportManager extends Manager {
             return $reports;
         }
         else {
-            throw new Exception("ReportManager: getReportsByUser($user->id): Erreur de requête.");
+            throw new \Exception("ReportManager: getReportsByUser($user->id): Erreur de requête.");
         }
     }
 
@@ -115,7 +116,7 @@ class ReportManager extends Manager {
             return $report;
         }
         else {
-            throw new Exception("ReportManager: getReportById($id): Erreur de requête.");
+            throw new \Exception("ReportManager: getReportById($id): Erreur de requête.");
         }
     }
 
@@ -206,7 +207,7 @@ class ReportManager extends Manager {
             return $count;
         }
         else {
-            throw new Exception("ReportManager: countComments(): Erreur de requête.");
+            throw new \Exception("ReportManager: countComments(): Erreur de requête.");
         }
     }
 }

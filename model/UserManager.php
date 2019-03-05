@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe gérant les interactions avec la bdd en rapport avec la table users
  * 
@@ -42,7 +43,7 @@ class UserManager extends Manager {
             }
         }
         else {
-            throw new Exception("UserManager: login($name, $password): Erreur de requête.");
+            throw new \Exception("UserManager: login($name, $password): Erreur de requête.");
         }
         return false;
     }
@@ -62,7 +63,7 @@ class UserManager extends Manager {
             $req = $this->_db->prepare('SELECT * FROM users');
         }
         else {
-            throw new Exception("UserManager: getUsers($page): Paramètre \$page($page) invalide.");
+            throw new \Exception("UserManager: getUsers($page): Paramètre \$page($page) invalide.");
         }
         if($req->execute()) {
             $users = [];
@@ -74,7 +75,7 @@ class UserManager extends Manager {
             return $users;
         }
         else {
-            throw new Exception("UserManager: getUsers($page): Erreur de requête.");
+            throw new \Exception("UserManager: getUsers($page): Erreur de requête.");
         }
     }
 
@@ -97,7 +98,7 @@ class UserManager extends Manager {
             return $user;
         }
         else {
-            throw new Exception("UserManager: getUserById($id): Erreur de requête.");
+            throw new \Exception("UserManager: getUserById($id): Erreur de requête.");
         }
     }
 
@@ -120,7 +121,7 @@ class UserManager extends Manager {
             return $users;
         }
         else {
-            throw new Exception("UserManager: getUsersBy($name, $value): Erreur de requête.");
+            throw new \Exception("UserManager: getUsersBy($name, $value): Erreur de requête.");
         }
     }
 
@@ -189,7 +190,7 @@ class UserManager extends Manager {
             }
         }
         else {
-            throw new Exception("UserManager: exists($name, $value, $id): Erreur de requête.");
+            throw new \Exception("UserManager: exists($name, $value, $id): Erreur de requête.");
         }
     }
 }

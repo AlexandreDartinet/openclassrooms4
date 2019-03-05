@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe représentant une ligne du tableau recovers de la bdd
  * 
@@ -34,7 +35,7 @@ class Recover extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Recover: $name($value) invalide.");
+                    throw new \Exception("Recover: $name($value) invalide.");
                 }
                 break;
             case "date_sent":
@@ -42,28 +43,28 @@ class Recover extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Recover: $name($value) invalide.");
+                    throw new \Exception("Recover: $name($value) invalide.");
                 }
                 break;
             case "user":
-                if(is_a($value, 'User')) {
+                if(is_a($value, 'DartAlex\\User')) {
                     $this->_attributes["id_user"] = $value->id;
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Recover: $name(".var_export($value).") n'est pas un User.");
+                    throw new \Exception("Recover: $name(".var_export($value).") n'est pas un User.");
                 }
                 break;
             case "manager":
-                if(is_a($value, 'RecoverManager')) {
+                if(is_a($value, 'DartAlex\\RecoverManager')) {
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Recover: $name(".var_export($value).") n'est pas un RecoverManager.");
+                    throw new \Exception("Recover: $name(".var_export($value).") n'est pas un RecoverManager.");
                 }
                 break;
             default:
-                throw new Exception("Recover: $name($value) attribut inconnu.");
+                throw new \Exception("Recover: $name($value) attribut inconnu.");
                 break;
         }
     }
@@ -105,9 +106,9 @@ class Recover extends DbObject {
      * @return boolean : true si le recover est valable, false sinon
      */
     public function isValid() {
-        $date = new DateTime($this->date_sent);
-        $date->add(new DateInterval("PT".self::HOURS_VALID."H"));
-        $now = new DateTime("now");
+        $date = new \DateTime($this->date_sent);
+        $date->add(new \DateInterval("PT".self::HOURS_VALID."H"));
+        $now = new \DateTime("now");
         return $date >= $now;
     }
 

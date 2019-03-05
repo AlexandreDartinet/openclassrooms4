@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe représentant une ligne du tableau bans de la bdd
  * 
@@ -36,7 +37,7 @@ class Ban extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Ban: $name($value) n'est pas une ip.");
+                    throw new \Exception("Ban: $name($value) n'est pas une ip.");
                 }
                 break;
             case "date_ban":
@@ -44,7 +45,7 @@ class Ban extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Ban: $name($value) n'est pas une date.");
+                    throw new \Exception("Ban: $name($value) n'est pas une date.");
                 }
                 break;
             case "type":
@@ -55,19 +56,19 @@ class Ban extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Ban: $name($value) vide.");
+                    throw new \Exception("Ban: $name($value) vide.");
                 }
                 break;
             case "manager":
-                if(is_a($value, 'BanManager')) {
+                if(is_a($value, 'DartAlex\\BanManager')) {
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Ban: $name(".var_export($value).") n'est pas un BanManager.");
+                    throw new \Exception("Ban: $name(".var_export($value).") n'est pas un BanManager.");
                 }
                 break;
             default:
-                throw new Exception("Ban: $name($value) attribut inconnu.");
+                throw new \Exception("Ban: $name($value) attribut inconnu.");
                 break;
         }
     }

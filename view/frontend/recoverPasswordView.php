@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Affiche le formulaire d'envoi de mail en cas de mot de passe oublié
  */

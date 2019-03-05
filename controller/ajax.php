@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Controlleur pour les requêtes ajax
  */
@@ -15,9 +16,9 @@ function displayCommentsJson(int $id) {
     if($postManager->exists('id', $id)) {
         $commentManager = new CommentManager();
         $comments = $commentManager->getComments($id, "all");
-        $json = new stdClass();
+        $json = new \stdClass();
         $json->lastId = $commentManager->lastId('id_post', $id);
-        $json->user = new stdClass();
+        $json->user = new \stdClass();
         $json->user->id = $_SESSION['user']->id;
         $json->user->name = $_SESSION['user']->name_display;
         $json->user->ip = $_SESSION['user']->ip;
@@ -28,13 +29,13 @@ function displayCommentsJson(int $id) {
         $moderator = ($_SESSION['user']->level >= User::LEVEL_MODERATOR);
         $json->comments = [];
         foreach($comments as $comment) {
-            $comment_json = new stdClass();
+            $comment_json = new \stdClass();
             if($moderator) {
                 $comment_json->ip = $comment->ip;
             }
             $comment_json->date = $comment->rDate('date_publication');
             $comment_json->id = $comment->id;
-            $comment_json->author = new stdClass();
+            $comment_json->author = new \stdClass();
             $comment_json->author->id = $comment->id_user;
             $comment_json->author->name = $comment->getName();
             $comment_json->author->nameDisplay = $comment->displayName();
@@ -47,14 +48,14 @@ function displayCommentsJson(int $id) {
             }
             $comment_json->replies = [];
             foreach($comment->replies as $reply) {
-                $reply_json = new stdClass();
+                $reply_json = new \stdClass();
                 if($moderator) {
                     $reply_json->ip = $reply->ip;
                 }
                 $reply_json->date = $reply->rDate('date_publication');
                 $reply_json->id = $reply->id;
                 $reply_json->userId = $reply->id_user;
-                $reply_json->author = new stdClass();
+                $reply_json->author = new \stdClass();
                 $reply_json->author->id = $reply->id_user;
                 $reply_json->author->name = $reply->getName();
                 $reply_json->author->nameDisplay = $reply->displayName();
@@ -92,19 +93,19 @@ function updateCommentsJson(int $id_post, int $last_id) {
     if($postManager->exists('id', $id_post)) {
         $commentManager = new CommentManager();
         $comments = $commentManager->getCommentsAfter($id_post, $last_id);
-        $json = new stdClass();
+        $json = new \stdClass();
         $json->lastId = $commentManager->lastId('id_post', $id_post);
         $json->commentsNbr = sizeof($comments);
         $moderator = ($_SESSION['user']->level >= User::LEVEL_MODERATOR);
         $json->comments = [];
         foreach($comments as $comment) {
-            $comment_json = new stdClass();
+            $comment_json = new \stdClass();
             if($moderator) {
                 $comment_json->ip = $comment->ip;
             }
             $comment_json->date = $comment->rDate('date_publication');
             $comment_json->id = $comment->id;
-            $comment_json->author = new stdClass();
+            $comment_json->author = new \stdClass();
             $comment_json->author->id = $comment->id_user;
             $comment_json->author->name = $comment->getName();
             $comment_json->author->nameDisplay = $comment->displayName();

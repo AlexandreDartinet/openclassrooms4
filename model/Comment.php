@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe représentant une ligne du tableau comments de la bdd
  * 
@@ -47,7 +48,7 @@ class Comment extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Comment: $name($value) n'est pas une date.");
+                    throw new \Exception("Comment: $name($value) n'est pas une date.");
                 }
                 break;
             case "ip":
@@ -55,7 +56,7 @@ class Comment extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Comment: $name($value) n'est pas une ip.");
+                    throw new \Exception("Comment: $name($value) n'est pas une ip.");
                 }
                 break;
             case "name":
@@ -63,7 +64,7 @@ class Comment extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Comment: $name($value) est vide.");
+                    throw new \Exception("Comment: $name($value) est vide.");
                 }
                 break;
             case "content":
@@ -71,7 +72,7 @@ class Comment extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Comment: $name($value) est vide.");
+                    throw new \Exception("Comment: $name($value) est vide.");
                 }
                 break;
             case "replies_nbr":
@@ -81,21 +82,21 @@ class Comment extends DbObject {
                 $this->_attributes[$name] = (int) $value;
                 break;
             case "user":
-                if(is_a($value, 'User')) {
+                if(is_a($value, 'DartAlex\\User')) {
                     $this->_attributes["id_user"] = $value->id;
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Comment: $name(".var_export($value).") n'est pas un User.");
+                    throw new \Exception("Comment: $name(".var_export($value).") n'est pas un User.");
                 }
                 break;
             case "post":
-                if(is_a($value, 'Post')) {
+                if(is_a($value, 'DartAlex\\Post')) {
                     $this->_attributes["id_post"] = $value->id;
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Comment: $name(".var_export($value).") n'est pas un Post.");
+                    throw new \Exception("Comment: $name(".var_export($value).") n'est pas un Post.");
                 }
                 break;
             case "replies":
@@ -103,7 +104,7 @@ class Comment extends DbObject {
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Comment: $name(".var_export($value).") n'est pas un Array.");
+                    throw new \Exception("Comment: $name(".var_export($value).") n'est pas un Array.");
                 }
                 break;
             case "reports":
@@ -111,27 +112,27 @@ class Comment extends DbObject {
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Comment: $name(".var_export($value).") n'est pas un Array.");
+                    throw new \Exception("Comment: $name(".var_export($value).") n'est pas un Array.");
                 }
                 break;
             case "parent":
-                if(is_a($value, 'Comment')) {
+                if(is_a($value, 'DartAlex\\Comment')) {
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Comment: $name(".var_export($value).") n'est pas un Comment.");
+                    throw new \Exception("Comment: $name(".var_export($value).") n'est pas un Comment.");
                 }
                 break;
             case "manager":
-                if(is_a($value, 'CommentManager')) {
+                if(is_a($value, 'DartAlex\\CommentManager')) {
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Comment: $name(".var_export($value).") n'est pas un CommentManager.");
+                    throw new \Exception("Comment: $name(".var_export($value).") n'est pas un CommentManager.");
                 }
                 break;
             default:
-                throw new Exception("Comment: $name($value) attribut inconnu.");
+                throw new \Exception("Comment: $name($value) attribut inconnu.");
                 break;
         }
     }

@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe gérant les interactions avec la bdd en rapport avec la table recovers
  * 
@@ -29,7 +30,7 @@ class RecoverManager extends Manager {
             return $recover;
         }
         else {
-            throw new Exception("RecoverManager: Erreur de requête getRecoverById($id).");
+            throw new \Exception("RecoverManager: Erreur de requête getRecoverById($id).");
         }
     }
 
@@ -52,7 +53,7 @@ class RecoverManager extends Manager {
             return $recover;
         }
         else {
-            throw new Exception("RecoverManager: Erreur de requête getRecoverByKey($key).");
+            throw new \Exception("RecoverManager: Erreur de requête getRecoverByKey($key).");
         }
     }
 
@@ -75,7 +76,7 @@ class RecoverManager extends Manager {
             return $recover;
         }
         else {
-            throw new Exception("RecoverManager: Erreur de requête getRecoverByUser($user->id).");
+            throw new \Exception("RecoverManager: Erreur de requête getRecoverByUser($user->id).");
         }
     }
 

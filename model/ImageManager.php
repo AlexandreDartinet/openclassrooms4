@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe gérant les interactions avec la bdd en rapport avec la table images
  * 
@@ -27,7 +28,7 @@ class ImageManager extends Manager {
             $queryStart = 'SELECT * FROM images';
         }
         else {
-            throw new Exception("ImageManager: getImages($page, $type): Paramètre \$type($type) invalide.");
+            throw new \Exception("ImageManager: getImages($page, $type): Paramètre \$type($type) invalide.");
         }
         if(is_int($page)) {
             $req = $this->_db->prepare($queryStart.' LIMIT '.(($page-1)*self::IMAGE_PAGE).','.$page*self::IMAGE_PAGE);
@@ -36,7 +37,7 @@ class ImageManager extends Manager {
             $req = $this->_db->prepare($queryStart);
         }
         else {
-            throw new Exception("ImageManager: getImages($page, $type): Paramètre \$page($page) invalide.");
+            throw new \Exception("ImageManager: getImages($page, $type): Paramètre \$page($page) invalide.");
         }
         if($req->execute()) {
             $images = [];
@@ -48,7 +49,7 @@ class ImageManager extends Manager {
             return $images;
         }
         else {
-            throw new Exception("ImageManager: getImages($page, $type): Erreur de requête.");
+            throw new \Exception("ImageManager: getImages($page, $type): Erreur de requête.");
         }
     }
 
@@ -71,7 +72,7 @@ class ImageManager extends Manager {
             return $image;
         }
         else {
-            throw new Exception("ImageManager: Erreur de requête getImageById($id).");
+            throw new \Exception("ImageManager: Erreur de requête getImageById($id).");
         }
     }
 
@@ -117,5 +118,17 @@ class ImageManager extends Manager {
      */
     public function removeImage(Image $image) {
         return $this->removeBy('id', $image->id);
+    }
+
+    /**
+     * Retire un utilisateur des images et le change en anonyme.
+     * 
+     * @param User $user : Utilisateur qu'on souhaite retirer
+     * 
+     * @return boolean : true si succès
+     */
+    public function removeUser(User $user) {
+        $req = $this->_db->prepare('UPDATE images SET id_user=0 WHERE id_user=?');
+        return $req->execute([$user->id]);
     }
 }

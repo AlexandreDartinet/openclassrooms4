@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Gère l'affichage du formulaire de modification du profil de l'utilisateur
  */

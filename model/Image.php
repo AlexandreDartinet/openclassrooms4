@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe représentant une ligne du tableau images de la bdd
  * 
@@ -53,7 +54,7 @@ class Image extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Image: $name($value) invalide.");
+                    throw new \Exception("Image: $name($value) invalide.");
                 }
                 break;
             case "date_sent":
@@ -61,7 +62,7 @@ class Image extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Image: $name($value) invalide.");
+                    throw new \Exception("Image: $name($value) invalide.");
                 }
                 break;
             case "type":
@@ -72,7 +73,7 @@ class Image extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Image: $name($value) invalide.");
+                    throw new \Exception("Image: $name($value) invalide.");
                 }
                 break;
             case "url":
@@ -80,31 +81,31 @@ class Image extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Image: $name($value) invalide.");
+                    throw new \Exception("Image: $name($value) invalide.");
                 }
                 break;
             case "image":
                 $this->_attributes[$name] = $value;
                 break;
             case "user":
-                if(is_a($value, 'User')) {
+                if(is_a($value, 'DartAlex\\User')) {
                     $this->_attributes["id_user"] = $value->id;
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Image: $name(".var_export($value).") n'est pas un User.");
+                    throw new \Exception("Image: $name(".var_export($value).") n'est pas un User.");
                 }
                 break;
             case "manager":
-                if(is_a($value, 'ImageManager')) {
+                if(is_a($value, 'DartAlex\\ImageManager')) {
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Image: $name(".var_export($value).") n'est pas un ImageManager.");
+                    throw new \Exception("Image: $name(".var_export($value).") n'est pas un ImageManager.");
                 }
                 break;
             default:
-                throw new Exception("Image: $name($value) attribut inconnu.");
+                throw new \Exception("Image: $name($value) attribut inconnu.");
                 break;
         }
     }

@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Fichier init.php, initialise les valeurs, fonctions, fichiers nécessaires à l'ensemble du site.
  */
@@ -62,9 +63,10 @@ define('CONFIG_SET', false);
  * On fait en sorte que nos classes se chargent automatiquement sans avoir besoin de les require à chaque fois.
  */
 function loadClass($name) {
+    $name = preg_replace('/DartAlex\\\/', '', $name);
     require "model/$name.php";
 }
-spl_autoload_register("loadClass");
+spl_autoload_register("DartAlex\\loadClass");
 
 /**
  * Interdire l'accès si l'utilisateur est banni
@@ -104,7 +106,7 @@ if(USE_PHPMAILER) { // Si on a décidé d'utiliser PHPMailer
         include PHPMAILER_PATH.'src/PHPMailer.php';
         include PHPMAILER_PATH.'src/SMTP.php';  
     }
-    catch (Exception $e) { // Si elles ne sont pas présentes, on signale à l'utilisateur qu'il doit installer PHPMailer ou modifier la config
+    catch (\Exception $e) { // Si elles ne sont pas présentes, on signale à l'utilisateur qu'il doit installer PHPMailer ou modifier la config
         echo 'Veuillez installer PHPMailer ou renseigner le chemin d\'accès correct à son répertoire d\'installation. <a href="https://github.com/PHPMailer/PHPMailer">https://github.com/PHPMailer/PHPMailer</a>.<br/>'.$e->getMessage();
     }
     /**
@@ -122,7 +124,7 @@ if(USE_PHPMAILER) { // Si on a décidé d'utiliser PHPMailer
      * @return string : Message d'erreur
      */
     function smtpMailer($to, $from, $from_name, $subject, $body) {
-        $mail = new PHPMailer\PHPMailer\PHPMailer();
+        $mail = new \PHPMailer\PHPMailer\PHPMailer();
         $mail->IsSMTP();
         $mail->SMTPDebug = 0;
         $mail->SMTPAuth = true;
@@ -169,7 +171,7 @@ else { // Si on n'utilise pas PHPMailer
             mail($to, $subject, $body, $headers);
             return true;
         }
-        catch(Exception $e) {
+        catch(\Exception $e) {
             return 'Mail error: '.$e->getMessage();
         }
     }

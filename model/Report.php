@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe représentant une ligne du tableau reports de la bdd
  * 
@@ -53,7 +54,7 @@ class Report extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Report: $name($value) n'est pas une ip.");
+                    throw new \Exception("Report: $name($value) n'est pas une ip.");
                 }
                 break;
             case "date_report":
@@ -61,7 +62,7 @@ class Report extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Report: $name($value) n'est pas une date.");
+                    throw new \Exception("Report: $name($value) n'est pas une date.");
                 }
                 break;
             case "type":
@@ -72,37 +73,37 @@ class Report extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Report: $name($value) vide.");
+                    throw new \Exception("Report: $name($value) vide.");
                 }
                 break;
             case "comment":
-                if(is_a($value, 'Comment')) {
+                if(is_a($value, 'DartAlex\\Comment')) {
                     $this->_attributes["id_comment"] = $value->id;
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Report: $name(".var_export($value).") n'est pas un Comment.");
+                    throw new \Exception("Report: $name(".var_export($value).") n'est pas un Comment.");
                 }
                 break;
             case "user":
-                if(is_a($value, 'User')) {
+                if(is_a($value, 'DartAlex\\User')) {
                     $this->_attributes["id_user"] = $value->id;
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Report: $name(".var_export($value).") n'est pas un User.");
+                    throw new \Exception("Report: $name(".var_export($value).") n'est pas un User.");
                 }
                 break;
             case "manager":
-                if(is_a($value, 'ReportManager')) {
+                if(is_a($value, 'DartAlex\\ReportManager')) {
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("Report: $name(".var_export($value).") n'est pas un ReportManager.");
+                    throw new \Exception("Report: $name(".var_export($value).") n'est pas un ReportManager.");
                 }
                 break;
             default:
-                throw new Exception("Report: $name($value) inconnu.");
+                throw new \Exception("Report: $name($value) inconnu.");
                 break;
         }
     }

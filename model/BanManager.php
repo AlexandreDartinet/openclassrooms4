@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe gérant les interactions avec la bdd en rapport avec la table bans
  * 
@@ -27,7 +28,7 @@ class BanManager extends Manager {
             $req = $this->_db->prepare('SELECT * FROM bans ORDER BY date_ban DESC');
         }
         else {
-            throw new Exception("BanManager: getBans($page): Paramètre \$page($page) invalide.");
+            throw new \Exception("BanManager: getBans($page): Paramètre \$page($page) invalide.");
         }
         if($req->execute()) {
             $bans = [];
@@ -39,7 +40,7 @@ class BanManager extends Manager {
             return $bans;
         }
         else {
-            throw new Exception("BanManager: getBans($page): Erreur de requête.");
+            throw new \Exception("BanManager: getBans($page): Erreur de requête.");
         }
     }
 
@@ -62,7 +63,7 @@ class BanManager extends Manager {
             return $ban;
         }
         else {
-            throw new Exception("BanManager: Erreur de requête getBanById($id).");
+            throw new \Exception("BanManager: Erreur de requête getBanById($id).");
         }
     }
 
@@ -85,7 +86,7 @@ class BanManager extends Manager {
             return $ban;
         }
         else {
-            throw new Exception("BanManager: Erreur de requête getBanByIp($ip).");
+            throw new \Exception("BanManager: Erreur de requête getBanByIp($ip).");
         }
     }
 

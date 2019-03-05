@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Gère l'affichage du profil d'un utilisateur
  */

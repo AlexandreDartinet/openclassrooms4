@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe abstraite d'un objet gérant les interactions avec une table de la bdd
  * Ses filles auront accès à un objet $_db dès l'initialisation leur permettant d'interragir avec la bdd
@@ -19,7 +20,7 @@ abstract class Manager
     public function __construct() {
         $this->_db = $this->dbConnect();
         if(static::TABLE_NAME == 'abstract') {
-            throw new Exception("Manager: TABLE_NAME non déclaré.");
+            throw new \Exception("Manager: TABLE_NAME non déclaré.");
         }
     }
 
@@ -31,13 +32,13 @@ abstract class Manager
     protected function dbConnect()
     {
         try {
-            $db = new PDO('mysql:host='.DB_HOST.';dbname='.DB_BASE.';charset=utf8', DB_USER, DB_PASSWORD);
-            $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            $db->setAttribute(PDO::ATTR_PERSISTENT, true);
+            $db = new \PDO('mysql:host='.DB_HOST.';dbname='.DB_BASE.';charset=utf8', DB_USER, DB_PASSWORD);
+            $db->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+            $db->setAttribute(\PDO::ATTR_PERSISTENT, true);
             return $db;
         }
-        catch (PDOException $e) { // On fait remonter les erreurs PDO
-            throw new Exception("Manager: Erreur PDO: ".$e->getMessage());
+        catch (\PDOException $e) { // On fait remonter les erreurs PDO
+            throw new \Exception("Manager: Erreur PDO: ".$e->getMessage());
         }
     }
 
@@ -99,7 +100,7 @@ abstract class Manager
             return $count;
         }
         else {
-            throw new Exception("DbObject: Erreur de requête count($name, $value).");
+            throw new \Exception("DbObject: Erreur de requête count($name, $value).");
         }
     }
     

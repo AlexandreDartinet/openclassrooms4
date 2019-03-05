@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Gère l'affichage de la liste des articles dans la section admin
  */

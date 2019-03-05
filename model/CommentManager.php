@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe gérant les interactions avec la bdd en rapport avec la table comments
  * 
@@ -29,7 +30,7 @@ class CommentManager extends Manager {
             $req = $this->_db->prepare('SELECT a.*, COUNT(b.id) AS replies_nbr FROM comments a LEFT JOIN comments b ON a.id = b.reply_to WHERE a.id_post=:id_post'.(($replies)?'':' AND a.reply_to=0').' GROUP BY a.id ORDER BY a.date_publication ASC');
         }
         else {
-            throw new Exception("CommentManager: Paramètre \$page($page) invalide.");
+            throw new \Exception("CommentManager: Paramètre \$page($page) invalide.");
             return [];
         }
         $req->bindParam(":id_post", $id_post);
@@ -43,7 +44,7 @@ class CommentManager extends Manager {
             return $comments;
         }
         else {
-            throw new Exception("CommentManager: Erreur de requête \$id_post($id_post), \$page($page), \$replies($replies).");
+            throw new \Exception("CommentManager: Erreur de requête \$id_post($id_post), \$page($page), \$replies($replies).");
         }
     }
     
@@ -69,7 +70,7 @@ class CommentManager extends Manager {
             return $comments;
         }
         else {
-            throw new Exception("CommentManager: Erreur de requête \$id_post($id_post), \$page($page), \$replies($replies).");
+            throw new \Exception("CommentManager: Erreur de requête \$id_post($id_post), \$page($page), \$replies($replies).");
         }
     }
 
@@ -94,7 +95,7 @@ class CommentManager extends Manager {
             return $comment;
         }
         else {
-            throw new Exception("CommentManager: Erreur de requête getCommentById($id).");
+            throw new \Exception("CommentManager: Erreur de requête getCommentById($id).");
         }
     }
 
@@ -116,7 +117,7 @@ class CommentManager extends Manager {
             return $comments;
         }
         else {
-            throw new Exception("CommentManager: Erreur de requête getCommentsByUser($user->id).");
+            throw new \Exception("CommentManager: Erreur de requête getCommentsByUser($user->id).");
         }
     }
 
@@ -176,7 +177,7 @@ class CommentManager extends Manager {
             return $comments;
         }
         else {
-            throw new Exception("CommentManager: Erreur de requête getReplies($comment->id).");
+            throw new \Exception("CommentManager: Erreur de requête getReplies($comment->id).");
         }
     }
 
@@ -227,7 +228,7 @@ class CommentManager extends Manager {
             return $count;
         }
         else {
-            throw new Exception("CommentManager: Erreur de requête countByPostId($id_post, $replies).");
+            throw new \Exception("CommentManager: Erreur de requête countByPostId($id_post, $replies).");
         }
     }
 

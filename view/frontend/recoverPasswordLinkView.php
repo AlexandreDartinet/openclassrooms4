@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Gère l'affichage de changement de mot de passe en cas de mot de passe oublié
  */

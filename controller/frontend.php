@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Toutes les fonctions relatives à l'affichage et au traitement des données de la partie frontend du site
  */

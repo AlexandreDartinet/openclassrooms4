@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe gérant les interactions avec la bdd en rapport avec la table posts
  * 
@@ -33,7 +34,7 @@ class PostManager extends Manager {
             $query_end =  ' GROUP BY posts.id ORDER BY posts.date_publication DESC';
         }
         else {
-            throw new Exception("PostManager: \$page($page) invalide.");
+            throw new \Exception("PostManager: \$page($page) invalide.");
         }
         if($year != 0) {// Si $year est renseigné
             if($month != 0) {// Si $month est renseigné
@@ -67,7 +68,7 @@ class PostManager extends Manager {
             return $posts;
         }
         else {
-            throw new Exception("PostManager: Erreur de requête getPosts($page, $published, $year, $month, $day).");
+            throw new \Exception("PostManager: Erreur de requête getPosts($page, $published, $year, $month, $day).");
         }
     }
 
@@ -91,7 +92,7 @@ class PostManager extends Manager {
             return $post;
         }
         else {
-            throw new Exception("PostManager: Erreur de requête getPostById($id).");
+            throw new \Exception("PostManager: Erreur de requête getPostById($id).");
         }
     }
 
@@ -114,7 +115,7 @@ class PostManager extends Manager {
             return $posts;
         }
         else {
-            throw new Exception("PostManager: Erreur de requête getPostsByUser($user->id).");
+            throw new \Exception("PostManager: Erreur de requête getPostsByUser($user->id).");
         }
     }
 
@@ -155,7 +156,7 @@ class PostManager extends Manager {
             return $table;
         }
         else {
-            throw new Exception("Postmanager: Erreur de requête getDateTable($published).");
+            throw new \Exception("Postmanager: Erreur de requête getDateTable($published).");
         }
     }
 
@@ -239,7 +240,7 @@ class PostManager extends Manager {
             return $count;
         }
         else {
-            throw new Exception("PostManager: Erreur de requête countPosts($published, $year, $month, $day).");
+            throw new \Exception("PostManager: Erreur de requête countPosts($published, $year, $month, $day).");
         }
     }
 
@@ -266,7 +267,7 @@ class PostManager extends Manager {
             return $count;
         }
         else {
-            throw new Exception("PostManager: Erreur de requête countPostsByUser($user->id, $published).");
+            throw new \Exception("PostManager: Erreur de requête countPostsByUser($user->id, $published).");
         }
     }
 

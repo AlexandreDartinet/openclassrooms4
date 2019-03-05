@@ -1,4 +1,5 @@
 <?php 
+namespace DartAlex;
 /**
  * Template d'affichage de la page.
  * On doit lui fournir $title pour le titre de la page, $menu pour son menu et $content pour son contenu.

@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Toutes les fonctions relatives à l'affichage et au traitement des données de tout le site
  */
@@ -70,7 +71,7 @@ function displayJson($object) {
  * @return void
  */
 function displayErrorJson(string $error) {
-    $json = new stdClass();
+    $json = new \stdClass();
     $json->error = $error;
     displayJson($json);
 }
@@ -83,7 +84,7 @@ function displayErrorJson(string $error) {
  * @return void
  */
 function displaySuccessJson(string $success) {
-    $json = new stdClass();
+    $json = new \stdClass();
     $json->success = $success;
     displayJson($json);
 }

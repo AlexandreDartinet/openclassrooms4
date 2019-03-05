@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Gère l'affichage du contenu généré dynamiquement
  */
@@ -31,7 +32,7 @@ function displayImagesJson() {
     $images = $imageManager->getImages("all", Image::TYPE_POST);
     $json = [];
     foreach($images as $image) {
-        $image_json = new stdClass();
+        $image_json = new \stdClass();
         $image_json->title = $image->title;
         $image_json->value = $image->url;
         $json[] = $image_json;

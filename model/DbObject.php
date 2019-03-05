@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe abstraite d'un objet représentant une ligne d'une table dans la bdd
  * 
@@ -41,7 +42,7 @@ abstract class DbObject {
             return $this->_attributes[$name];
         }
         else {
-            throw new Exception("DbObject: L'attribut $name n'existe pas pour l'objet.");
+            throw new \Exception("DbObject: L'attribut $name n'existe pas pour l'objet.");
             return false;
         };
     }

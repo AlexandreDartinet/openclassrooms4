@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe représentant une ligne du tableau users de la bdd
  * 
@@ -60,7 +61,7 @@ class User extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("User: $name($value) est vide.");
+                    throw new \Exception("User: $name($value) est vide.");
                 }
                 break;
             case "password":
@@ -68,7 +69,7 @@ class User extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("User: $name($value) est vide.");
+                    throw new \Exception("User: $name($value) est vide.");
                 }
                 break;
             case "email":
@@ -76,7 +77,7 @@ class User extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("User: $name($value) invalide.");
+                    throw new \Exception("User: $name($value) invalide.");
                 }
                 break;
             case "date_inscription":
@@ -84,7 +85,7 @@ class User extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("User: $name($value) invalide");
+                    throw new \Exception("User: $name($value) invalide");
                 }
                 break;
             case "last_seen":
@@ -92,7 +93,7 @@ class User extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("User: $name($value) invalide");
+                    throw new \Exception("User: $name($value) invalide");
                 }
                 break;
             case "level":
@@ -103,7 +104,7 @@ class User extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("User: $name($value) invalide.");
+                    throw new \Exception("User: $name($value) invalide.");
                 }
                 break;
             case "name_display":
@@ -111,7 +112,7 @@ class User extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("User: $name($value) invalide.");
+                    throw new \Exception("User: $name($value) invalide.");
                 }
                 break;
             case "comments_nbr":
@@ -128,7 +129,7 @@ class User extends DbObject {
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("User: $name(".var_export($value).") n'est pas un Array.");
+                    throw new \Exception("User: $name(".var_export($value).") n'est pas un Array.");
                 }
                 break;
             case "posts":
@@ -136,7 +137,7 @@ class User extends DbObject {
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("User: $name(".var_export($value).") n'est pas un Array.");
+                    throw new \Exception("User: $name(".var_export($value).") n'est pas un Array.");
                 }
                 break;
             case "reports":
@@ -144,19 +145,19 @@ class User extends DbObject {
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("User: $name(".var_export($value).") n'est pas un Array.");
+                    throw new \Exception("User: $name(".var_export($value).") n'est pas un Array.");
                 }
                 break;
             case "manager":
-                if(is_a($value, 'UserManager')) {
+                if(is_a($value, 'DartAlex\\UserManager')) {
                     $this->_attributes[$name] = $value;
                 }
                 else {
-                    throw new Exception("User: $name(".var_export($value).") n'est pas un UserManager.");
+                    throw new \Exception("User: $name(".var_export($value).") n'est pas un UserManager.");
                 }
                 break;
             default:
-                throw new Exception("User: $name($value) inconnu.");
+                throw new \Exception("User: $name($value) inconnu.");
                 break;
         }
     }
@@ -292,7 +293,9 @@ class User extends DbObject {
         $cmResult = $commentManager->removeUser($this);
         $reportManager = new ReportManager();
         $rmResult = $reportManager->removeUser($this);
-        return $this->manager->removeBy('id',$this->id) && $pmResult && $cmResult && $rmResult;
+        $imageManager = new ImageManager();
+        $imResult = $imageManager->removeUser($this);
+        return $this->manager->removeBy('id',$this->id) && $pmResult && $cmResult && $rmResult && $imResult;
     }
 
     /**

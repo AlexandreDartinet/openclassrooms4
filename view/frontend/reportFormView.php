@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Gère l'affichage du formulaire de signalement
  * On lui fournit $comment, le commentaire à signaler et $path ou envoyer les données

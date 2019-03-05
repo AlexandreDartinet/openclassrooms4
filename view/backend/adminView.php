@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Affichage de la page d'accueil de l'interface d'administration
  */

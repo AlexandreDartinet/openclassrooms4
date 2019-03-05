@@ -1,4 +1,5 @@
 <?php
+namespace DartAlex;
 /**
  * Classe représentant une ligne du tableau posts dans la bdd
  * 
@@ -35,7 +36,7 @@ class Post extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Post: $name($value) n'est pas une date.");
+                    throw new \Exception("Post: $name($value) n'est pas une date.");
                 }
                 break;
             case "id_user":
@@ -46,7 +47,7 @@ class Post extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Post: $name($value) est vide.");
+                    throw new \Exception("Post: $name($value) est vide.");
                 }
                 break;
             case "content":
@@ -54,7 +55,7 @@ class Post extends DbObject {
                     $this->_attributes[$name] = (string) $value;
                 }
                 else {
-                    throw new Exception("Post: $name($value) est vide.");
+                    throw new \Exception("Post: $name($value) est vide.");
                 }
                 break;
             case "published":
@@ -64,12 +65,12 @@ class Post extends DbObject {
                 $this->_attributes[$name] = (int) $value;
                 break;
             case "user":
-                if(is_a($value, 'User')) {
+                if(is_a($value, 'DartAlex\\User')) {
                     $this->_attributes["id_user"] = $value->id;
                     $this->_attributes[$name] = $value; 
                 }
                 else {
-                    throw new Exception("Post: $name(".var_export($value).") n'est pas un User.");
+                    throw new \Exception("Post: $name(".var_export($value).") n'est pas un User.");
                 }
                 break;
             case "comments":
@@ -77,19 +78,19 @@ class Post extends DbObject {
                     $this->_attributes[$name] = $value; 
                 }
                 else {
-                    throw new Exception("Post: $name(".var_export($value).") n'est pas un array.");
+                    throw new \Exception("Post: $name(".var_export($value).") n'est pas un array.");
                 }
                 break;
             case "manager":
-                if(is_a($value, 'PostManager')) {
+                if(is_a($value, 'DartAlex\\PostManager')) {
                     $this->_attributes[$name] = $value; 
                 }
                 else {
-                    throw new Exception("Post: $name(".var_export($value).") n'est pas un PostManager.");
+                    throw new \Exception("Post: $name(".var_export($value).") n'est pas un PostManager.");
                 }
                 break;
             default:
-                throw new Exception("Post: $name($value) attribut inconnu.");
+                throw new \Exception("Post: $name($value) attribut inconnu.");
                 break;
         }
     }
@@ -247,8 +248,8 @@ class Post extends DbObject {
      * @return boolean : True si le post est publié
      */
     public function isPublished() {
-        $date = new DateTime($this->date_publication);
-        $now = new DateTime("now");
+        $date = new \DateTime($this->date_publication);
+        $now = new \DateTime("now");
         return ($date <= $now) && $this->published;
     }
 
