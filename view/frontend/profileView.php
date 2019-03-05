@@ -6,7 +6,7 @@ namespace DartAlex;
 ob_start();
 ?>
 <div class="directory-item" id="directory-item-<?= $user->id ?>">
-    <p><?= $user->name_display ?> : <?= $user->displayLevel() ?></p>
+    <p><?= $user->displayName() ?> : <?= $user->displayLevel() ?></p>
     <p>Enregistrement : <?= $user->rDate('date_inscription') ?></p>
     <p>Dernière connexion : <?= $user->rDate('last_seen') ?></p>
     <p>Commentaires postés : <?= $user->comments_nbr ?></p>

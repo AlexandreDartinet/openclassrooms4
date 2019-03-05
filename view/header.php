@@ -13,7 +13,7 @@ ob_start();
 if($_SESSION['user']->id != 0) { // Si l'utilisateur est authentifié, on affiche un lien vers l'édition de son profil, et pour se déconnecter
 ?>
 <div id="logout">
-        <a class="fas fa-user" href="/profile/edit/"> <?= $_SESSION['user']->name ?></a>
+        <a class="fas fa-user" href="/profile/edit/"> <?= htmlspecialchars($_SESSION['user']->name) ?></a>
         <a title="Déconnexion" class="fas fa-times" href="/logout/"></a>
 <?php
 }
