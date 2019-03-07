@@ -5,7 +5,10 @@ namespace DartAlex;
  */
 ob_start();
 ?>
-<footer>
+<footer class="footer is-dark">
+    <div class="content has-text-centered">
+        bla bla
+    </div>
 </footer>
 <?php
 $footer = ob_get_clean();
