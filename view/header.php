@@ -7,6 +7,7 @@ ob_start();
 ?>
         
 <div id="nav" class="navbar is-fixed-top is-dark" role="navigation" aria-label="main navigation">
+        <div class="container">
         <div class="navbar-brand">
                 <a class="navbar-item" href="/"><span class="icon"><i class="fas fa-home"></i></span>&nbsp;Accueil</a>
                 <a role="button" aria-label="menu" aria-expanded="false" data-target="navbarMenu" class="navbar-burger burger">
@@ -68,7 +69,7 @@ else { // Si l'utilisateur est anonyme, on affiche le formulaire de connexion, u
 }
 ?>
                 </div>
-        </div>
+        </div></div>
 </div>
 <!-- <header class="hero">
         <div class="hero-body">
