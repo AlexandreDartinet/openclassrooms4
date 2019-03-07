@@ -59,7 +59,7 @@ else {
         </div>
         <div class="field">
             <div class="control">
-                <textarea class="textarea" name="content" id="content" required><?= $content ?></textarea>
+                <textarea class="textarea" name="content" id="content"><?= $content ?></textarea>
             </div>
         </div>
 <?php

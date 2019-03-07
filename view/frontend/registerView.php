@@ -19,7 +19,7 @@ ob_start();
  */
 ?>
 <div class="box"><form method="post" action="/" id="register-form">
-    <input type="hidden" name="action" value="registerUser" required/>
+    <input type="hidden" name="action" value="registerUser"/>
     <div class="field is-horizontal">
         <div class="field-label is-normal">
             <label for="name" class="label">Pseudonyme</label>

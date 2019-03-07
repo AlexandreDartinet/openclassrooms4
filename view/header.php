@@ -43,7 +43,7 @@ else { // Si l'utilisateur est anonyme, on affiche le formulaire de connexion, u
                                 <div class="navbar-dropdown is-boxed is-right">
                                         <div class="navbar-item">
                                                 <form method="post" action="<?= PATH ?>">
-                                                        <input type="hidden" name="action" value="login" required/>
+                                                        <input type="hidden" name="action" value="login"/>
                                                         <div class="field">
                                                                 <div class="control has-icons-left">
                                                                         <input class="input" type="text" name="name" placeholder="Pseudonyme" required/>
@@ -80,13 +80,13 @@ else { // Si l'utilisateur est anonyme, on affiche le formulaire de connexion, u
                 </div>
         </div></div>
 </div>
-<!-- <header class="hero">
+<header class="hero">
         <div class="hero-body">
                 <div class="container">
-                        <h1 class="title is-1"></h1>
+                        <h1 class="title is-1 box" id="main-title">Mon site</h1>
                 </div>
         </div>
-</header> -->
+</header>
 
 <?php
 
