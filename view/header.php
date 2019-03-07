@@ -45,17 +45,26 @@ else { // Si l'utilisateur est anonyme, on affiche le formulaire de connexion, u
                                                 <form method="post" action="<?= PATH ?>">
                                                         <input type="hidden" name="action" value="login" required/>
                                                         <div class="field">
-                                                                <div class="control">
+                                                                <div class="control has-icons-left">
                                                                         <input class="input" type="text" name="name" placeholder="Pseudonyme" required/>
+                                                                        <div class="icon is-small is-left">
+                                                                                <i class="fas fa-user"></i>
+                                                                        </div>
                                                                 </div>
                                                         </div>
-                                                        <div class="field">
+                                                        <div class="field has-addons">
+                                                                <div class="control has-icons-left">
+                                                                        <input class="input" type="password" name="password" placeholder="Password" required/>
+                                                                        <div class="icon is-small is-left">
+                                                                                <i class="fas fa-lock"></i>
+                                                                        </div>
+                                                                </div>
                                                                 <div class="control">
-                                                                        <input class="input" type="password" name="password" placeholder="Mot de passe" required/>
+                                                                        <input class="button is-primary" type="submit" value="Ok" id="login-submit"/>
                                                                 </div>
                                                         </div>
                                                         
-                                                        <input class="button" type="submit" id="login-submit"/>
+                                                        
                                                 </form>
                                         </div>
                                         <hr class="navbar-divider">
