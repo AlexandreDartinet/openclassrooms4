@@ -38,34 +38,34 @@ foreach($posts as $post) {
     if($post->published) {
         if($post->canEdit($_SESSION['user'])) {
 ?>
-                    <a title="Masquer l'article" class="fas fa-check post-unpublish-link post-unpublish-link-active" id="post-unpublish-link-<?= $post->id ?>" href="/admin/posts/unpublish/<?= $post->id ?>/">Publié</a>
+                    <a title="Masquer l'article" class="fas fa-check post-unpublish-link post-unpublish-link-active has-text-primary" id="post-unpublish-link-<?= $post->id ?>" href="/admin/posts/unpublish/<?= $post->id ?>/">Publié</a>
 <?php
         }
         else {
 ?>
-                    <a class="fas fa-check post-unpublish-link">Publié</a>
+                    <a class="fas fa-check post-unpublish-link has-text-primary">Publié</a>
 <?php
         }
     }
     else {
         if($_SESSION['user']->level >= User::LEVEL_ADMIN) {
 ?>
-                    <a title="Publier l'article" class="fas fa-times post-publish-link post-publish-link-active" id="post-publish-link-<?= $post->id ?>" href="/admin/posts/publish/<?= $post->id ?>/">Masqué</a>
+                    <a title="Publier l'article" class="fas fa-times post-publish-link post-publish-link-active has-text-danger" id="post-publish-link-<?= $post->id ?>" href="/admin/posts/publish/<?= $post->id ?>/">Masqué</a>
 <?php
         }
         else {
 ?>
-                    <a class="fas fa-times post-publish-link">Masqué</a>
+                    <a class="fas fa-times post-publish-link has-text-danger">Masqué</a>
 <?php
         }
     }
 ?>
                 </td>
                 <td>
-                    <?= ($post->canEdit($_SESSION['user']))?"<a class='fas fa-edit post-edit-link' id='post-edit-link-$post->id' href='/admin/posts/edit/$post->id/'>Editer</a>":"" ?>
+                    <?= ($post->canEdit($_SESSION['user']))?"<a class='fas fa-edit post-edit-link has-text-warning' id='post-edit-link-$post->id' href='/admin/posts/edit/$post->id/'>Editer</a>":"" ?>
                 </td>
                 <td>
-                    <?= ($post->canEdit($_SESSION['user']))?"<a class='fas fa-trash post-delete-link' id='post-delete-link-$post->id' href='/admin/posts/delete/$post->id/'>Supprimer</a>":"" ?>
+                    <?= ($post->canEdit($_SESSION['user']))?"<a class='fas fa-trash post-delete-link has-text-danger' id='post-delete-link-$post->id' href='/admin/posts/delete/$post->id/'>Supprimer</a>":"" ?>
                 </td>
             </tr>
 <?php
