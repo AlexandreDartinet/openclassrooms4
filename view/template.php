@@ -7,7 +7,7 @@ namespace DartAlex;
 require('header.php');
 require('footer.php');
 ?><!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="utf-8" />
         <meta name="robots" content="noindex,nofollow"/>
