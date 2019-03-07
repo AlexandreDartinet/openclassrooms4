@@ -26,8 +26,11 @@ ob_start();
         </div>
         <div class="field-body">
             <div class="field">
-                <div class="control">
+                <div class="control has-icons-left">
                     <input class="input" type="text" name="name" id="name" placeholder="Entrez votre pseudo ici." required/>
+                    <div class="icon is-small is-left">
+                        <i class="fas fa-user"></i>
+                    </div>
                 </div>
             </div>
         </div>  
@@ -38,13 +41,19 @@ ob_start();
         </div>
         <div class="field-body">
             <div class="field">
-                <div class="control is-expanded">
+                <div class="control is-expanded has-icons-left">
                     <input class="input" type="password" name="password" id="password" placeholder="Mot de passe" required/>
+                    <div class="icon is-left is-small">
+                        <i class="fas fa-lock"></i>
+                    </div>
                 </div>
             </div>
             <div class="field">
-                <div class="control is-expanded">
+                <div class="control is-expanded has-icons-left">
                     <input class="input" type="password" name="password_confirm" id="password_confirm" placeholder="Confirmez le mot de passe" required/>
+                    <div class="icon is-left is-small">
+                        <i class="fas fa-lock"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,8 +65,11 @@ ob_start();
         </div>
         <div class="field-body">
             <div class="field">
-                <div class="control">
+                <div class="control has-icons-left">
                     <input class="input" type="text" name="name_display" id="name_display" placeholder="Entrez le nom que vous voulez afficher." required/>
+                    <div class="icon is-left is-small">
+                        <i class="fas fa-eye"></i>
+                    </div>
                 </div>
             </div>
         </div>
@@ -69,13 +81,19 @@ ob_start();
         </div>
         <div class="field-body">
             <div class="field">
-                <div class="control is-expanded">
+                <div class="control is-expanded has-icons-left">
                     <input class="input" type="email" name="email" id="email" placeholder="Entrez votre email." required/>
+                    <div class="icon is-left is-small">
+                        <i class="fas fa-envelope"></i>
+                    </div>
                 </div>
             </div>
             <div class="field">
-                <div class="control is-expanded">
+                <div class="control is-expanded has-icons-left">
                     <input class="input" type="email" name="email_confirm" id="email_confirm" placeholder="Confirmez votre email." required/>
+                    <div class="icon is-left is-small">
+                        <i class="fas fa-envelope"></i>
+                    </div>
                 </div>
             </div>
         </div>
