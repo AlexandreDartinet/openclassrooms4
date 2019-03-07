@@ -381,6 +381,9 @@ try { // Gestion des erreurs
                     viewPost($id_post, $page);
                 }
             }
+            elseif (preg_match('/^\/polconf\//', PATH)) {
+                viewPolconf();
+            }
             elseif (preg_match('/^\/register\//', PATH)) {
                 viewRegister();
             }

@@ -145,6 +145,18 @@ function viewContactForm() {
     
     require('view/frontend/contactFormView.php');
 }
+
+/**
+ * Affiche la politique de confidentialité
+ * 
+ * @return void
+ */
+function viewPolconf() {
+    $title = "Politique de confidentialité";
+
+    require('view/frontend/polconfView.php');
+}
+
 /**
  * Affiche le formulaire d'envoi d'un lien de récupération de mot de passe
  * 

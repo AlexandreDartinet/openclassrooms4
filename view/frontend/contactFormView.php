@@ -47,7 +47,7 @@ ob_start();
         <div class="control">
             <label class="checkbox">
                 <input type="checkbox" required/>
-                J'accepte bla bla
+                J'accepte la <a href="/polconf/" target="_blank">politique de confidentialité</a>.
             </label>
         </div>
     </div>

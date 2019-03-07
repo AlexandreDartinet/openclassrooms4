@@ -70,6 +70,9 @@ body::after {
     height: 168px;
 
 }
+.footer a:hover {
+    color: whitesmoke;
+}
 
 @media all and (max-width: 1024px) {
 	table, tr, td, tbody {
