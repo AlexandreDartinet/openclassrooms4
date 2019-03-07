@@ -19,7 +19,7 @@ namespace DartAlex;
  */
 class Post extends DbObject {
 
-    const EXTRACT_LENGTH = 500;
+    const EXTRACT_LENGTH = 2000;
     
     /**
      * Fonction d'encapsulation
