@@ -138,7 +138,7 @@ class Post extends DbObject {
         $extract = $this->content;
 
         if(strlen($extract) > self::EXTRACT_LENGTH) {
-            $offset = strlen(substr($this->content, 0, self::EXTRACT_LENGTH)) - strlen(strip_tags(substr($this->content, 0, self::EXTRACT_LENGTH)));
+            $offset = strlen($this->content) - strlen(strip_tags($this->content));
             $length = self::EXTRACT_LENGTH + $offset;
             $last_space = strrpos(substr($this->content, $length, $length*2), '/(<\/.*>)|(<.*\/>)|( )/');
             $extract = substr($this->content, 0, $last_space+$length+1).'...';
