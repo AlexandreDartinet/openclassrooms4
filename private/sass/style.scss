@@ -8,10 +8,7 @@ $body-background-color: #e9edf0;
 	word-wrap:break-word;
 }
 
-body {
-    min-height: 100vh;
-    position:relative;
-}
+
 #retry, #success {
 	position: fixed;
 	top: 4.5em;
@@ -42,6 +39,20 @@ body {
 }
 main {
     margin-bottom:24px !important;
+}
+header {
+    min-height:168px;
+    background-position: center;
+    margin-bottom: 24px;
+    border-bottom: solid 1px lightgrey;
+}
+#main-title {
+    opacity:0.7;
+    width:fit-content;
+}
+body {
+    min-height: 100vh;
+    position:relative;
 }
 body::after {
     content: '';
