@@ -19,8 +19,17 @@ switch(sizeof($posts)) {
     case 8:
         $fullwidth = [1,4,7,8];
         break;
+    case 11:
+        $fullwidth = [1,4,7,10,11];
+        break;
+    case 14:
+        $fullwidth = [1,4,7,10,13,14];
+        break;
+    case 17:
+        $fullwidth = [1,4,7,10,13,16,17];
+        break;
     default:
-        $fullwidth = [1,4,7];
+        $fullwidth = [1,4,7,10,13,16,19];
         break;
 }
 foreach($posts as $post) {
