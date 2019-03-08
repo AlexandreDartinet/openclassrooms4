@@ -63,7 +63,7 @@ foreach($posts as $post) {
 ?>
 </div>
 <?php
-echo '<div class="container" style="max-width:960px;">'.$pageSelector.'</div>';
+echo '<div class="container" style="max-width:960px; padding:0 1rem;">'.$pageSelector.'</div>';
 $content = ob_get_clean();
 
 if(!isset($scripts)) {

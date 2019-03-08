@@ -11,9 +11,9 @@ $navbar-height: 3.25rem;
     border: 1px solid #ddd;
     margin-bottom: 1rem;
 }
-.container {
-    padding-left:1rem;
-    padding-right:1rem;
+
+.navbar-brand a.navbar-item:hover {
+    background-color: #fafafa !important;
 }
 .bounce {
     animation: bounce 2s infinite;
