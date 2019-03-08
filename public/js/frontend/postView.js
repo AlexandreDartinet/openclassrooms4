@@ -323,7 +323,7 @@ function showReportComment(id) {
     formElt = $(document.createElement('div')).addClass('box');
     form = $(document.createElement('form'))
         .append($(document.createElement('div'))
-            .addClass('field')
+            .addClass('field select')
             .append($(document.createElement('select'))
                 .attr('required', true)
                 .attr('name', 'type')
