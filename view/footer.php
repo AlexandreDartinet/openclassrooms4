@@ -5,9 +5,9 @@ namespace DartAlex;
  */
 ob_start();
 ?>
-<footer class="footer is-dark">
+<footer class="footer">
     <div class="content has-text-centered">
-        <a href="/polconf/" target="_blank">Politique de confidentialité.</a><br/>
+        <a href="/polconf/">Politique de confidentialité.</a><br/>
         
         Site développé par <a href="https://github.com/Dart-Alex/" target="_blank">Dart-Alex</a>.<br/>
         <a href="https://bulma.io/made-with-bulma/" target="_blank">
