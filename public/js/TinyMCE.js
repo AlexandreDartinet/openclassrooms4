@@ -33,6 +33,8 @@ tinymce.init({
     max_height: 700,
     image_caption: true,
     media_live_embeds: true,
+    paste_data_images: false,
+    quickbars_insert_toolbar: "image link media | quicktable",
     spellchecker_language: 'fr',
     image_list: "/generated/json/images.json"
 });
