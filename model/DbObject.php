@@ -102,7 +102,7 @@ abstract class DbObject {
      * @return string : Date lisible par un français
      */
     public function rDate(string $name) {
-        return preg_replace('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', '$3/$2/$1 à $4h$5', $this->$name);
+        return self::srDate($this->$name);
     }
 
     /**
@@ -153,7 +153,24 @@ abstract class DbObject {
      * @return string : Chaine lisible représentant la date et l'heure actuelle
      */
     public static function rNow() {
-        return preg_replace('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', '$3/$2/$1 à $4h$5', self::now());
+        return self::srDate(self::now());
+    }
+
+    /**
+     * Renvoie une date lisible à partir d'une date datetime en argument
+     * 
+     * @param string $date : Date
+     * 
+     * @return string : date
+     */
+    public static function srDate(string $date) {
+        //$return = preg_replace('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', '$3/$2/$1 à $4h$5', $date);
+        $day = (int) preg_replace('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', '$3', $date);
+        $month = self::rMonth((int) preg_replace('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', '$2', $date));
+        $year = preg_replace('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', '$1', $date);
+        $time = preg_replace('/^(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})$/', '$4h$5', $date);
+        $return = "$day $month $year à $time";
+        return $return;
     }
 
     /**
