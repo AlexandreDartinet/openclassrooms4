@@ -18,7 +18,7 @@ ob_start();
  * @var string email_confirm : Confirmation de l'email (required)
  */
 ?>
-<div class="box"><form method="post" action="/" id="register-form">
+<div class="box container"><form method="post" action="/" id="register-form">
     <input type="hidden" name="action" value="registerUser"/>
     <div class="field is-horizontal">
         <div class="field-label is-normal">

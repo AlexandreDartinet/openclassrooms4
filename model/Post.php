@@ -135,15 +135,43 @@ class Post extends DbObject {
      * @return string : Extrait du post
      */
     public function getExtract() {
-        $extract = $this->content;
+        // $extract = $this->content;
 
-        if(strlen($extract) > self::EXTRACT_LENGTH) {
-            $offset = strlen($this->content) - strlen(strip_tags($this->content));
-            $length = self::EXTRACT_LENGTH + $offset;
-            $last_space = strrpos(substr($this->content, $length, $length*2), '/(<\/.*>)|(<.*\/>)|( )/');
-            $extract = substr($this->content, 0, $last_space+$length+1).'...';
+        // if(strlen($extract) > self::EXTRACT_LENGTH) {
+        //     $offset = strlen($this->content) - strlen(strip_tags($this->content));
+        //     $length = self::EXTRACT_LENGTH + $offset;
+        //     $last_space = strrpos(substr($this->content, $length, $length*2), '/(<\/.*>)|(<.*\/>)|( )/');
+        //     $extract = substr($this->content, 0, $last_space+$length+1).'...';
+        // }
+        // return $extract;
+        $ok = false;
+        $start = 0;
+        $end = 0;
+        while($start !== false) {
+            $start = strpos($this->content, '<p>', $end);
+            $end = strpos($this->content, '</p>', $start);
+            if(strlen(strip_tags(substr($this->content, $start, $end-$start+4))) >= 10) {
+                $ok = true;
+                return strip_tags(substr($this->content, $start, $end-$start+4));
+            }
         }
-        return $extract;
+        return "";
+    }
+
+    /**
+     * Retourne la première image du post
+     * 
+     * @return string
+     */
+    public function getImage() {
+        if($start = strpos($this->content, '<img')) {
+            $end = strpos($this->content, '>', $start);
+            $img = substr($this->content, $start, $end-$start+1);
+            return preg_replace('/^.*src=.(.*). .*$/', '$1', $img);
+        }
+        else {
+            return 'nothing';
+        }
     }
 
     /**
@@ -201,12 +229,12 @@ class Post extends DbObject {
             $content = $this->getExtract();
             $display = "<div class='post box' id='post-$this->id'>";
             $display .= "<h3 class='post-title title is-4'>";
-            $display .= "<a href='/post/$this->id/'>$title</a>";
-            $display .= "<em> le $date par $author</em>";
+            $display .= "<a href='/post/$this->id/'>$title</a></h3>";
+            $display .= "<h4 class='subtitle is-6 has-text-grey-light'>$date par $author</h4>";
             $display .= "</h3>";
             $display .= "<p class='content'>$content</p>";
-            $display .= "<p><a href='/post/$this->id/'>";
-            $display .= ($this->comments_nbr > 0)?"$this->comments_nbr commentaires.":"Aucun commentaire.";
+            $display .= "<p><a title='Commentaires' href='/post/$this->id/'>";
+            $display .= "<div class='icon'><i class='fas fa-comments'></i></div>$this->comments_nbr";
             $display .= "</a></p>";
             $display .= "</div>";
         }

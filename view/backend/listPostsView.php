@@ -6,7 +6,7 @@ namespace DartAlex;
 ob_start();
 ?>
 <h2 class="title is-3">Liste des articles</h2>
-<div class="box content">
+<div class="box content container">
     <p><a class="button is-primary" href="/admin/posts/new/">Créer un nouvel article</a></p>
     <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
         <thead>

@@ -6,7 +6,7 @@ namespace DartAlex;
 ob_start();
 ?>
 <h2 class="title is-3">Vous avez oublié votre mot de passe</h2>
-<div class="box">
+<div class="box container">
 <?php
 /**
  * Le formulaire envoie en post à / les valeurs suivantes :

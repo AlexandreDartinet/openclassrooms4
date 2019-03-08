@@ -6,7 +6,7 @@ namespace DartAlex;
 ob_start();
 ?>
 <h2 class="title is-3">Liste des utilisateurs</h2>
-<div class="box">
+<div class="box container">
     <table class="table is-bordered is-striped is-narrow is-hoverable">
         <thead class="thead">
             <tr>

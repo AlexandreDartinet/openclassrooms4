@@ -16,7 +16,7 @@ ob_start();
  * @var string old_password : Confirmation du nouveau mot de passe (requires)
  */
 ?>
-<div class="box">
+<div class="box container">
 <form method="post" action="/">
     <input type="hidden" name="action" value="useRecover"/>
     <input type="hidden" name="key" value="<?= $recover->recover_key ?>"/>

@@ -6,7 +6,7 @@ namespace DartAlex;
 ob_start(); 
 ?>
 <h2 class="title is-3">Liste des images</h2>
-<div class="box">
+<div class="box container">
     <form class="box" action="<?= PATH ?>" method="post" enctype="multipart/form-data">
         <input type="hidden" name="action" value="addImage"/>
         <div class="field is-horizontal">

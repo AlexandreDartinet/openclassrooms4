@@ -6,7 +6,8 @@ namespace DartAlex;
 ob_start();
 ?>
 <h2 class="title is-3">Accueil de l'interface d'administration</h2>
-<p>Bienvenue <?= htmlspecialchars($_SESSION['user']->name_display) ?>, vous êtes <?= $_SESSION['user']->displayLevel() ?>.</p>
+<div class="container">
+<p class="subtitle is-5">Bienvenue <?= htmlspecialchars($_SESSION['user']->name_display) ?>, vous êtes <?= $_SESSION['user']->displayLevel() ?>.</p>
 <div class="box content">
     <h3 class="title is-4"><a href="/admin/reports/">Signalements</a></h3>
 <?php
@@ -82,6 +83,9 @@ foreach(Ban::TYPES as $type => $display) {
 </div>
 <?php
 }
+?>
+</div>
+<?php
 
 $content = ob_get_clean();
 require('template.php');

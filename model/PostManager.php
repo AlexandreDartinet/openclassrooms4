@@ -10,7 +10,7 @@ namespace DartAlex;
  */
 class PostManager extends Manager {
 
-    const POST_PAGE = 5;
+    const POST_PAGE = 6;
     const TABLE_NAME = 'posts';
 
     /**

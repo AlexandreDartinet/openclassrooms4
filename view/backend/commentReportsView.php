@@ -6,8 +6,8 @@ namespace DartAlex;
 ob_start();
 ?>
 <h2 class="title is-3">Signalements du commentaire <?= $comment->id ?></h2>
-<?= $comment->display(true,false,false,true) ?>
-<div class="box content">
+<div class="container"><?= $comment->display(true,false,false,true) ?></div>
+<div class="box content container">
     <ul>
         <li><a href="/post/<?= $comment->id_post ?>/">Aller à l'article</a></li>
         <!-- <li><a href="/admin/reports/ban/<?= $comment->id ?>/">Supprimer le commentaire et empêcher de nouveaux commentaires de l'utilisateur.</a></li>

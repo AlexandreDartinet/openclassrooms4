@@ -56,7 +56,7 @@ if(SUCCESS != '') {
 <?php
 }
 ?>
-        <main class="container">
+        <main>
         <?= $content ?>
         </main>
         <?= $footer ?>

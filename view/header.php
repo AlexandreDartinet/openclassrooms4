@@ -6,8 +6,8 @@ namespace DartAlex;
 ob_start();
 ?>
         
-<div id="nav" class="navbar is-fixed-top is-dark" role="navigation" aria-label="main navigation">
-        <div class="container">
+<div id="nav" class="navbar is-fixed-top" role="navigation" aria-label="main navigation">
+        <!-- <div class="container"> -->
         <div class="navbar-brand">
                 <a class="navbar-item" href="/"><span class="icon"><i class="fas fa-home"></i></span>&nbsp;Accueil</a>
                 <a role="button" aria-label="menu" aria-expanded="false" data-target="navbarMenu" class="navbar-burger burger">
@@ -16,8 +16,8 @@ ob_start();
                         <span aria-hidden="true"></span>
                 </a>
         </div>
-        <div class="navbar-menu is-dark" id="navbarMenu">
-                <div class="navbar-start is-dark">
+        <div class="navbar-menu" id="navbarMenu">
+                <div class="navbar-start">
                         <?= $menu ?>
                 </div>
                 <div class="navbar-end">
@@ -53,7 +53,7 @@ else { // Si l'utilisateur est anonyme, on affiche le formulaire de connexion, u
                                                                 </div>
                                                         </div>
                                                         <div class="field has-addons">
-                                                                <div class="control has-icons-left">
+                                                                <div class="control has-icons-left is-expanded">
                                                                         <input class="input" type="password" name="password" placeholder="Password" required/>
                                                                         <div class="icon is-small is-left">
                                                                                 <i class="fas fa-lock"></i>
@@ -78,15 +78,9 @@ else { // Si l'utilisateur est anonyme, on affiche le formulaire de connexion, u
 }
 ?>
                 </div>
-        </div></div>
-</div>
-<header class="hero">
-        <div class="hero-body">
-                <div class="container">
-                        <h1 class="title is-1 box" id="main-title">Mon site</h1>
-                </div>
         </div>
-</header>
+<!-- </div> -->
+</div>
 
 <?php
 

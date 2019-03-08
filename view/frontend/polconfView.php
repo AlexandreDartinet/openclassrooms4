@@ -4,8 +4,9 @@
  */
 ob_start();
 ?>
-<div class="box content">
-    <h2>Politique modèle de confidentialité.</h2>
+
+<h2 class="title is-3">Politique modèle de confidentialité.</h2>
+<div class="box content container">
     <p><strong>Introduction</strong><br>
     Devant le développement des nouveaux outils de communication, il est nécessaire de porter une attention particulière à la protection de la vie privée. 
     C'est pourquoi, nous nous engageons à respecter la confidentialité des renseignements personnels que nous collectons.

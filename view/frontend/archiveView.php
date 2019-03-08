@@ -6,7 +6,7 @@ namespace DartAlex;
 ob_start();
 ?>
 <h2 class="title is-3">Index des archives</h2>
-<div class="box content">
+<div class="box content container">
     
 
     <ul>

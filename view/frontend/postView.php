@@ -4,8 +4,34 @@ namespace DartAlex;
  * Gère l'affichage d'un post
  */
 ob_start();
-echo $post->display();
+if($start = strpos($post->content, '<img')) {
+    $end = strpos($post->content, '>', $start);
+    $content = substr($post->content, 0, $start).substr($post->content, $end+1, strlen($post->content));
+}
+else {
+    $content = $post->content;
+}
 ?>
+<div class="post">
+    <div class="title-container">
+        <div class="background-cover" style="background-image: url('<?= $post->getImage() ?>');">
+            <div class="background-shroud">
+                <p class="title">
+                    <?= htmlentities($post->title) ?>
+                </p>
+                <p class="date">
+                    Publié le <?= $post->rDate('date_publication') ?> par <?= $post->user->displayName() ?>
+                </p>
+                <p class="chevron bounce is-hidden-mobile">
+                    <i class="fas fa-chevron-down"></i>
+                </p>
+            </div>
+        </div>
+    </div>
+    <article class="container">
+        <?=  $content ?>
+    </article>
+</div>
 <aside id="comments" class="box">
     <h2 class="title is-3">Commentaires</h2>
     <div id="comment-form-div" class="box">

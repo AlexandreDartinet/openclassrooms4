@@ -14,7 +14,7 @@ ob_start();
 ?>
 <h2 class="title is-3">Formulaire de contact</h2>
 
-<div id="contact-form" class="box"><form method="post" action="/">
+<div id="contact-form" class="box container"><form method="post" action="/">
     <input type="hidden" name="action" value="sendContactForm"/>
     <div class="field">
         <label for="name" class="label">Votre nom</label>
