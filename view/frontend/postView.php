@@ -22,7 +22,7 @@ else {
                 <p class="date">
                     Publié le <?= $post->rDate('date_publication') ?> par <?= $post->user->displayName() ?>
                 </p>
-                <p class="chevron bounce is-hidden-mobile">
+                <p class="chevron bounce">
                     <i class="fas fa-chevron-down"></i>
                 </p>
             </div>
