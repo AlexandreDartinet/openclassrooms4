@@ -1,4 +1,4 @@
-$('div.post')
+$('div.post-bloc')
     .on('click', (e) => {
         tryRedirect($(e.target));
     })
