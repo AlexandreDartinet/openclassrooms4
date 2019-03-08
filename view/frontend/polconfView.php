@@ -5,7 +5,7 @@
 ob_start();
 ?>
 
-<h2 class="title is-3">Politique de confidentialité.</h2>
+<h2 class="title is-3">Politique de confidentialité</h2>
 <div class="box content container">
     <p><strong>Introduction</strong><br>
     Devant le développement des nouveaux outils de communication, il est nécessaire de porter une attention particulière à la protection de la vie privée. 
