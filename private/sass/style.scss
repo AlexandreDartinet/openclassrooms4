@@ -34,6 +34,7 @@ $navbar-height: 3.25rem;
 }
 h2.title {
     text-align:center;
+    margin:1.5rem;
 }
 #nav {
     border-bottom: 1px solid #ddd;
@@ -217,16 +218,6 @@ main {
     margin-bottom:24px !important;
     height:100%;
 }
-header {
-    min-height:168px;
-    background-position: center;
-    margin-bottom: 24px;
-    border-bottom: solid 1px lightgrey;
-}
-#main-title {
-    opacity:0.7;
-    width:fit-content;
-}
 body {
     min-height: 100vh;
     position:relative;
@@ -239,8 +230,6 @@ body::after {
 }
 .footer {
     margin-top:auto;
-    //background-color:#363636;
-    //color: whitesmoke;
     background-color: #f2f2f2;
     border-top: 1px solid #999;
     position: absolute;
@@ -249,9 +238,6 @@ body::after {
     height: 168px;
 
 }
-//.footer a:hover {
-    //color: whitesmoke;
-//}
 
 @media all and (max-width: 1024px) {
 	table, tr, td, tbody {

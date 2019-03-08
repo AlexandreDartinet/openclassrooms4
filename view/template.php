@@ -13,7 +13,6 @@ require('footer.php');
         <meta name="robots" content="noindex,nofollow"/>
         <meta name="author" content="Alexandre Dartinet"/>
         <link rel="Shortcut Icon" href="/public/images/favicon.ico" type="image/x-icon">
-        <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.4/css/bulma.min.css" integrity="sha256-8B1OaG0zT7uYA572S2xOxWACq9NXYPQ+U5kHPV1bJN4=" crossorigin="anonymous" /> -->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
         <link href="/public/css/style.css" rel="stylesheet" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -77,14 +76,6 @@ if(SUCCESS != '') {
             }, 5000);
 
             $(document).ready(() => {
-                let images = [
-                    '/public/images/header-1.jpg',
-                    '/public/images/header-2.jpg',
-                    '/public/images/header-3.jpg'
-                ];
-                let randIndex = Math.floor(Math.random() * images.length);
-                let background = "url('"+images[randIndex]+"')";
-                $('header').css({ 'background-image':background });
                 // Check for click events on the navbar burger icon
                 $(".navbar-burger").click(() => {
                     // Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"

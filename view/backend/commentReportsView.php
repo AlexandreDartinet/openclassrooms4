@@ -35,9 +35,9 @@ foreach($reports as $report) {
 <?php
 }
 ?>
+<?= $pageSelector ?>
 </div>
 <?php
-echo $pageSelector;
 $content = ob_get_clean();
 
 require('template.php');

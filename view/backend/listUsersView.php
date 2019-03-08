@@ -69,8 +69,9 @@ foreach($users as $user) {
 ?>
         </tbody>
     </table>
+    <?= $pageSelector ?>
 </div>
-<?= $pageSelector ?>
+
 <?php
 
 $content = ob_get_clean();

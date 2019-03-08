@@ -6,8 +6,8 @@ namespace DartAlex;
 ob_start();
 ?>
 <h2 class="title is-3">Liste des articles</h2>
-<div class="box content container">
-    <p><a class="button is-primary" href="/admin/posts/new/">Créer un nouvel article</a></p>
+<div class="box container">
+    <p><a class="button is-primary" href="/admin/posts/new/">Créer un nouvel article</a></p><br/>
     <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
         <thead>
             <tr>
@@ -73,9 +73,9 @@ foreach($posts as $post) {
 ?>
         </tbody>
     </table>
+    <?= $pageSelector ?>
 </div>
 <?php
-echo $pageSelector;
 $content = ob_get_clean();
 
 require('template.php');
