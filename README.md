@@ -8,3 +8,5 @@ Le fichier de configuration par défaut va se générer automatiquement au premi
 Si aucun utilisateur n'est présent dans la base, un utilisateur "admin" avec "123456" comme mot de passe sera créé. Pensez à le modifier dès que possible.
 
 Pour utiliser PHPMailer pour les mails, remplissez le fichier de configuration, et installez le à partir de https://github.com/PHPMailer/PHPMailer
+
+Après avoir cloné le projet, npm install && npm run deploy pour générer les fichiers css et javascript.
