@@ -1,12 +1,11 @@
 @charset "utf-8";
 
-//$body-background-color: #e9edf0;
 $box-shadow: 0 10px 10px -10px #ccc;
 $box-radius: 5px;
 $navbar-height: 3.25rem;
 $footer-size: 168px;
 
-@import "../../vendor/bulma/bulma.sass";
+@import "../../node_modules/bulma/bulma.sass";
 
 .box {
     border: 1px solid #ddd;

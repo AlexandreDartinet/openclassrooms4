@@ -128,7 +128,7 @@ ob_start();
 <script>
     const postId = <?= $post->id ?>;
 </script>
-<script src="/public/js/frontend/postView.js"></script>
+<script src="/public/js/postView.js"></script>
 <?php
 $scripts[] = ob_get_clean();
 

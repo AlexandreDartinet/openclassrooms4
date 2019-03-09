@@ -69,6 +69,6 @@ $content = ob_get_clean();
 if(!isset($scripts)) {
     $scripts = [];
 }
-$scripts[] = "<script src='/public/js/frontend/listPostsView.js'></script>";
+$scripts[] = "<script src='/public/js/listPostsView.js'></script>";
 
 require('template.php');
