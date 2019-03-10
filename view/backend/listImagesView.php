@@ -70,7 +70,7 @@ foreach($images as $image) {
             <td><?= $image->rDate('date_sent') ?></td>
             <td><a class="fas fa-trash" href="<?= PATH ?>delete/<?= $image->id ?>/"></a></td>
         </tr>
-<?
+<?php
 }
 ?>
         </tbody>
@@ -96,4 +96,5 @@ if(!isset($scripts)) {
     $scripts = [];
 }
 $scripts[] = ob_get_clean();
-require('template.php');
+
+require('view/backend/template.php');
