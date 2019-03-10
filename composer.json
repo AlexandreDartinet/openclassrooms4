@@ -1,0 +1,20 @@
+{
+    "name": "dart-alex/openclassrooms4",
+    "description": "Blog pour un ecrivain",
+    "type": "project",
+    "license": "UNLICENSED",
+    "authors": [
+        {
+            "name": "Dart-Alex",
+            "email": "DarkVcious@gmail.com"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DartAlex\\": "model/"
+        }
+    }
+}

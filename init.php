@@ -34,14 +34,13 @@ define('SITE_URL', 'xxx'); // Adresse du site
 define('CONTACT_MAIL','XXX'); // Mail de contact de l'administrateur
 
 /**
- * Configuration de PHPMailer
+ * Configuration de SwiftMailer
  */
-define('USE_PHPMAILER', false); // true pour utiliser PHPMailer (à installer séparément : https://github.com/PHPMailer/PHPMailer )
+define('USE_SWIFTMAILER', false); // true pour utiliser PHPMailer (à installer séparément : https://github.com/PHPMailer/PHPMailer )
 define('SMTP_HOST','XXX'); // L'addresse du serveur smtp
 define('SMTP_USER','XXX'); // Le nom d'utilisateur pour la connexion au serveur smtp
 define('SMTP_PASSWORD','XXX'); // Le mot de passe pour la connexion au serveur smtp
 define('SMTP_PORT',465); // Le port de connexion au serveur smtp
-define('PHPMAILER_PATH', 'model/PHPMailer/'); // L'endroit ou est installé PHPMailer
 
 /**
  * Configuration de TinyMCE
@@ -62,11 +61,7 @@ define('CONFIG_SET', false);
 /**
  * On fait en sorte que nos classes se chargent automatiquement sans avoir besoin de les require à chaque fois.
  */
-function loadClass($name) {
-    $name = preg_replace('/DartAlex\\\/', '', $name);
-    require "model/$name.php";
-}
-spl_autoload_register("DartAlex\\loadClass");
+require_once("vendor/autoload.php");
 
 /**
  * Interdire l'accès si l'utilisateur est banni
@@ -100,17 +95,10 @@ if($userManager->count() == 0) { // Si aucun utilisateur n'existe, on crée un n
 /**
  * Initialisation de la fonction d'envois de mails du site
  */
-if(USE_PHPMAILER) { // Si on a décidé d'utiliser PHPMailer
-    try { // On essaye de charger les classes nécessaires
-        include PHPMAILER_PATH.'src/Exception.php';
-        include PHPMAILER_PATH.'src/PHPMailer.php';
-        include PHPMAILER_PATH.'src/SMTP.php';  
-    }
-    catch (\Exception $e) { // Si elles ne sont pas présentes, on signale à l'utilisateur qu'il doit installer PHPMailer ou modifier la config
-        echo 'Veuillez installer PHPMailer ou renseigner le chemin d\'accès correct à son répertoire d\'installation. <a href="https://github.com/PHPMailer/PHPMailer">https://github.com/PHPMailer/PHPMailer</a>.<br/>'.$e->getMessage();
-    }
+if(USE_SWIFTMAILER) { // Si on a décidé d'utiliser PHPMailer
+    
     /**
-     * Envoie les mails via PHPMailer.
+     * Envoie les mails via SwiftMailer.
      * @param string $to : Adresse mail du destinataire
      * @param string $from : Adresse mail de l'expéditeur
      * @param string $from_name : Nom de l'expéditeur
@@ -124,29 +112,27 @@ if(USE_PHPMAILER) { // Si on a décidé d'utiliser PHPMailer
      * @return string : Message d'erreur
      */
     function smtpMailer($to, $from, $from_name, $subject, $body) {
-        $mail = new \PHPMailer\PHPMailer\PHPMailer();
-        $mail->IsSMTP();
-        $mail->SMTPDebug = 0;
-        $mail->SMTPAuth = true;
-        $mail->SMTPSecure = 'ssl';
-        $mail->Host = SMTP_HOST;
-        $mail->Port = SMTP_PORT;
-        $mail->Username = SMTP_USER;
-        $mail->Password = SMTP_PASSWORD;
-        $mail->From = $from;
-        $mail->FromName = $from_name;
-        $mail->Subject = $subject;
-        $mail->Body = $body;
-        $mail->AddAddress($to);
-        $mail->addReplyTo($from,$from_name);
-        if(!$mail->Send()) {
-            return 'Mail error: '.$mail->ErrorInfo;
-        } else {
-            return true;
-        }
+        $transport = (new \Swift_SmtpTransport(SMTP_HOST, SMTP_PORT))
+            ->setUsername(SMTP_USER)
+            ->setPassword(SMTP_PASSWORD)
+            ->setEncryption('ssl')
+        ;
+
+        $mailer = new \Swift_Mailer($transport);
+
+        $message = (new \Swift_Message($subject))
+            ->setFrom([$from => $from_name])
+            ->setTo($to)
+            ->setBody($body)
+            ->setCharset('utf-8')
+            ->setReplyTo([$from => $from_name])
+            ->setSender([$from => $from_name])
+        ;
+
+        return $mailer->send($message);
     }
 }
-else { // Si on n'utilise pas PHPMailer
+else { // Si on n'utilise pas SwiftMailer
     /**
      * Envoie les mails via mail().
      * @param string $to : Adresse mail du destinataire
