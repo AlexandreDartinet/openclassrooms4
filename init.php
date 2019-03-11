@@ -16,44 +16,7 @@ if(file_exists('config.php')) { // On vérifie si le fichier de configuration ex
     }
 }
 else {
-    $configfile = fopen("config.php", "w") or die("Je n'ai pas les permissions pour créer config.php.");
-    $config = 
-"<?php
-/**
- * Configuration de la base de données
- */
-define('DB_HOST','XXX'); // Hote de la base de données
-define('DB_USER','XXX'); // Utilisateur pour la connexion à la bdd
-define('DB_PASSWORD','XXX'); // Mot de passe de connexion à la bdd
-define('DB_BASE','XXX'); // Base qu'on utilise pour le site
-
-/**
- * Configuration de constantes relatives au site
- */
-define('SITE_URL', 'xxx'); // Adresse du site
-define('CONTACT_MAIL','XXX'); // Mail de contact de l'administrateur
-
-/**
- * Configuration de SwiftMailer
- */
-define('USE_SWIFTMAILER', false); // true pour utiliser PHPMailer (à installer séparément : https://github.com/PHPMailer/PHPMailer )
-define('SMTP_HOST','XXX'); // L'addresse du serveur smtp
-define('SMTP_USER','XXX'); // Le nom d'utilisateur pour la connexion au serveur smtp
-define('SMTP_PASSWORD','XXX'); // Le mot de passe pour la connexion au serveur smtp
-define('SMTP_PORT',465); // Le port de connexion au serveur smtp
-
-/**
- * Configuration de TinyMCE
- */
-define('TINYMCE_KEY', 'XXX'); // Clé de l'api TinyMce
-
-/**
- * Si vous avez tout lu et configuré correctement, passez CONFIG_SET à true.
- */
-define('CONFIG_SET', false);
-";
-    fwrite($configfile, $config);
-    fclose($configfile);
+    copy('config.php.example', 'config.php');
     die("Fichier config.php par défaut créé, merci de le modifier pour pouvoir utiliser le site.");
 }
 

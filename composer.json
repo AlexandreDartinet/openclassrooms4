@@ -16,5 +16,12 @@
         "psr-4": {
             "DartAlex\\": "model/"
         }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "npm install",
+            "npm run deploy",
+            "@php -r \"file_exists('config.php') || copy('config.php.example', 'config.php');\""
+        ]
     }
 }
