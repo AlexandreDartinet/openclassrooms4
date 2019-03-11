@@ -104,14 +104,6 @@ INSERT INTO `comments` (`id`, `id_post`, `id_user`, `reply_to`, `date_publicatio
 (105, 13, 0, 0, '2019-03-11 08:17:50', '0.0.0.0', 'Cath D', 'Très belle photo !');
 
 --
--- Contenu de la table `images`
---
-
-INSERT INTO `images` (`id`, `id_user`, `date_sent`, `file_name`, `type`, `title`) VALUES
-(15, 1, '2019-03-10 16:38:27', '1552232307', 1, 'VODKA'),
-(16, 1, '2019-03-10 16:38:58', '1552232337', 1, 'loremipsum');
-
---
 -- Contenu de la table `posts`
 --
 
