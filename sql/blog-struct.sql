@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Client :  localhost:3306
--- Généré le :  Sam 02 Mars 2019 à 12:23
+-- Généré le :  Lun 11 Mars 2019 à 11:08
 -- Version du serveur :  10.1.37-MariaDB-0+deb9u1
--- Version de PHP :  7.0.33-0+deb9u1
+-- Version de PHP :  7.1.27-1+0~20190307202204.14+stretch~1.gbp7163d5
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -15,10 +15,6 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8mb4 */;
-
---
--- Base de données :  `blog`
---
 
 -- --------------------------------------------------------
 
@@ -45,13 +41,16 @@ CREATE TABLE IF NOT EXISTS `bans` (
 CREATE TABLE IF NOT EXISTS `comments` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_post` int(11) NOT NULL,
-  `id_user` int(11) NOT NULL DEFAULT '0',
-  `reply_to` int(11) NOT NULL DEFAULT '0',
+  `id_user` int(11) DEFAULT '0',
+  `reply_to` int(11) DEFAULT '0',
   `date_publication` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `ip` varchar(255) NOT NULL,
   `name` varchar(100) NOT NULL DEFAULT 'Anonyme',
   `content` text NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `id_post` (`id_post`),
+  KEY `id_user` (`id_user`),
+  KEY `reply_to` (`reply_to`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- --------------------------------------------------------
